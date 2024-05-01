@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:firebase_auth_platform_interface/src/user_info.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:myevent/dashboard.dart';
+import 'package:get/get.dart';
+import 'package:myevent/database/api.dart';
+import 'package:myevent/database/firebase.dart';
 import 'package:myevent/model/user.dart';
-import 'package:myevent/navigation_drawer.dart';
-import 'package:myevent/register.dart';
-import 'package:myevent/database/sql_user.dart';
+// import 'package:myevent/database/sql_user.dart';
+import 'package:http/http.dart' as http;
 
 final _formKey = GlobalKey<FormState>();
 
@@ -213,9 +218,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Aksi ketika tombol ditekan
-                    },
+                    onPressed: continueWithGoogle,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,
                       backgroundColor: const Color.fromARGB(
@@ -271,11 +274,13 @@ class _LoginState extends State<Login> {
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             // Implementasi logika ketika "Daftar" ditekan
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Register()),
-                            );
+                            Get.toNamed('/register');
+
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const Register()),
+                            // );
                           },
                       ),
                     ],
@@ -300,31 +305,98 @@ class _LoginState extends State<Login> {
     });
   }
 
+  // void _login() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     String email = _emailController.text;
+  //     String password = _passwordController.text;
+  //     final dbUser = UserDatabase();
+  //     await dbUser.initializeDatabase();
+  //     User user = await dbUser.login(email, password);
+
+  //     if (!mounted) return;
+  //     if (user.id == null) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('User tidak ditemukan || email atau password salah'),
+  //           duration: Duration(seconds: 2),
+  //         ),
+  //       );
+  //     } else {
+  //       // Navigator.push(
+  //       //   context,
+  //       //   MaterialPageRoute(
+  //       //     builder: (context) => const Dashboard(),
+  //       //     settings: RouteSettings(arguments: user), ////data => argumen
+  //       //   ),
+  //       // );
+
+  //       Get.offNamed('/dashboard', arguments: user);
+  //     }
+  //   }
+  // }
   void _login() async {
     if (_formKey.currentState!.validate()) {
       String email = _emailController.text;
       String password = _passwordController.text;
-      final dbUser = UserDatabase();
-      await dbUser.initializeDatabase();
-      User user = await dbUser.login(email, password);
 
-      if (!mounted) return;
-      if (user.id == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('User tidak ditemukan || email atau password salah'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Dashboard(),
-            settings: RouteSettings(arguments: user), ////data => argumen
-          ),
-        );
+      try {
+        var response = await http
+            .get(Uri.parse("${Api.urlLogin}?login=$email&password=$password"));
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          // Request successful, parse the response body
+          User user = User.fromMap(json["user"]);
+          Get.offNamed('/dashboard', arguments: user);
+        } else {
+          // Request failed, handle error
+          _showAlertDialog(
+              "ERROR CODE ${response.statusCode}", json["message"].toString());
+        }
+      } catch (e) {
+        // Handle socket connection error
+        _showAlertDialog("ERROR", e.toString());
       }
+    }
+  }
+
+  Future<void> _showAlertDialog(String title, String text) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(text),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ya'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void continueWithGoogle() async {
+    FirebaseController.logout();
+    final user = await FirebaseController.loginWithGoogle();
+    if (user != null) {
+      String uid = await FirebaseController.getId();
+      String email = await FirebaseController.getEmail();
+      String phone = await FirebaseController.getPhone();
+      List<UserInfo>? listInfo = await FirebaseController.getInfo();
+      String info = listInfo.toString();
+      String text = "UID: $uid\nemail: $email\nphone: $phone\n info: $info";
+      _showAlertDialog("Firebase Login", text);
     }
   }
 }

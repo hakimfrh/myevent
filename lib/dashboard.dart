@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:myevent/getx_state.dart';
 import 'package:myevent/model/user.dart';
 import 'package:myevent/navigation_drawer.dart';
+import 'package:myevent/user_list.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -11,11 +14,10 @@ class Dashboard extends StatefulWidget {
 class DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Home(),
-    NavDrawer(),
-    Text('Profile Page'),
-    Text('Profile Page'),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const Home(),
+    const NavDrawer(),
+    const UserList(),
   ];
 
   void _onItemTapped(int index) {
@@ -83,14 +85,16 @@ class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  HomeState createState() => HomeState();
 }
 
-class _HomeState extends State<Home> {
+class HomeState extends State<Home> {
 
   @override
  Widget build(BuildContext context) {
-  final user = ModalRoute.of(context)!.settings.arguments as User;
+  // final user = ModalRoute.of(context)!.settings.arguments as User;
+  final User user = Get.arguments as User;
+
   return Scaffold(
     body: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,7 +144,7 @@ class _HomeState extends State<Home> {
                   fontSize: 30,
                   fontWeight: FontWeight.bold
                 ),),
-                Text(user.nama, style: const TextStyle(
+                Text(user.name, style: const TextStyle(
                   fontFamily: 'Rubik',
                   fontSize: 30,
                   fontWeight: FontWeight.bold
@@ -171,7 +175,7 @@ class _HomeState extends State<Home> {
                 ),),
               ],
             ),
-            Text(user.namaPerusahaan),
+            Text(user.businessName),
            
           ],
         ),

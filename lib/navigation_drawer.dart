@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myevent/login.dart';
 import 'package:myevent/model/user.dart';
 
@@ -14,7 +15,7 @@ class _NavDrawerState extends State<NavDrawer> {
   Widget build(BuildContext context) {
     final user = ModalRoute.of(context)!.settings.arguments as User;
     return Scaffold(
-      // appBar: AppBar(),
+      appBar: AppBar(),
       drawer: Drawer(
           child: ListView(
         children: [
@@ -29,12 +30,11 @@ class _NavDrawerState extends State<NavDrawer> {
           ),
           ListTile(
             onTap: () {
-
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Login()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => const Login()),
+              // );
+              Get.offAllNamed("/login");
             },
             title: const Text('Logout'),
           ),
@@ -44,7 +44,7 @@ class _NavDrawerState extends State<NavDrawer> {
         child: Column(
           children: [
             Text(user.toMap().toString()),
-            ],
+          ],
         ),
       ),
     );
@@ -69,7 +69,6 @@ class _NavDrawerState extends State<NavDrawer> {
               child: const Text('Ya'),
               onPressed: () {
                 Navigator.of(context).pop();
-                
               },
             ),
             TextButton(

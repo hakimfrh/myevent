@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "811479466024",
+    "project_id": "kelompok5-myevent",
+    "storage_bucket": "kelompok5-myevent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811479466024:android:3471cc8acf51354923751d",
+        "android_client_info": {
+          "package_name": "com.gdev.myevent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811479466024-9q83s9l168javs5vlj6grtlu1840a7is.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gdev.myevent",
+            "certificate_hash": "4dbf9975cc1fec5c82b82249bfe7938f12d15b3e"
+          }
+        },
+        {
+          "client_id": "811479466024-fk04cesqs7cmolbhtn6u5inaahi9rpek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfuz3uwJSN0O2QBXRfbFi6gxzxwa9ffbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811479466024-fk04cesqs7cmolbhtn6u5inaahi9rpek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,40 +1,45 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:json_annotation/json_annotation.dart';
+
+part 'user.g.dart';
+
+@JsonSerializable()
 class User {
-    String nama;
-    String alamat;
+    int id;
+    String name;
+    String phone;
+    String email;
     String username;
     String password;
-    String email;
-    String namaPerusahaan;
-    String deskipsiPerusahaan;
-    String nomor;
-    String lokasi;
-    String? id;
+    @JsonKey(name: 'business_name')
+    String businessName;
+    @JsonKey(name: 'business_location')
+    String businessLocation;
+    @JsonKey(name: 'business_description')
+    String businessDescription;
+    @JsonKey(name: 'email_verified_at')
+    DateTime? emailVerifiedAt;
+    @JsonKey(name: 'created_at')
+    DateTime? createdAt;
+    @JsonKey(name: 'updated_at')
+    DateTime? updatedAt;
 
-  User({
-    required this.nama,
-    required this.alamat,
-    required this.username,
-    required this.password,
-    required this.email,
-    required this.namaPerusahaan,
-    required this.deskipsiPerusahaan,
-    required this.nomor,
-    required this.lokasi,
-    this.id
-  });
+    User({
+        this.id = 0,
+        required this.name,
+        required this.phone,
+        required this.email,
+        required this.username,
+        this.password = "",
+        required this.businessName,
+        required this.businessLocation,
+        required this.businessDescription,
+        this.emailVerifiedAt,
+        this.createdAt,
+        this.updatedAt,
+    });
 
+factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);
 
-    Map<String, dynamic> toMap() => {
-        "id": id,
-        "nama": nama,
-        "alamat": alamat,
-        "username": username,
-        "password": password,
-        "email":email,
-        "namaPerusahaan":namaPerusahaan,
-        "deskripsiPerusahaan":deskipsiPerusahaan,
-        "nomor":nomor,
-        "lokasi":lokasi,
-    };
+Map<String, dynamic> toMap() => _$UserToJson(this);
+
 }

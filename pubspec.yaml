@@ -7,8 +7,15 @@ environment:
   sdk: '>=3.2.6 <4.0.0'
 
 dependencies:
+  change_app_package_name: ^1.1.0
+  firebase_auth: ^4.17.8
+  firebase_core: ^2.27.0
   flutter:
     sdk: flutter
+  get: ^4.6.6
+  google_sign_in: ^6.2.1
+  http: ^1.2.0
+  json_serializable: ^6.7.1
   path: ^1.8.3
   sqflite: ^2.3.2
 
@@ -16,6 +23,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.9
 
 flutter:
   uses-material-design: true

@@ -1,3 +1,4 @@
+/*
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:myevent/model/user.dart';
@@ -120,3 +121,4 @@ class UserDatabase {
     }
   }
 }
+*/

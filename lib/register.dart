@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:myevent/login.dart';
+import 'package:get/get.dart';
+import 'package:myevent/database/api.dart';
 import 'package:myevent/model/user.dart';
 import 'package:myevent/database/sql_user.dart';
+import 'package:http/http.dart' as http;
 
 final _stepOneKey = GlobalKey<FormState>();
 final _stepTwoKey = GlobalKey<FormState>();
@@ -20,22 +25,22 @@ class _RegisterState extends State<Register> {
       appBar: AppBar(
         title: Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                if (_currentStep > 0) {
-                  setState(() {
-                    _currentStep--; // Kembali ke tahap sebelumnya
-                  });
-                } else {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Login()),
-                    (route) => false,
-                  ); // Kembali ke halaman sebelumnya jika sudah pada tahap pertama
-                }
-              },
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.arrow_back),
+            //   onPressed: () {
+            //     if (_currentStep > 0) {
+            //       setState(() {
+            //         _currentStep--; // Kembali ke tahap sebelumnya
+            //       });
+            //     } else {
+            //       Navigator.pushAndRemoveUntil(
+            //         context,
+            //         MaterialPageRoute(builder: (context) => const Login()),
+            //         (route) => false,
+            //       ); // Kembali ke halaman sebelumnya jika sudah pada tahap pertama
+            //     }
+            //   },
+            // ),
             const SizedBox(width: 0), // Add space between back button and image
             Image.asset(
               'images/logo.png', // Replace 'assets/register_logo.png' with your image asset path
@@ -201,7 +206,7 @@ class _RegisterState extends State<Register> {
                 return 'Masukkan username';
               } else if (!value.contains(RegExp(r'^[a-zA-Z0-9_]+$'))) {
                 return 'Username Tidak Valid';
-              }  else {
+              } else {
                 return null;
               }
             },
@@ -328,6 +333,7 @@ class _RegisterState extends State<Register> {
               ),
               prefixIcon: const Icon(Icons.email),
               floatingLabelBehavior: FloatingLabelBehavior.never,
+              errorText: _emailError,
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -511,6 +517,7 @@ class _RegisterState extends State<Register> {
   bool _isPasswordHidden = true;
   bool _isPasswordHidden2 = true;
   int _currentStep = 0;
+  String ? _emailError;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -544,49 +551,147 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  void _register() async {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text("Menambakhan User")));
+  // void _register() async {
+  //   ScaffoldMessenger.of(context)
+  //       .showSnackBar(const SnackBar(content: Text("Menambakhan User")));
 
-    //inisialisasi variabel dari controller.
-    String nama = _fullNameController.text;
-    String alamat = _locationController.text;
-    String username = _usernameController.text;
-    String password = _passwordController.text;
-    String email = _emailController.text;
-    String nomor = _phoneNumberController.text;
-    String namaPerusahaan = _companyNameController.text;
-    String lokasi = _locationController.text;
-    String deskipsiPerusahaan = _descriptionController.text;
+  //inisialisasi variabel dari controller.
+  // String nama = _fullNameController.text;
+  // String username = _usernameController.text;
+  // String password = _passwordController.text;
+  // String email = _emailController.text;
+  // String nomor = _phoneNumberController.text;
+  // String namaPerusahaan = _companyNameController.text;
+  // String lokasi = _locationController.text;
+  // String deskipsiPerusahaan = _descriptionController.text;
 
 //objek
+//     User user = User(
+//       name: _fullNameController.text,
+//       email: _emailController.text,
+//       phone: _phoneNumberController.text,
+//       username: _usernameController.text,
+//       password: _passwordController.text,
+//       businessName: _companyNameController.text,
+//       businessDescription: _descriptionController.text,
+//       businessLocation: _locationController.text,
+//     );
+//     final dbUser = UserDatabase();
+//     await dbUser.initializeDatabase();
+
+//     if (await dbUser.register(user)) {
+//       if (!mounted) return;
+//       ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(content: Text("User Berhasil Ditambahkan")));
+//       // Navigator.pushAndRemoveUntil(
+//       //   context,
+//       //   MaterialPageRoute(builder: (context) => const Login()),
+//       //   (route) => false,
+//       // );
+//       Get.back();
+//     }else{
+//       if (!mounted) return;
+//       ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(content: Text("Username sudah ada")));
+//     }
+//   }
+  void _register() async {
     User user = User(
-      nama: nama,
-      alamat: alamat,
-      username: username,
-      password: password,
-      email: email,
-      namaPerusahaan: namaPerusahaan,
-      deskipsiPerusahaan: deskipsiPerusahaan,
-      nomor: nomor,
-      lokasi: lokasi,
+      name: _fullNameController.text,
+      email: _emailController.text,
+      phone: _phoneNumberController.text,
+      username: _usernameController.text,
+      password: _passwordController.text,
+      businessName: _companyNameController.text,
+      businessDescription: _descriptionController.text,
+      businessLocation: _locationController.text,
     );
-    final dbUser = UserDatabase();
-    await dbUser.initializeDatabase();
-    
-    if (await dbUser.register(user)) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("User Berhasil Ditambahkan")));
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const Login()),
-        (route) => false,
-      );
-    }else{
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Username sudah ada")));
+
+    try {
+      // Convert JSON data to form-data format
+      var userMap = user.toMap();
+      var formData = <String, String>{};
+      userMap.forEach((key, value) {
+        formData[key] = value.toString();
+      });
+
+      var response =
+          await http.post(Uri.parse(Api.urlRegister), body: formData);
+      if (response.statusCode == 200) {
+        // Request successful, parse the response body
+        _showAlertLogout(
+            response.statusCode.toString(), response.body.toString());
+      } else {
+        // Request failed, handle error
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (json['message'].toString().contains("Username")) {
+          setState(() {
+            // _stepOneKey.currentState?.setState(() {
+            //   _stepOneKey.currentState?.=
+            //       'Field 1 is required';
+            // });
+          });
+        }
+        if (json['message'].toString().contains("Email")) {
+          setState(() {
+        _emailError = 'Email telah digunakan';
+      });
+        }
+        if (json['message'].toString().contains("Password")) {}
+        
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        // Handle socket connection error
+        _showAlertLogout("ERROR", e.toString());
+      }
     }
+  }
+
+  Future<void> _checkEmailAvailability(String email) async {
+    // Kirim permintaan HTTP ke API Anda
+    final response = await http.get(Uri.parse('${Api.urlRegister}?email=$email'));
+
+    if (response.statusCode == 200) {
+      // Jika permintaan berhasil, cek apakah email telah digunakan
+      final jsonData = jsonDecode(response.body);
+      final emailExists = jsonData['exists'];
+
+      setState(() {
+        _emailError = emailExists ? 'Email telah digunakan' : null;
+      });
+    } else {
+      // Jika permintaan gagal, tangani kesalahan sesuai kebutuhan Anda
+      setState(() {
+        _emailError = 'Gagal memeriksa email';
+      });
+    }
+  }
+
+  Future<void> _showAlertLogout(String title, String text) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(text),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ya'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
