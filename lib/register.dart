@@ -517,7 +517,7 @@ class _RegisterState extends State<Register> {
   bool _isPasswordHidden = true;
   bool _isPasswordHidden2 = true;
   int _currentStep = 0;
-  String ? _emailError;
+  String? _emailError;
 
   void _togglePasswordVisibility() {
     setState(() {
@@ -634,11 +634,10 @@ class _RegisterState extends State<Register> {
         }
         if (json['message'].toString().contains("Email")) {
           setState(() {
-        _emailError = 'Email telah digunakan';
-      });
+            _emailError = 'Email telah digunakan';
+          });
         }
         if (json['message'].toString().contains("Password")) {}
-        
       }
     } catch (e) {
       if (e is SocketException) {
@@ -650,7 +649,8 @@ class _RegisterState extends State<Register> {
 
   Future<void> _checkEmailAvailability(String email) async {
     // Kirim permintaan HTTP ke API Anda
-    final response = await http.get(Uri.parse('${Api.urlRegister}?email=$email'));
+    final response =
+        await http.get(Uri.parse('${Api.urlRegister}?email=$email'));
 
     if (response.statusCode == 200) {
       // Jika permintaan berhasil, cek apakah email telah digunakan

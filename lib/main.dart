@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:myevent/dashboard.dart';
 import 'package:myevent/firebase_options.dart';
 import 'package:myevent/login.dart';
+import 'package:myevent/forgotpassword/forgotpassword.dart';
 import 'package:myevent/register.dart';
 import 'package:get/get.dart';
 
-
 void main() async {
-   WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
     // return const MaterialApp(
     //   home: Login(),
     // );
-    return GetMaterialApp( // Instead of MaterialApp, use GetMaterialApp
+    return GetMaterialApp(
+      // Instead of MaterialApp, use GetMaterialApp
       title: 'Flutter GetX Routing Example',
       debugShowCheckedModeBanner: false,
       // Define initial route
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/login', page: () => Login()),
         GetPage(name: '/register', page: () => Register()),
         GetPage(name: '/dashboard', page: () => Dashboard()),
+        GetPage(name: '/forgotpassword', page: () => ForgotPassword()),
       ],
     );
   }

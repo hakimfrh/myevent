@@ -286,6 +286,40 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 16.0),
+                // Don't have an account link
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      const TextSpan(
+                        text: "Lupa Password? ",
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 0, 0, 0),
+                        ),
+                      ),
+                      TextSpan(
+                        text: "Klik Disini",
+                        style: const TextStyle(
+                          color: Colors
+                              .blue, // Ubah warna teks "Daftar" sesuai kebutuhan
+                          fontWeight: FontWeight
+                              .bold, // Contoh: Menjadikan teks "Daftar" tebal
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            // Implementasi logika ketika "Daftar" ditekan
+                            Get.toNamed('/forgotpassword');
+
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const Register()),
+                            // );
+                          },
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
