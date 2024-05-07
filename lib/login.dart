@@ -426,11 +426,30 @@ class _LoginState extends State<Login> {
     if (user != null) {
       String uid = await FirebaseController.getId();
       String email = await FirebaseController.getEmail();
-      String phone = await FirebaseController.getPhone();
-      List<UserInfo>? listInfo = await FirebaseController.getInfo();
-      String info = listInfo.toString();
-      String text = "UID: $uid\nemail: $email\nphone: $phone\n info: $info";
-      _showAlertDialog("Firebase Login", text);
+
+      // String phone = await FirebaseController.getPhone();
+      // List<UserInfo>? listInfo = await FirebaseController.getInfo();
+      // String info = listInfo.toString();
+      // String text = "UID: $uid\nemail: $email\nphone: $phone\n info: $info";
+      // _showAlertDialog("Firebase Login", text);
+
+
+      try {
+        var response = await http.get(Uri.parse("${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          // Request successful, parse the response body
+          User user = User.fromMap(json["user"]);
+          Get.offNamed('/dashboard', arguments: user);
+        } else {
+          // Request failed, handle error
+          _showAlertDialog(
+              "ERROR CODE ${response.statusCode}", json["message"].toString());
+        }
+      } catch (e) {
+        // Handle socket connection error
+        _showAlertDialog("ERROR", e.toString());
+      }
     }
   }
 }

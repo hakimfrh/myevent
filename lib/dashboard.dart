@@ -96,15 +96,13 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // final user = ModalRoute.of(context)!.settings.arguments as User;
-    // final User user = Get.arguments as User; //ni jug komen dulu buat desain
-    String _selectedFilter =
-        ''; // Variabel state untuk menyimpan nilai yang dipilih
-
+    final User user = Get.arguments as User; //ni jug komen dulu buat desain
+    String _selectedFilter = ''; // Variabel state untuk menyimpan nilai yang dipilih
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: EdgeInsets.all(9.0),
+            padding: const EdgeInsets.all(9.0),
             sliver: SliverToBoxAdapter(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -135,7 +133,7 @@ class HomeState extends State<Home> {
           ),
           SliverToBoxAdapter(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -155,8 +153,8 @@ class HomeState extends State<Home> {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              // user.name, //ini aku komen dulu buat desainnya
-                              'Kepeng',
+                              user.name, //ini aku komen dulu buat desainnya
+                              // 'Kepeng',
                               style: const TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 30,
@@ -175,12 +173,12 @@ class HomeState extends State<Home> {
                   ),
                   const Spacer(),
                   const SizedBox(width: 20), // Add spacing between columns
-                  Padding(
-                    padding: const EdgeInsets.only(right: 0.0, top: 27.0),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 0.0, top: 27.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
                             Text(
                               'Bisnis : ',
@@ -192,7 +190,7 @@ class HomeState extends State<Home> {
                           ],
                         ),
                         // Text(user.businessName),
-                        const Text('Cakei')
+                        Text('Cakei')
                       ],
                     ),
                   ), // Add spacing between columns
@@ -214,7 +212,7 @@ class HomeState extends State<Home> {
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.only(left: 6.0, right: 6.0, top: 15.0),
+            padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 15.0),
             sliver: SliverToBoxAdapter(
               child: Card(
                 child: Container(
@@ -234,7 +232,7 @@ class HomeState extends State<Home> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             "25",
                             style: TextStyle(
                               color: Colors.white,
@@ -242,14 +240,14 @@ class HomeState extends State<Home> {
                               fontSize: 35,
                             ),
                           ),
-                          SizedBox(width: 40.0),
+                          const SizedBox(width: 40.0),
                           Container(
                             height: 40.0,
                             width: 1.0,
                             color: Colors.white,
                           ),
-                          SizedBox(width: 40.0),
-                          Text(
+                          const SizedBox(width: 40.0),
+                          const Text(
                             "11",
                             style: TextStyle(
                               color: Colors.white,
@@ -257,14 +255,14 @@ class HomeState extends State<Home> {
                               fontSize: 35,
                             ),
                           ),
-                          SizedBox(width: 30.0),
+                          const SizedBox(width: 30.0),
                           Container(
                             height: 40.0,
                             width: 1.0,
                             color: Colors.white,
                           ),
-                          SizedBox(width: 50.0),
-                          Text(
+                          const SizedBox(width: 50.0),
+                          const Text(
                             "20",
                             style: TextStyle(
                               color: Colors.white,
@@ -274,8 +272,8 @@ class HomeState extends State<Home> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.0),
-                      Row(
+                      const SizedBox(height: 8.0),
+                      const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
@@ -319,11 +317,11 @@ class HomeState extends State<Home> {
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.only(left: 20.0, right: 20.0),
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
             sliver: SliverToBoxAdapter(
               child: Row(
                 children: [
-                  Text(
+                  const Text(
                     "Event yang anda ikuti",
                     style: TextStyle(
                       color: Colors.black,
@@ -333,39 +331,39 @@ class HomeState extends State<Home> {
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   PopupMenuButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.filter_alt_outlined,
                       color: Colors.black,
                     ),
                     itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                      PopupMenuItem(
+                      const PopupMenuItem(
+                        value: 'Semua',
                         child: Text(
                           'Semua',
                           style: TextStyle(
                             color: Colors.black,
                           ),
                         ),
-                        value: 'Semua',
                       ),
-                      PopupMenuItem(
+                      const PopupMenuItem(
+                        value: 'Ditolak',
                         child: Text(
                           'Ditolak',
                           style: TextStyle(
                             color: Colors.black,
                           ),
                         ),
-                        value: 'Ditolak',
                       ),
-                      PopupMenuItem(
+                      const PopupMenuItem(
+                        value: 'Pembayaran',
                         child: Text(
                           'Pembayaran',
                           style: TextStyle(
                             color: Colors.black,
                           ),
                         ),
-                        value: 'Pembayaran',
                       ),
                       // Add more menu items if needed
                     ],
@@ -387,7 +385,7 @@ class HomeState extends State<Home> {
                               8.0), // Add a bit of padding between text and menu
                       child: Text(
                         _selectedFilter,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black, // Set the text color to black
                         ),
                       ),
@@ -396,7 +394,7 @@ class HomeState extends State<Home> {
               ),
             ),
           ),
-          SliverPadding(
+          const SliverPadding(
             padding: EdgeInsets.only(left: 30.0),
             sliver: SliverToBoxAdapter(
               child: Row(
@@ -416,10 +414,10 @@ class HomeState extends State<Home> {
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             sliver: SliverToBoxAdapter(
               child: Card(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
                 elevation: 1,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -436,7 +434,7 @@ class HomeState extends State<Home> {
                         right: 0,
                         child: Container(
                           height: 23,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(5.0),
                               topRight: Radius.circular(5.0),
@@ -447,11 +445,11 @@ class HomeState extends State<Home> {
                               colors: [Color(0xFFF35AE24), Color(0xFF16480F)],
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
+                                padding: EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   "Id Event : 92389",
                                   style: TextStyle(
@@ -462,7 +460,7 @@ class HomeState extends State<Home> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
+                                padding: EdgeInsets.only(right: 16.0),
                                 child: Text(
                                   "Selesai",
                                   style: TextStyle(
@@ -478,7 +476,7 @@ class HomeState extends State<Home> {
                       ),
                       Center(
                         child: Container(
-                          margin: EdgeInsets.fromLTRB(15.0, 20, 0, 0),
+                          margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -486,8 +484,8 @@ class HomeState extends State<Home> {
                                 'images/event1.png',
                                 width: 80,
                               ),
-                              SizedBox(width: 10.0),
-                              VerticalDivider(
+                              const SizedBox(width: 10.0),
+                              const VerticalDivider(
                                 color: Colors.grey, // Warna garis
                                 thickness: 1, // Ketebalan garis
                                 width: 20, // Lebar garis
@@ -496,12 +494,12 @@ class HomeState extends State<Home> {
                               ),
                               Flexible(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5.0, 15, 20, 0),
+                                  padding: const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "SUNDAY SERVICE",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -511,9 +509,9 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.center,
                                         softWrap: true,
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       // Text festival
-                                      Text(
+                                      const Text(
                                         "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -523,8 +521,8 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.start,
                                         softWrap: true,
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
+                                      const SizedBox(height: 5),
+                                      const Text(
                                         "Harga Mulai Dari :",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -534,11 +532,11 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.start,
                                         softWrap: true,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                           height:
                                               5), // Tambahkan jarak sebelum teks harga
                                       // Row untuk menampilkan harga
-                                      Row(
+                                      const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
@@ -566,7 +564,7 @@ class HomeState extends State<Home> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       Row(
@@ -623,10 +621,10 @@ class HomeState extends State<Home> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: SizedBox(height: 10.0),
           ),
-          SliverPadding(
+          const SliverPadding(
             padding: EdgeInsets.only(left: 30.0),
             sliver: SliverToBoxAdapter(
               child: Row(
@@ -646,10 +644,10 @@ class HomeState extends State<Home> {
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             sliver: SliverToBoxAdapter(
               child: Card(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
                 elevation: 1,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -666,7 +664,7 @@ class HomeState extends State<Home> {
                         right: 0,
                         child: Container(
                           height: 23,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(5.0),
                               topRight: Radius.circular(5.0),
@@ -677,11 +675,11 @@ class HomeState extends State<Home> {
                               colors: [Color(0xFFFFFC107), Color(0xFF997404)],
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
+                                padding: EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   "Id Event : 2090",
                                   style: TextStyle(
@@ -692,7 +690,7 @@ class HomeState extends State<Home> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
+                                padding: EdgeInsets.only(right: 16.0),
                                 child: Text(
                                   "Menunggu Pembayaran",
                                   style: TextStyle(
@@ -708,7 +706,7 @@ class HomeState extends State<Home> {
                       ),
                       Center(
                         child: Container(
-                          margin: EdgeInsets.fromLTRB(15.0, 20, 0, 0),
+                          margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -716,8 +714,8 @@ class HomeState extends State<Home> {
                                 'images/event1.png',
                                 width: 80,
                               ),
-                              SizedBox(width: 10.0),
-                              VerticalDivider(
+                              const SizedBox(width: 10.0),
+                              const VerticalDivider(
                                 color: Colors.grey, // Warna garis
                                 thickness: 1, // Ketebalan garis
                                 width: 20, // Lebar garis
@@ -726,12 +724,12 @@ class HomeState extends State<Home> {
                               ),
                               Flexible(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5.0, 15, 20, 0),
+                                  padding: const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "SUNDAY SERVICE",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -741,9 +739,9 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.center,
                                         softWrap: true,
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       // Text festival
-                                      Text(
+                                      const Text(
                                         "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -753,8 +751,8 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.start,
                                         softWrap: true,
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
+                                      const SizedBox(height: 5),
+                                      const Text(
                                         "Harga Mulai Dari :",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -764,11 +762,11 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.start,
                                         softWrap: true,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                           height:
                                               5), // Tambahkan jarak sebelum teks harga
                                       // Row untuk menampilkan harga
-                                      Row(
+                                      const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
@@ -796,7 +794,7 @@ class HomeState extends State<Home> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       Row(
@@ -853,10 +851,10 @@ class HomeState extends State<Home> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: SizedBox(height: 5.0),
           ),
-          SliverPadding(
+          const SliverPadding(
             padding: EdgeInsets.only(left: 30.0),
             sliver: SliverToBoxAdapter(
               child: Row(
@@ -876,10 +874,10 @@ class HomeState extends State<Home> {
             ),
           ),
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             sliver: SliverToBoxAdapter(
               child: Card(
-                margin: EdgeInsets.symmetric(vertical: 10.0),
+                margin: const EdgeInsets.symmetric(vertical: 10.0),
                 elevation: 1,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -896,7 +894,7 @@ class HomeState extends State<Home> {
                         right: 0,
                         child: Container(
                           height: 23,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(5.0),
                               topRight: Radius.circular(5.0),
@@ -907,11 +905,11 @@ class HomeState extends State<Home> {
                               colors: [Color(0xFFFF3D3D), Color(0xFF992424)],
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
+                                padding: EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   "Id Event : 92389",
                                   style: TextStyle(
@@ -922,7 +920,7 @@ class HomeState extends State<Home> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
+                                padding: EdgeInsets.only(right: 16.0),
                                 child: Text(
                                   "Selesai",
                                   style: TextStyle(
@@ -938,7 +936,7 @@ class HomeState extends State<Home> {
                       ),
                       Center(
                         child: Container(
-                          margin: EdgeInsets.fromLTRB(15.0, 20, 0, 0),
+                          margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -946,8 +944,8 @@ class HomeState extends State<Home> {
                                 'images/event1.png',
                                 width: 80,
                               ),
-                              SizedBox(width: 10.0),
-                              VerticalDivider(
+                              const SizedBox(width: 10.0),
+                              const VerticalDivider(
                                 color: Colors.grey, // Warna garis
                                 thickness: 1, // Ketebalan garis
                                 width: 20, // Lebar garis
@@ -956,12 +954,12 @@ class HomeState extends State<Home> {
                               ),
                               Flexible(
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(5.0, 15, 20, 0),
+                                  padding: const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "SUNDAY SERVICE",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -971,9 +969,9 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.center,
                                         softWrap: true,
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       // Text festival
-                                      Text(
+                                      const Text(
                                         "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -983,8 +981,8 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.start,
                                         softWrap: true,
                                       ),
-                                      SizedBox(height: 5),
-                                      Text(
+                                      const SizedBox(height: 5),
+                                      const Text(
                                         "Harga Mulai Dari :",
                                         style: TextStyle(
                                           color: Colors.black,
@@ -994,11 +992,11 @@ class HomeState extends State<Home> {
                                         textAlign: TextAlign.start,
                                         softWrap: true,
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                           height:
                                               5), // Tambahkan jarak sebelum teks harga
                                       // Row untuk menampilkan harga
-                                      Row(
+                                      const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
@@ -1026,7 +1024,7 @@ class HomeState extends State<Home> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 5,
                                       ),
                                       Row(
@@ -1083,7 +1081,7 @@ class HomeState extends State<Home> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
+          const SliverToBoxAdapter(
             child: SizedBox(height: 5.0),
           ),
         ],
