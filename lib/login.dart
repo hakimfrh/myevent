@@ -433,9 +433,9 @@ class _LoginState extends State<Login> {
       // String text = "UID: $uid\nemail: $email\nphone: $phone\n info: $info";
       // _showAlertDialog("Firebase Login", text);
 
-
       try {
-        var response = await http.get(Uri.parse("${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
+        var response = await http.get(Uri.parse(
+            "${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
         Map<String, dynamic> json = jsonDecode(response.body);
         if (response.statusCode == 200) {
           // Request successful, parse the response body
