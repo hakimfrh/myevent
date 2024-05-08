@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myevent/database/api.dart';
+import 'package:http/http.dart' as http;
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -199,7 +201,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             height: 10.0,
           ),
           TextFormField(
-            //controller: _companyNameController,
+            controller: _emailController,
             decoration: InputDecoration(
               labelText: 'Ex : admin@gmail.com',
               border: OutlineInputBorder(
@@ -210,7 +212,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Masukkan nama perusahaan';
+                return 'Masukkan Email';
               }
               return null;
             },
@@ -372,10 +374,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ),
     );
   }
+  final TextEditingController _emailController = TextEditingController();
 
-  void _validateStep() {
+  void _validateStep() async {
     if (_currentStep == 0) {
       if (_stepOneKey.currentState!.validate()) {
+        _sendCode();
         setState(() {
           _currentStep++;
         });
@@ -402,5 +406,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   void _register() async {
     // Your registration logic here
     // Example: sending data to an API endpoint
+  }
+
+  void _sendCode() async{
+    String email = _emailController.text;
+    var response = await http.get(Uri.parse("${Api.urlSendCode}?email=$email"));
   }
 }
