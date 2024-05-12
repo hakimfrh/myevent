@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myevent/dashboard.dart';
-import 'package:myevent/event/event.dart';
+import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/firebase_options.dart';
 import 'package:myevent/login.dart';
 import 'package:myevent/forgotpassword/forgotpassword.dart';
+import 'package:myevent/navigation_drawer.dart';
 import 'package:myevent/register.dart';
 import 'package:get/get.dart';
 
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter GetX Routing Example',
       debugShowCheckedModeBanner: false,
       // Define initial route
-      initialRoute: '/event',
+      initialRoute: '/dashboard',
       // Define routes
       getPages: [
         // Example of a named route
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/dashboard', page: () => Dashboard()),
         GetPage(name: '/forgotpassword', page: () => ForgotPassword()),
         GetPage(name: '/event', page: () => Event()),
+        GetPage(name: '/listevent', page: () => ListEvent()),
       ],
     );
   }

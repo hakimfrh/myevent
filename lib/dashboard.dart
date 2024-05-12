@@ -16,7 +16,7 @@ class DashboardState extends State<Dashboard> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Home(),
-    const NavDrawer(),
+    const ListEvent(),
     const UserList(),
   ];
 
@@ -96,8 +96,9 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // final user = ModalRoute.of(context)!.settings.arguments as User;
-    final User user = Get.arguments as User; //ni jug komen dulu buat desain
-    String _selectedFilter = ''; // Variabel state untuk menyimpan nilai yang dipilih
+    // final User user = Get.arguments as User; //ni jug komen dulu buat desain
+    String _selectedFilter =
+        ''; // Variabel state untuk menyimpan nilai yang dipilih
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -153,8 +154,8 @@ class HomeState extends State<Home> {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              user.name, //ini aku komen dulu buat desainnya
-                              // 'Kepeng',
+                              // user.name
+                              'Kepeng',
                               style: const TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 30,
@@ -494,7 +495,8 @@ class HomeState extends State<Home> {
                               ),
                               Flexible(
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -724,7 +726,8 @@ class HomeState extends State<Home> {
                               ),
                               Flexible(
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -954,7 +957,8 @@ class HomeState extends State<Home> {
                               ),
                               Flexible(
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
