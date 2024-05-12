@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/getx_state.dart';
+import 'package:myevent/model/card_event.dart';
 import 'package:myevent/model/user.dart';
 import 'package:myevent/navigation_drawer.dart';
 import 'package:myevent/user_list.dart';
+import 'model/event.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -109,6 +112,33 @@ class HomeState extends State<Home> {
     // final User user = Get.arguments as User; //ni jug komen dulu buat desain
     String _selectedFilter =
         ''; // Variabel state untuk menyimpan nilai yang dipilih
+
+    // List<Eventt> eventList = [];
+    List<Eventt> eventList = [
+      Eventt(
+          idEvent: '123123',
+          status: 'selesai',
+          tanggal: '28 Februari 2023',
+          namaEvent: 'Gatau',
+          deskripsiEvent: 'gatauu',
+          hargaMin: '250.000',
+          hargaMax: '500.000',
+          lokasi: 'jember',
+          noWa: '12308120938123',
+          cover: 'logo.png'),
+      Eventt(
+          idEvent: '456456',
+          status: 'diundur',
+          tanggal: '40 Februari 2023',
+          namaEvent: 'Gatau',
+          deskripsiEvent: 'gatauu',
+          hargaMin: '300.000',
+          hargaMax: '800.000',
+          lokasi: 'Jakarta',
+          noWa: '12308120938123',
+          cover: 'logo.png'),
+    ];
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -183,12 +213,12 @@ class HomeState extends State<Home> {
                   ),
                   const Spacer(),
                   const SizedBox(width: 20), // Add spacing between columns
-                  const Padding(
-                    padding: EdgeInsets.only(right: 0.0, top: 27.0),
+                   Padding(
+                    padding: const EdgeInsets.only(right: 0.0, top: 27.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(
+                        const Row(
                           children: [
                             Text(
                               'Bisnis : ',
@@ -199,8 +229,7 @@ class HomeState extends State<Home> {
                             ),
                           ],
                         ),
-                        // Text(user.businessName),
-                        Text('Cakei')
+                        Text(user.businessName),
                       ],
                     ),
                   ), // Add spacing between columns
@@ -404,695 +433,14 @@ class HomeState extends State<Home> {
               ),
             ),
           ),
-          const SliverPadding(
-            padding: EdgeInsets.only(left: 30.0),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                children: [
-                  Text(
-                    "28 Agustus 2013",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 10,
-                    ),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            sliver: SliverToBoxAdapter(
-              child: Card(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                color: Colors.white,
-                child: SizedBox(
-                  width: 350,
-                  height: 200,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          height: 23,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              topRight: Radius.circular(5.0),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xFFF35AE24), Color(0xFF16480F)],
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 16.0),
-                                child: Text(
-                                  "Id Event : 92389",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 16.0),
-                                child: Text(
-                                  "Selesai",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'images/event1.png',
-                                width: 80,
-                              ),
-                              const SizedBox(width: 10.0),
-                              const VerticalDivider(
-                                color: Colors.grey, // Warna garis
-                                thickness: 1, // Ketebalan garis
-                                width: 20, // Lebar garis
-                                indent: 30, // Jarak dari atas
-                                endIndent: 30, // Jarak dari bawah
-                              ),
-                              Flexible(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "SUNDAY SERVICE",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 19,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      // Text festival
-                                      const Text(
-                                        "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 10,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      const Text(
-                                        "Harga Mulai Dari :",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(
-                                          height:
-                                              5), // Tambahkan jarak sebelum teks harga
-                                      // Row untuk menampilkan harga
-                                      const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // Teks harga pertama
-                                          Text(
-                                            "Rp. 150.000",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            softWrap: true,
-                                          ),
-                                          // Teks harga kedua
-                                          Text(
-                                            "Rp. 300.000",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            softWrap: true,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Image.asset(
-                                            'images/lokasi.png',
-                                            width:
-                                                8, // Add the desired width here
-                                          ),
-                                          const SizedBox(
-                                              width:
-                                                  5), // Tambahkan jarak antara gambar dan teks
-                                          const Text(
-                                            "Jember, IDN",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Rubik',
-                                            ),
-                                          ),
-                                          const Spacer(), // Spacer untuk mendorong teks harga ke sisi kanan
-                                          // Teks harga
-                                          Image.asset(
-                                            'images/wa.png',
-                                            width:
-                                                10, // Add the desired width here
-                                          ),
-                                          const SizedBox(
-                                              width:
-                                                  5), // Tambahkan jarak antara gambar dan teks
-                                          const Text(
-                                            "081726371286",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Rubik',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 10.0),
-          ),
-          const SliverPadding(
-            padding: EdgeInsets.only(left: 30.0),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                children: [
-                  Text(
-                    "28 Agustus 2013",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 10,
-                    ),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            sliver: SliverToBoxAdapter(
-              child: Card(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                color: Colors.white,
-                child: SizedBox(
-                  width: 350,
-                  height: 200,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          height: 23,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              topRight: Radius.circular(5.0),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xFFFFFC107), Color(0xFF997404)],
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 16.0),
-                                child: Text(
-                                  "Id Event : 2090",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 16.0),
-                                child: Text(
-                                  "Menunggu Pembayaran",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'images/event1.png',
-                                width: 80,
-                              ),
-                              const SizedBox(width: 10.0),
-                              const VerticalDivider(
-                                color: Colors.grey, // Warna garis
-                                thickness: 1, // Ketebalan garis
-                                width: 20, // Lebar garis
-                                indent: 30, // Jarak dari atas
-                                endIndent: 30, // Jarak dari bawah
-                              ),
-                              Flexible(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "SUNDAY SERVICE",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 19,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      // Text festival
-                                      const Text(
-                                        "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 10,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      const Text(
-                                        "Harga Mulai Dari :",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(
-                                          height:
-                                              5), // Tambahkan jarak sebelum teks harga
-                                      // Row untuk menampilkan harga
-                                      const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // Teks harga pertama
-                                          Text(
-                                            "Rp. 150.000",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            softWrap: true,
-                                          ),
-                                          // Teks harga kedua
-                                          Text(
-                                            "Rp. 300.000",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            softWrap: true,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Image.asset(
-                                            'images/lokasi.png',
-                                            width:
-                                                8, // Add the desired width here
-                                          ),
-                                          const SizedBox(
-                                              width:
-                                                  5), // Tambahkan jarak antara gambar dan teks
-                                          const Text(
-                                            "Jember, IDN",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Rubik',
-                                            ),
-                                          ),
-                                          const Spacer(), // Spacer untuk mendorong teks harga ke sisi kanan
-                                          // Teks harga
-                                          Image.asset(
-                                            'images/wa.png',
-                                            width:
-                                                10, // Add the desired width here
-                                          ),
-                                          const SizedBox(
-                                              width:
-                                                  5), // Tambahkan jarak antara gambar dan teks
-                                          const Text(
-                                            "081726371286",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Rubik',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 5.0),
-          ),
-          const SliverPadding(
-            padding: EdgeInsets.only(left: 30.0),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                children: [
-                  Text(
-                    "28 September 2013",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 10,
-                    ),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            sliver: SliverToBoxAdapter(
-              child: Card(
-                margin: const EdgeInsets.symmetric(vertical: 10.0),
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                color: Colors.white,
-                child: SizedBox(
-                  width: 350,
-                  height: 200,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          height: 23,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              topRight: Radius.circular(5.0),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xFFFF3D3D), Color(0xFF992424)],
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 16.0),
-                                child: Text(
-                                  "Id Event : 92389",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 16.0),
-                                child: Text(
-                                  "Selesai",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Container(
-                          margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                'images/event1.png',
-                                width: 80,
-                              ),
-                              const SizedBox(width: 10.0),
-                              const VerticalDivider(
-                                color: Colors.grey, // Warna garis
-                                thickness: 1, // Ketebalan garis
-                                width: 20, // Lebar garis
-                                indent: 30, // Jarak dari atas
-                                endIndent: 30, // Jarak dari bawah
-                              ),
-                              Flexible(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "SUNDAY SERVICE",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 19,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      // Text festival
-                                      const Text(
-                                        "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 10,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(height: 5),
-                                      const Text(
-                                        "Harga Mulai Dari :",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 10,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        softWrap: true,
-                                      ),
-                                      const SizedBox(
-                                          height:
-                                              5), // Tambahkan jarak sebelum teks harga
-                                      // Row untuk menampilkan harga
-                                      const Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // Teks harga pertama
-                                          Text(
-                                            "Rp. 150.000",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            softWrap: true,
-                                          ),
-                                          // Teks harga kedua
-                                          Text(
-                                            "Rp. 300.000",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            softWrap: true,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Image.asset(
-                                            'images/lokasi.png',
-                                            width:
-                                                8, // Add the desired width here
-                                          ),
-                                          const SizedBox(
-                                              width:
-                                                  5), // Tambahkan jarak antara gambar dan teks
-                                          const Text(
-                                            "Jember, IDN",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Rubik',
-                                            ),
-                                          ),
-                                          const Spacer(), // Spacer untuk mendorong teks harga ke sisi kanan
-                                          // Teks harga
-                                          Image.asset(
-                                            'images/wa.png',
-                                            width:
-                                                10, // Add the desired width here
-                                          ),
-                                          const SizedBox(
-                                              width:
-                                                  5), // Tambahkan jarak antara gambar dan teks
-                                          const Text(
-                                            "081726371286",
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              fontFamily: 'Rubik',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          SliverList.builder(
+            // Provide the number of items in the list
+            itemCount: eventList.length,
+            // Build each list item dynamically
+            itemBuilder: (BuildContext context, int index) {
+              Eventt event = eventList[index];
+              return CardEvent(event: event);
+            },
           ),
           const SliverToBoxAdapter(
             child: SizedBox(height: 5.0),

@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-class Event {
+class Eventt {
   String idEvent;
   String status;
   String tanggal;
@@ -11,7 +11,7 @@ class Event {
   String noWa;
   String cover;
   
-  Event({
+  Eventt({
     required this.idEvent,
     required this.status,
     required this.tanggal,
