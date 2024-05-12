@@ -96,6 +96,16 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // final user = ModalRoute.of(context)!.settings.arguments as User;
+    final User user = User(
+        id: 1,
+        name: 'Mamang',
+        phone: '01923901283',
+        email: 'mamang@gmail.com',
+        username: 'mamang123',
+        password: 'mamang123',
+        businessName: 'mamangCorp',
+        businessLocation: 'Jember',
+        businessDescription: 'gatau ini kantor apa');
     // final User user = Get.arguments as User; //ni jug komen dulu buat desain
     String _selectedFilter =
         ''; // Variabel state untuk menyimpan nilai yang dipilih
@@ -154,8 +164,7 @@ class HomeState extends State<Home> {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              // user.name
-                              'Kepeng',
+                              user.name,
                               style: const TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 30,
