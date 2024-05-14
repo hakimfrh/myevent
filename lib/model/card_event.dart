@@ -11,7 +11,7 @@ class CardEvent extends StatelessWidget {
     String eventColor;
     String status = event.status.toLowerCase();
     if(status == 'selesai'){eventColor = '1';}
-    else if(status == 'pembayaran'){eventColor = '2';}
+    else if(status.contains('menunggu')){eventColor = '2';}
     else if(status == 'ditolak'){eventColor = '3';}
     else {eventColor = '3';}
 
