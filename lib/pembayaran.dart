@@ -1,25 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:myevent/database/api.dart';
-import 'package:http/http.dart' as http;
 
-class UserList extends StatefulWidget {
-  const UserList({super.key});
+class Pembayaran extends StatefulWidget {
+  const Pembayaran({super.key});
 
   @override
-  State<UserList> createState() => _UserListState();
+  State<Pembayaran> createState() => _PembayaranState();
 }
 
 List<bool> _isSelected = [false, false, false, false];
-final List<String> categories = [
-  'Semua',
-  'Ditolak',
-  'Menunggu Pembayaran',
-  'Selesai'
-];
+final List<String> categories = ['Semua', 'Ditolak', 'Menunggu Pembayaran'];
 
-class _UserListState extends State<UserList> {
+class _PembayaranState extends State<Pembayaran> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,17 +18,14 @@ class _UserListState extends State<UserList> {
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.only(left: 10, right: 0, top: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(categories.length, (index) {
+              children: List.generate(_isSelected.length, (index) {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      // Only allow one category to be selected at a time
-                      for (int i = 0; i < _isSelected.length; i++) {
-                        _isSelected[i] = i == index;
-                      }
+                      // Update the selected state of the tapped button
+                      _isSelected[index] = !_isSelected[index];
                     });
                   },
                   child: Container(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/getx_state.dart';
-import 'package:myevent/model/card_event.dart';
+import 'package:myevent/event/card_event.dart';
 import 'package:myevent/model/user.dart';
 import 'package:myevent/navigation_drawer.dart';
 import 'package:myevent/user_list.dart';
@@ -120,7 +120,8 @@ class HomeState extends State<Home> {
           status: 'Selesai',
           tanggal: '28 Februari 2023',
           namaEvent: 'Sunday Services',
-          deskripsiEvent: 'Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.',
+          deskripsiEvent:
+              'Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.',
           hargaMin: '250.000',
           hargaMax: '500.000',
           lokasi: 'jember',
@@ -131,7 +132,8 @@ class HomeState extends State<Home> {
           status: 'Menunggu Pembayaran',
           tanggal: '40 Februari 2023',
           namaEvent: 'Summer Van Tour',
-          deskripsiEvent: 'Konser hura hura bersama artis terkenal. Dimeriahkan oleh Coldplay, Ed-Shetan, dan Puyung Teduh.',
+          deskripsiEvent:
+              'Konser hura hura bersama artis terkenal. Dimeriahkan oleh Coldplay, Ed-Shetan, dan Puyung Teduh.',
           hargaMin: '300.000',
           hargaMax: '800.000',
           lokasi: 'Jakarta',
@@ -224,7 +226,7 @@ class HomeState extends State<Home> {
                   ),
                   const Spacer(),
                   const SizedBox(width: 20), // Add spacing between columns
-                   Padding(
+                  Padding(
                     padding: const EdgeInsets.only(right: 0.0, top: 27.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
