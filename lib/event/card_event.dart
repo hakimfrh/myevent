@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/event.dart';
 
-class CardEvent extends StatelessWidget {
+class CardEvent extends StatefulWidget {
   final Eventt event;
   const CardEvent({super.key, required this.event});
 
@@ -258,5 +258,25 @@ class CardEvent extends StatelessWidget {
         )
       ],
     );
+  }
+  
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
+}
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

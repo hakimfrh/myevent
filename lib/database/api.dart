@@ -1,5 +1,5 @@
 class Api {
-  static const String serverIp = "http://10.10.180.227:8000";
+  static const String serverIp = "http://192.168.1.2:8000";
 
   static const String urlLogin = "$serverIp/api/login";
   static const String urlContinueGoogle = "$serverIp/api/continuegoogle";
