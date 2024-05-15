@@ -8,6 +8,7 @@ import 'package:myevent/forgotpassword/forgotpassword.dart';
 import 'package:myevent/navigation_drawer.dart';
 import 'package:myevent/register.dart';
 import 'package:myevent/pembayaran.dart';
+import 'package:myevent/user_list.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter GetX Routing Example',
       debugShowCheckedModeBanner: false,
       // Define initial route
-      initialRoute: '/login',
+      initialRoute: '/dashboard',
       // Define routes
       getPages: [
         // Example of a named route
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/event', page: () => Event()),
         GetPage(name: '/listevent', page: () => ListEvent()),
         GetPage(name: '/pembayaran', page: () => Pembayaran()),
+        GetPage(name: '/riwayat', page: () => UserList()),
       ],
     );
   }
