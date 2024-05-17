@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter GetX Routing Example',
       debugShowCheckedModeBanner: false,
       // Define initial route
-      initialRoute: '/dashboard',
+      initialRoute: '/pembayaran',
       // Define routes
       getPages: [
         // Example of a named route

@@ -25,6 +25,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.0"
+  another_stepper:
+    dependency: "direct main"
+    description:
+      name: another_stepper
+      sha256: "04f5166c57f2412c612b17101e8a3d819f210c53f6bc1b5be541dc4c6987c681"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.2"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: ecf4273855368121b1caed0d10d4513c7241dfc813f7d3c8933b36622ae9b265
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.5.1"
   args:
     dependency: transitive
     description:
@@ -193,6 +209,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.6"
+  easy_stepper:
+    dependency: "direct main"
+    description:
+      name: easy_stepper
+      sha256: "8d1d9f048f6a079dcfa98cea56650d77976f21a50033bf99dd0d82046e12060b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.4"
   fake_async:
     dependency: transitive
     description:
@@ -368,6 +392,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  horizontal_stepper_flutter:
+    dependency: "direct main"
+    description:
+      name: horizontal_stepper_flutter
+      sha256: bd7f3c7efcffe3ce9336a4528def4f1e85b68c9de097fbff186ca54713253449
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   http:
     dependency: "direct main"
     description:
@@ -472,6 +504,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  lottie:
+    dependency: transitive
+    description:
+      name: lottie
+      sha256: "46def1e76c4fbfd4643e823980112cfe94a2ba1d9152fe54701c0bf30be4f4cd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
   matcher:
     dependency: transitive
     description:
