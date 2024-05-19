@@ -7,14 +7,17 @@ environment:
   sdk: '>=3.2.6 <4.0.0'
 
 dependencies:
+  another_stepper: ^1.2.2
   change_app_package_name: ^1.1.0
   dropdown_search: ^5.0.6
+  easy_stepper: ^0.8.4
   firebase_auth: ^4.17.8
   firebase_core: ^2.27.0
   flutter:
     sdk: flutter
   get: ^4.6.6
   google_sign_in: ^6.2.1
+  horizontal_stepper_flutter: ^1.0.3
   http: ^1.2.0
   intl: ^0.19.0
   json_serializable: ^6.7.1
