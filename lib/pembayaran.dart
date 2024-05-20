@@ -163,9 +163,17 @@ class _PembayaranState extends State<Pembayaran> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Konfirmasi Pemesanan'),
-        ),
+        appBar:AppBar(
+  leading: IconButton(
+    icon: Icon(Icons.arrow_back),
+    onPressed: () {
+      // Action to perform when back arrow is pressed
+      Navigator.pop(context);
+    },
+  ),
+  title: const Text('Konfirmasi Pemesanan'),
+)
+,
         body: Column(
           children: [
             Padding(

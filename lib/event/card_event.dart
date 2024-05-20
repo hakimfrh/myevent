@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:myevent/database/api.dart';
 import '../model/eventt.dart';
-
 
 class CardEvent extends StatefulWidget {
   const CardEvent({super.key, required this.event});
@@ -12,7 +14,18 @@ class CardEvent extends StatefulWidget {
 
 class CardEventState extends State<CardEvent> {
   Eventt event;
+  String imageData = '';
   CardEventState({required this.event});
+
+  @override
+  void initState() {
+    super.initState();
+    fetchImage().then((data) {
+      setState(() {
+        imageData = data;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,10 +139,16 @@ class CardEventState extends State<CardEvent> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Image.asset(
-                            'images/event1.png',
-                            width: 80,
-                          ),
+                          // Image.asset(
+                          //   'images/event1.png',
+                          //   width: 80,
+                          // ),
+                          imageData != ''
+                              ? Image.memory(
+                                  base64Decode(imageData),
+                                  fit: BoxFit.cover,
+                                )
+                              : CircularProgressIndicator(),
                           const SizedBox(width: 10.0),
                           const VerticalDivider(
                             color: Colors.grey, // Warna garis
@@ -189,8 +208,8 @@ class CardEventState extends State<CardEvent> {
                                     children: [
                                       // Teks harga pertama
                                       Text(
-                                        // event.hargaMin,
-                                        '123',
+                                        event.hargaMin,
+                                        // '123',
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -201,8 +220,8 @@ class CardEventState extends State<CardEvent> {
                                       ),
                                       // Teks harga kedua
                                       Text(
-                                        // event.hargaMax,
-                                        '123',
+                                        event.hargaMax,
+                                        // '123',
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -244,7 +263,7 @@ class CardEventState extends State<CardEvent> {
                                           width:
                                               5), // Tambahkan jarak antara gambar dan teks
                                       Text(
-                                        event.noWa??'',
+                                        event.noWa ?? '',
                                         style: const TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
@@ -269,10 +288,14 @@ class CardEventState extends State<CardEvent> {
       ],
     );
   }
-  
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
+
+  Future<String> fetchImage() async {
+    final response =
+        await http.get(Uri.parse('${Api.urlImage}/${event.cover}?w=96&h=128'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['base64Image'];
+    } else {
+      throw Exception('Failed to load image');
+    }
   }
 }

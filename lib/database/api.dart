@@ -7,4 +7,5 @@ class Api {
   static const String urlUpdatePassword = "$serverIp/api/update_password";
   static const String urlUserList = "$serverIp/api/getalluser";
   static const String urlSendCode = "$serverIp/api/sendcode";
+  static const String urlImage = "$serverIp/api/image";
 }

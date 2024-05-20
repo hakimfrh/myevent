@@ -33,7 +33,7 @@ List<Eventt> eventList = [
       hargaMax: '500.000',
       lokasi: 'jember',
       noWa: '12308128123',
-      cover: 'logo.png'),
+      cover: 'event2.png'),
   Eventt(
       idEvent: '456456',
       status: 'Menunggu Pembayaran',
@@ -45,7 +45,7 @@ List<Eventt> eventList = [
       hargaMax: '800.000',
       lokasi: 'Jakarta',
       noWa: '12308120123',
-      cover: 'logo.png'),
+      cover: 'event1.png'),
   Eventt(
       idEvent: '789789',
       status: 'Ditolak',
@@ -56,7 +56,7 @@ List<Eventt> eventList = [
       hargaMax: '800.000',
       lokasi: 'Malang',
       noWa: '12308120123',
-      cover: 'logo.png'),
+      cover: 'event2.png'),
 ];
 
 class _UserListState extends State<UserList> {

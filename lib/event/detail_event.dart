@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myevent/pembayaran.dart';
 import 'dart:ui';
 
 class Event extends StatefulWidget {
@@ -625,18 +626,21 @@ void _showBottomSheet(BuildContext context) {
                           bottom: 10,
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                // Aksi untuk tombol "Terapkan"
+                                Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Pembayaran()),
+                        );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
                                     Color(0xFF512E67), // Warna ungu
                                 fixedSize:
-                                    Size(320, 50), // Lebar dan tinggi tombol
+                                    Size(370, 50), // Lebar dan tinggi tombol
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.circular(10), // Radius sudut

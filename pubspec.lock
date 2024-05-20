@@ -213,10 +213,10 @@ packages:
     dependency: "direct main"
     description:
       name: easy_stepper
-      sha256: "8d1d9f048f6a079dcfa98cea56650d77976f21a50033bf99dd0d82046e12060b"
+      sha256: d09e974ec9148480072f8a7d3b0779dfdbc1a3ec1ff7daa7fbda95b0c1fe7453
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.4"
+    version: "0.8.5"
   fake_async:
     dependency: transitive
     description:
@@ -463,11 +463,7 @@ packages:
       sha256: ea1432d167339ea9b5bb153f0571d0039607a873d6e04e0117af043f14a1fd4b
       url: "https://pub.dev"
     source: hosted
-<<<<<<< Updated upstream
-    version: "6.7.1"
-=======
     version: "6.8.0"
->>>>>>> Stashed changes
   lints:
     dependency: transitive
     description:
@@ -488,10 +484,10 @@ packages:
     dependency: transitive
     description:
       name: lottie
-      sha256: "46def1e76c4fbfd4643e823980112cfe94a2ba1d9152fe54701c0bf30be4f4cd"
+      sha256: "6a24ade5d3d918c306bb1c21a6b9a04aab0489d51a2582522eea820b4093b62b"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.2"
   matcher:
     dependency: transitive
     description:
