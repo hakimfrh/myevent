@@ -6,7 +6,7 @@ import 'package:myevent/event/card_event.dart';
 import 'package:myevent/model/user.dart';
 import 'package:myevent/navigation_drawer.dart';
 import 'package:myevent/user_list.dart';
-import 'model/event.dart';
+import 'model/eventt.dart';
 
 class Dashboard extends StatefulWidget {
   @override

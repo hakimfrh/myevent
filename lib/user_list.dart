@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:myevent/database/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:myevent/event/card_event.dart';
-import 'package:myevent/model/event.dart';
+import 'package:myevent/model/eventt.dart';
 
 class UserList extends StatefulWidget {
   const UserList({super.key});

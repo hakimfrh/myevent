@@ -3,7 +3,7 @@ import 'package:another_stepper/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myevent/event/card_event.dart';
-import 'package:myevent/model/event.dart';
+import 'package:myevent/model/eventt.dart';
 
 void main() {
   runApp(const Pembayaran());

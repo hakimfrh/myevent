@@ -5,23 +5,25 @@ part 'user.g.dart';
 @JsonSerializable()
 class User {
     int id;
+    @JsonKey(name: 'nama_lengkap')
     String name;
+    @JsonKey(name: 'no_telp')
     String phone;
     String email;
     String username;
     String password;
-    @JsonKey(name: 'business_name')
+    @JsonKey(name: 'nama_perusahaan')
     String businessName;
-    @JsonKey(name: 'business_location')
+    @JsonKey(name: 'alamat_perusahaan')
     String businessLocation;
-    @JsonKey(name: 'business_description')
+    @JsonKey(name: 'deskripsi_perusahaan')
     String businessDescription;
-    @JsonKey(name: 'email_verified_at')
-    DateTime? emailVerifiedAt;
-    @JsonKey(name: 'created_at')
-    DateTime? createdAt;
-    @JsonKey(name: 'updated_at')
-    DateTime? updatedAt;
+    // @JsonKey(name: 'email_verified_at')
+    // DateTime? emailVerifiedAt;
+    // @JsonKey(name: 'created_at')
+    // DateTime? createdAt;
+    // @JsonKey(name: 'updated_at')
+    // DateTime? updatedAt;
 
     User({
         this.id = 0,
@@ -33,9 +35,9 @@ class User {
         required this.businessName,
         required this.businessLocation,
         required this.businessDescription,
-        this.emailVerifiedAt,
-        this.createdAt,
-        this.updatedAt,
+        // this.emailVerifiedAt,
+        // this.createdAt,
+        // this.updatedAt,
     });
 
 factory User.fromMap(Map<String, dynamic> json) => _$UserFromJson(json);

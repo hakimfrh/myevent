@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../model/event.dart';
+import '../model/eventt.dart';
 
 
 class CardEvent extends StatefulWidget {
@@ -189,7 +189,8 @@ class CardEventState extends State<CardEvent> {
                                     children: [
                                       // Teks harga pertama
                                       Text(
-                                        event.hargaMin,
+                                        // event.hargaMin,
+                                        '123',
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -200,7 +201,8 @@ class CardEventState extends State<CardEvent> {
                                       ),
                                       // Teks harga kedua
                                       Text(
-                                        event.hargaMax,
+                                        // event.hargaMax,
+                                        '123',
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold,
@@ -242,7 +244,7 @@ class CardEventState extends State<CardEvent> {
                                           width:
                                               5), // Tambahkan jarak antara gambar dan teks
                                       Text(
-                                        event.noWa,
+                                        event.noWa??'',
                                         style: const TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,

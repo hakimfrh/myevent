@@ -619,8 +619,10 @@ class _RegisterState extends State<Register> {
           await http.post(Uri.parse(Api.urlRegister), body: formData);
       if (response.statusCode == 200) {
         // Request successful, parse the response body
-        _showAlertLogout(
-            response.statusCode.toString(), response.body.toString());
+        // _showAlertLogout(response.statusCode.toString(), response.body.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registrasi Berhasil. Silahkan Login")));
+            Get.offNamed('/login');
       } else {
         // Request failed, handle error
         Map<String, dynamic> json = jsonDecode(response.body);
