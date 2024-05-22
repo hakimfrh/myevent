@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:myevent/database/api.dart';
 import 'package:http/http.dart' as http;
-import 'package:myevent/event/card_event.dart';
+import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/eventt.dart';
+import 'package:myevent/model/order.dart';
 
 class UserList extends StatefulWidget {
   const UserList({super.key});
@@ -21,43 +22,7 @@ final List<String> categories = [
   'Selesai'
 ];
 
-List<Eventt> eventList = [
-  Eventt(
-      idEvent: '123123',
-      status: 'Selesai',
-      tanggal: '28 Februari 2023',
-      namaEvent: 'Sunday Services',
-      deskripsiEvent:
-          'Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.',
-      hargaMin: '250.000',
-      hargaMax: '500.000',
-      lokasi: 'jember',
-      noWa: '12308128123',
-      cover: 'event2.png'),
-  Eventt(
-      idEvent: '456456',
-      status: 'Menunggu Pembayaran',
-      tanggal: '40 Februari 2023',
-      namaEvent: 'Summer Van Tour',
-      deskripsiEvent:
-          'Konser hura hura bersama artis terkenal. Dimeriahkan oleh Coldplay, Ed-Shetan, dan Puyung Teduh.',
-      hargaMin: '300.000',
-      hargaMax: '800.000',
-      lokasi: 'Jakarta',
-      noWa: '12308120123',
-      cover: 'event1.png'),
-  Eventt(
-      idEvent: '789789',
-      status: 'Ditolak',
-      tanggal: '10 Februari 2023',
-      namaEvent: 'Black Parade',
-      deskripsiEvent: 'Ajang festival peringatan hari hitam sedunia',
-      hargaMin: '300.000',
-      hargaMax: '800.000',
-      lokasi: 'Malang',
-      noWa: '12308120123',
-      cover: 'event2.png'),
-];
+List<Order> eventList = [];
 
 class _UserListState extends State<UserList> {
   @override
@@ -107,8 +72,8 @@ class _UserListState extends State<UserList> {
             child: ListView.builder(
               itemCount: eventList.length, // Jumlah total item dalam daftar
               itemBuilder: (context, index) {
-                Eventt event = eventList[index];
-                return CardEvent(event: event);
+                Order event = eventList[index];
+                return CardEventOrder(order: event);
               },
             ),
           )

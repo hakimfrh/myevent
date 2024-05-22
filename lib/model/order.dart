@@ -9,8 +9,10 @@ part 'order.g.dart';
 class Order {
   @JsonKey(name: 'id_order')
   final int idOrder;
-  @JsonKey(name: 'status_pembayaran')
-  final String statusPembayaran;
+  @JsonKey(name: 'status_order')
+  final String statusOrder;
+  @JsonKey(name: 'nomor_booth')
+  final String nomorBooth;
   @JsonKey(name: 'harga_bayar')
   final int hargaBayar;
   @JsonKey(name: 'img_bukti_transfer')
@@ -23,10 +25,10 @@ class Order {
   @JsonKey(name: 'id_booth')
   final int idBooth;
   final Booth? booth;
-  
   Order({
     required this.idOrder,
-    required this.statusPembayaran,
+    required this.statusOrder,
+    required this.nomorBooth,
     required this.hargaBayar,
     required this.imgBuktiTransfer,
     required this.tglOrder,
@@ -35,6 +37,8 @@ class Order {
     required this.idBooth,
     this.booth,
   });
+  
+ 
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
 

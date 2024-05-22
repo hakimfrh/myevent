@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myevent/pembayaran.dart';
 import 'dart:ui';
 
@@ -38,10 +39,9 @@ class _EventState extends State<Event> {
                       color: Colors.white.withOpacity(0.20),
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        Navigator.pop(
-                            context); // Navigate back to previous screen
+                        Get.back(); // Navigate back to previous screen
                       },
                       color: Colors.black,
                     ),
@@ -57,8 +57,8 @@ class _EventState extends State<Event> {
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Container(
-                      margin: EdgeInsets.only(left: 0.0, bottom: 0.0),
-                      child: Text(
+                      margin: const EdgeInsets.only(left: 0.0, bottom: 0.0),
+                      child: const Text(
                         'SUNDAY SERVICE!',
                         style: TextStyle(
                           fontSize: 18.0,
@@ -71,8 +71,8 @@ class _EventState extends State<Event> {
                   Align(
                     alignment: Alignment.bottomLeft,
                     child: Container(
-                      margin: EdgeInsets.only(left: 0.0, bottom: 20.0),
-                      child: Row(
+                      margin: const EdgeInsets.only(left: 0.0, bottom: 20.0),
+                      child: const Row(
                         children: [
                           Icon(Icons.location_pin,
                               color: Colors.red, size: 10), // Example icon
@@ -121,7 +121,7 @@ class _EventState extends State<Event> {
                             color: Colors.black.withOpacity(0.6),
                             spreadRadius: 2,
                             blurRadius: 30,
-                            offset: Offset(0, 200),
+                            offset: const Offset(0, 200),
                           ),
                         ],
                       ),
@@ -140,7 +140,7 @@ class _EventState extends State<Event> {
               child: Container(
                 height: 32.0,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(32.0),
@@ -161,7 +161,7 @@ class _EventState extends State<Event> {
           SliverList(
             delegate: SliverChildListDelegate(
               [
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -258,12 +258,12 @@ class _EventState extends State<Event> {
                   ],
                 ),
 
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          right: 25.0, left: 25.0, top: 10.0),
+                      padding:
+                          EdgeInsets.only(right: 25.0, left: 25.0, top: 10.0),
                       child: Text(
                         'Festival yang menggabungkan beragam bentuk seni, meliputi seni visual, pertunjukan teater, instalasi seni, serta genre musik yang beragam, diselaraskan dengan serangkaian aktivitas hijau seperti workshop daur ulang, pameran produk ramah lingkungan, dan demonstrasi praktik-praktik berkelanjutan dalam kehidupan sehari-hari. Tujuan utamanya adalah untuk meningkatkan kesadaran akan isu-isu lingkungan, mendorong kreativitas dalam membangun solusi-solusi inovatif, serta menginspirasi tindakan nyata yang mendukung keberlanjutan lingkungan.',
                         style: TextStyle(
@@ -279,16 +279,16 @@ class _EventState extends State<Event> {
                   height: 1,
                   width: 10, // Height of the divider
                   color: Colors.grey, // Color of the divider
-                  margin: EdgeInsets.symmetric(
+                  margin: const EdgeInsets.symmetric(
                       vertical: 10.0,
                       horizontal: 20), // Margin around the divider
                 ),
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          right: 0.0, left: 25.0, top: 10.0),
+                      padding:
+                          EdgeInsets.only(right: 0.0, left: 25.0, top: 10.0),
                       child: Text(
                         'Booth : ',
                         style: TextStyle(
@@ -306,7 +306,7 @@ class _EventState extends State<Event> {
                   child: Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                             left: 20, top: 10.0), // Add margin here
                         width: 180.0, // Specify the width here
                         height: 100.0, // Specify the height here
@@ -316,12 +316,13 @@ class _EventState extends State<Event> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(left: 20, top: 7.0),
+                                padding:
+                                    const EdgeInsets.only(left: 20, top: 7.0),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    const Text(
                                       'Booth A :',
                                       style: TextStyle(
                                           fontSize: 14.0,
@@ -340,11 +341,11 @@ class _EventState extends State<Event> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                             left: 20, top: 10.0), // Add margin here
                         width: 180.0, // Specify the width here
                         height: 100.0, // Specify the height here
-                        child: Card(
+                        child: const Card(
                           child: Center(
                             child: Text(
                               'Besok Selesai',
@@ -358,12 +359,12 @@ class _EventState extends State<Event> {
                   ),
                 ),
 
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          right: 25.0, left: 25.0, top: 10.0),
+                      padding:
+                          EdgeInsets.only(right: 25.0, left: 25.0, top: 10.0),
                       child: Text(
                         'Booth ini tersedia dalam berbagai ukuran dan posisi strategis di sekitar area festival. Fasilitas yang disediakan termasuk : area pameran dengan staf yang ramah perlengkapan promosi, koneksi listrik dan Wi-Fi. Tambahan peralatan seperti layar proyeksi atau sound system juga tersedia.',
                         style: TextStyle(
@@ -379,17 +380,17 @@ class _EventState extends State<Event> {
                   height: 1,
                   width: 10, // Height of the divider
                   color: Colors.grey, // Color of the divider
-                  margin: EdgeInsets.symmetric(
+                  margin: const EdgeInsets.symmetric(
                       vertical: 10.0,
                       horizontal: 20), // Margin around the divider
                 ),
 
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(
-                          right: 0.0, left: 25.0, top: 10.0),
+                      padding:
+                          EdgeInsets.only(right: 0.0, left: 25.0, top: 10.0),
                       child: Text(
                         'Denah Event : ',
                         style: TextStyle(
@@ -405,7 +406,7 @@ class _EventState extends State<Event> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [Image.asset('images/denah_booth.png')],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 90,
                 ),
 
@@ -425,9 +426,15 @@ class _EventState extends State<Event> {
             _showBottomSheet(
                 context); // Panggil fungsi untuk menampilkan bottom sheet
           },
-          backgroundColor: Color(0xFF512E67), // Warna latar belakang
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
+          backgroundColor: const Color(0xFF512E67),
+          mini: false, // Mengatur ukuran menjadi non-mini
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0), // Menyesuaikan sudut
+            // Mengatur bentuk, misalnya StadiumBorder(), bisa digunakan untuk sudut yang lebih bulat
+          ),
+          elevation: 6.0, // Warna latar belakang
+          child: const Padding(
+            padding: EdgeInsets.symmetric(
                 horizontal: 30.0), // Menambahkan padding horizontal
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -443,13 +450,7 @@ class _EventState extends State<Event> {
                 Icon(Icons.add, color: Colors.white), // Icon
               ],
             ),
-          ),
-          mini: false, // Mengatur ukuran menjadi non-mini
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), // Menyesuaikan sudut
-            // Mengatur bentuk, misalnya StadiumBorder(), bisa digunakan untuk sudut yang lebih bulat
-          ),
-          elevation: 6.0, // Efek bayangan
+          ), // Efek bayangan
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -471,7 +472,7 @@ void _showBottomSheet(BuildContext context) {
             child: Wrap(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     top: 10,
                     left: 20,
                     right: 0,
@@ -489,9 +490,9 @@ void _showBottomSheet(BuildContext context) {
                               _buttonColor = Colors.transparent;
                               _borderColor = Colors.black;
                             } else {
-                              _buttonColor = Color(
+                              _buttonColor = const Color(
                                   0xFF512E67); // Ubah warna saat tombol ditekan
-                              _borderColor = Color(
+                              _borderColor = const Color(
                                   0xFF512E67); // Ubah warna border saat tombol ditekan
                             }
                             _isButtonClicked =
@@ -516,11 +517,11 @@ void _showBottomSheet(BuildContext context) {
                               fontSize: 12),
                         ),
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                     ],
                   ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 0, left: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -545,7 +546,7 @@ void _showBottomSheet(BuildContext context) {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
+                  padding: const EdgeInsets.only(
                     top: 5,
                     left: 20,
                   ),
@@ -553,15 +554,15 @@ void _showBottomSheet(BuildContext context) {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Rp. 150.000',
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 28.0, fontWeight: FontWeight.w700),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(
                           top: 0,
                           left: 0,
@@ -581,7 +582,7 @@ void _showBottomSheet(BuildContext context) {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           top: 0,
                           left: 0,
                           right: 0,
@@ -602,7 +603,7 @@ void _showBottomSheet(BuildContext context) {
                                         10), // Menambahkan radius sudut
                                   ), // Tampilan border input field
 
-                                  contentPadding: EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                       horizontal:
                                           20), // Padding konten dalam input field
                                 ),
@@ -615,11 +616,11 @@ void _showBottomSheet(BuildContext context) {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           top: 0,
                           left: 0,
                           right: 0,
@@ -632,21 +633,22 @@ void _showBottomSheet(BuildContext context) {
                             ElevatedButton(
                               onPressed: () {
                                 Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Pembayaran()),
-                        );
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Pembayaran()),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                    Color(0xFF512E67), // Warna ungu
-                                fixedSize:
-                                    Size(370, 50), // Lebar dan tinggi tombol
+                                    const Color(0xFF512E67), // Warna ungu
+                                fixedSize: const Size(
+                                    370, 50), // Lebar dan tinggi tombol
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.circular(10), // Radius sudut
                                 ),
                               ),
-                              child: Text('Pesan Sekarang',
+                              child: const Text('Pesan Sekarang',
                                   style: TextStyle(color: Colors.white)),
                             ),
                           ],

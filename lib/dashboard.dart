@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myevent/database/api.dart';
 import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/getx_state.dart';
-import 'package:myevent/event/card_event.dart';
+import 'package:myevent/event/card_event_order.dart';
+import 'package:myevent/model/order.dart';
 import 'package:myevent/model/user.dart';
 import 'package:myevent/navigation_drawer.dart';
 import 'package:myevent/user_list.dart';
 import 'model/eventt.dart';
+import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
   @override
@@ -96,62 +101,50 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  final User user = User(
+      id: 1,
+      name: 'Mamang',
+      phone: '01923901283',
+      email: 'mamang@gmail.com',
+      username: 'mamang123',
+      password: 'mamang123',
+      businessName: 'mamangCorp',
+      businessLocation: 'Jember',
+      businessDescription: 'gatau ini kantor apa');
+  // final User user = Get.arguments as User; //ni jug komen dulu buat desain
+  String _selectedFilter =
+      ''; // Variabel state untuk menyimpan nilai yang dipilih
+
+  List<Order> orderList = [];
+
+  void getOrder() async {
+    var response = await http.get(Uri.parse('${Api.urlOrder}?user_id=${user.id}'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body)['order_list'];
+
+      for (int i = 0; i < data.length; i++) {
+        Map<String, dynamic> orderMap = data[i];
+        // print(orderMap.toString());
+        Order order = Order.fromJson(orderMap);
+        if(!mounted) return;
+        setState(() {
+          orderList.add(order);
+        });
+      }
+    } else {
+      // Request failed, handle error
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getOrder();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final user = ModalRoute.of(context)!.settings.arguments as User;
-    final User user = User(
-        id: 1,
-        name: 'Mamang',
-        phone: '01923901283',
-        email: 'mamang@gmail.com',
-        username: 'mamang123',
-        password: 'mamang123',
-        businessName: 'mamangCorp',
-        businessLocation: 'Jember',
-        businessDescription: 'gatau ini kantor apa');
-    // final User user = Get.arguments as User; //ni jug komen dulu buat desain
-    String _selectedFilter =
-        ''; // Variabel state untuk menyimpan nilai yang dipilih
-
-    // List<Eventt> eventList = [];
-    List<Eventt> eventList = [
-      Eventt(
-          idEvent: '123123',
-          status: 'Selesai',
-          tanggal: '28 Februari 2023',
-          namaEvent: 'Sunday Services',
-          deskripsiEvent:
-              'Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.',
-          hargaMin: '250.000',
-          hargaMax: '500.000',
-          lokasi: 'jember',
-          noWa: '12308128123',
-          cover: 'event1.png'),
-      Eventt(
-          idEvent: '456456',
-          status: 'Menunggu Pembayaran',
-          tanggal: '40 Februari 2023',
-          namaEvent: 'Summer Van Tour',
-          deskripsiEvent:
-              'Konser hura hura bersama artis terkenal. Dimeriahkan oleh Coldplay, Ed-Shetan, dan Puyung Teduh.',
-          hargaMin: '300.000',
-          hargaMax: '800.000',
-          lokasi: 'Jakarta',
-          noWa: '12308120123',
-          cover: 'event2.png'),
-      Eventt(
-          idEvent: '789789',
-          status: 'Ditolak',
-          tanggal: '10 Februari 2023',
-          namaEvent: 'Black Parade',
-          deskripsiEvent: 'Ajang festival peringatan hari hitam sedunia',
-          hargaMin: '300.000',
-          hargaMax: '800.000',
-          lokasi: 'Malang',
-          noWa: '12308120123',
-          cover: 'event1.png'),
-    ];
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -448,11 +441,11 @@ class HomeState extends State<Home> {
           ),
           SliverList.builder(
             // Provide the number of items in the list
-            itemCount: eventList.length,
+            itemCount: orderList.length,
             // Build each list item dynamically
             itemBuilder: (BuildContext context, int index) {
-              Eventt event = eventList[index];
-              return CardEvent(event: event);
+              Order order = orderList[index];
+              return CardEventOrder(order: order);
             },
           ),
           const SliverToBoxAdapter(

@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:another_stepper/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myevent/event/card_event.dart';
+import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/eventt.dart';
+import 'package:myevent/model/order.dart';
 
 void main() {
   runApp(const Pembayaran());
@@ -16,20 +17,7 @@ class Pembayaran extends StatefulWidget {
   State<Pembayaran> createState() => _PembayaranState();
 }
 
-List<Eventt> eventList = [
-  Eventt(
-      idEvent: '123123',
-      status: 'Menunggu Verifikasi',
-      tanggal: '28 Februari 2023',
-      namaEvent: 'Sunday Services',
-      deskripsiEvent:
-          'Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.',
-      hargaMin: '250.000',
-      hargaMax: '500.000',
-      lokasi: 'jember',
-      noWa: '12308128123',
-      cover: 'logo.png'),
-];
+List<Order> eventList = [];
 
 class _PembayaranState extends State<Pembayaran> {
   int activeIndex = 1;
@@ -53,7 +41,7 @@ class _PembayaranState extends State<Pembayaran> {
         iconWidget: Container(
           padding: const EdgeInsets.all(6), // Adjust padding for smaller icon
           decoration: BoxDecoration(
-            color: activeIndex >= 0 ? Color(0xFF993D5C) : Colors.red,
+            color: activeIndex >= 0 ? const Color(0xFF993D5C) : Colors.red,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           child: const Icon(Icons.looks_one,
@@ -77,7 +65,7 @@ class _PembayaranState extends State<Pembayaran> {
         iconWidget: Container(
           padding: const EdgeInsets.all(6), // Adjust padding for smaller icon
           decoration: BoxDecoration(
-            color: activeIndex >= 1 ? Color(0xFF993D5C) : Colors.grey,
+            color: activeIndex >= 1 ? const Color(0xFF993D5C) : Colors.grey,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           child: const Icon(Icons.looks_two,
@@ -101,7 +89,7 @@ class _PembayaranState extends State<Pembayaran> {
         iconWidget: Container(
           padding: const EdgeInsets.all(6), // Adjust padding for smaller icon
           decoration: BoxDecoration(
-            color: activeIndex >= 2 ? Color(0xFF993D5C) : Colors.grey,
+            color: activeIndex >= 2 ? const Color(0xFF993D5C) : Colors.grey,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           child: const Icon(Icons.looks_3,
@@ -125,7 +113,7 @@ class _PembayaranState extends State<Pembayaran> {
         iconWidget: Container(
           padding: const EdgeInsets.all(6), // Adjust padding for smaller icon
           decoration: BoxDecoration(
-            color: activeIndex >= 3 ? Color(0xFF993D5C) : Colors.grey,
+            color: activeIndex >= 3 ? const Color(0xFF993D5C) : Colors.grey,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
           child: const Icon(Icons.check,
@@ -152,10 +140,10 @@ class _PembayaranState extends State<Pembayaran> {
   }
 
   final List<Widget> stepWidgets = [
-    StepOneContent(),
-    StepTwoContent(),
-    StepThreeContent(),
-    StepFourContent(),
+    const StepOneContent(),
+    const StepTwoContent(),
+    const StepThreeContent(),
+    const StepFourContent(),
   ];
 
   @override
@@ -163,17 +151,16 @@ class _PembayaranState extends State<Pembayaran> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar:AppBar(
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    onPressed: () {
-      // Action to perform when back arrow is pressed
-      Navigator.pop(context);
-    },
-  ),
-  title: const Text('Konfirmasi Pemesanan'),
-)
-,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              // Action to perform when back arrow is pressed
+              Navigator.pop(context);
+            },
+          ),
+          title: const Text('Konfirmasi Pemesanan'),
+        ),
         body: Column(
           children: [
             Padding(
@@ -183,7 +170,7 @@ class _PembayaranState extends State<Pembayaran> {
                 stepperDirection: Axis.horizontal,
                 iconWidth: 32, // Decrease width
                 iconHeight: 32, // Decrease height
-                activeBarColor: Color(0xFF993D5C),
+                activeBarColor: const Color(0xFF993D5C),
                 inActiveBarColor: Colors.grey,
                 inverted: true,
                 verticalGap: 20, // Decrease vertical gap
@@ -214,7 +201,7 @@ class _PembayaranState extends State<Pembayaran> {
                           ),
                           foregroundColor: Colors.white,
                           backgroundColor:
-                              Color(0xFF512E67), // Atur warna teks button
+                              const Color(0xFF512E67), // Atur warna teks button
                         ),
                         child: const Text('Selanjutnya'),
                       ),
@@ -231,23 +218,25 @@ class _PembayaranState extends State<Pembayaran> {
 }
 
 class StepOneContent extends StatelessWidget {
+  const StepOneContent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             "Menunggu Verifikasi Penyelenggara",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: eventList.length,
               itemBuilder: (context, index) {
-                Eventt event = eventList[index];
-                return CardEvent(event: event);
+                Order event = eventList[index];
+                return CardEventOrder(order: event);
               },
             ),
           ),
@@ -258,6 +247,8 @@ class StepOneContent extends StatelessWidget {
 }
 
 class StepTwoContent extends StatelessWidget {
+  const StepTwoContent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -265,21 +256,21 @@ class StepTwoContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Text(
+          const Text(
             "Menunggu \nVerifikasi Penyelenggara",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Expanded(
             child: ListView.builder(
               itemCount: eventList.length,
               itemBuilder: (context, index) {
-                Eventt event = eventList[index];
-                return CardEvent(event: event);
+                Order event = eventList[index];
+                return CardEventOrder(order: event);
               },
             ),
           ),
@@ -290,6 +281,8 @@ class StepTwoContent extends StatelessWidget {
 }
 
 class StepThreeContent extends StatefulWidget {
+  const StepThreeContent({super.key});
+
   @override
   _StepThreeContentState createState() => _StepThreeContentState();
 }
@@ -302,10 +295,10 @@ class _StepThreeContentState extends State<StepThreeContent> {
   @override
   void initState() {
     super.initState();
-    _endTime = DateTime.now().add(Duration(minutes: 30));
+    _endTime = DateTime.now().add(const Duration(minutes: 30));
     _remainingTime = _endTime.difference(DateTime.now());
 
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _remainingTime = _endTime.difference(DateTime.now());
         if (_remainingTime.isNegative) {
@@ -337,18 +330,18 @@ class _StepThreeContentState extends State<StepThreeContent> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(),
+            padding: const EdgeInsets.only(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Sisa Waktu Bayar ",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   formatDuration(_remainingTime),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.w600,
                       color: Colors.red),
@@ -357,17 +350,17 @@ class _StepThreeContentState extends State<StepThreeContent> {
                   shrinkWrap: true,
                   itemCount: eventList.length,
                   itemBuilder: (context, index) {
-                    Eventt event = eventList[index];
-                    return CardEvent(event: event);
+                    Order event = eventList[index];
+                    return CardEventOrder(order: event);
                   },
                 ),
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(left: 28),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -381,7 +374,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 15, top: 5, right: 15),
+            padding: const EdgeInsets.only(left: 15, top: 5, right: 15),
             child: Column(
               children: [
                 Row(
@@ -392,12 +385,12 @@ class _StepThreeContentState extends State<StepThreeContent> {
                       height: 200,
                       width: 0.7, // Height of the divider
                       color: Colors.grey, // Color of the divider
-                      margin: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.symmetric(
                         vertical: 10.0,
                         horizontal: 0,
                       ), // Margin around the divider
                     ),
-                    Flexible(
+                    const Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
                       child: Padding(
@@ -419,7 +412,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
                         ),
                       ),
                     ),
-                    Flexible(
+                    const Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
                       child: Padding(
@@ -445,7 +438,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
                       height: 200,
                       width: 0.7, // Height of the divider
                       color: Colors.grey, // Color of the divider
-                      margin: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.symmetric(
                         vertical: 10.0,
                         horizontal: 0,
                       ), // Margin around the divider
@@ -462,18 +455,20 @@ class _StepThreeContentState extends State<StepThreeContent> {
 }
 
 class StepFourContent extends StatelessWidget {
+  const StepFourContent({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           top: 10,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 15, top: 10, right: 15),
+              padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
               child: Column(
                 children: [
                   Image.asset(
@@ -481,7 +476,7 @@ class StepFourContent extends StatelessWidget {
                     width: 100,
                     height: 100,
                   ),
-                  Text(
+                  const Text(
                     "Pembayaran Terkirim",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                   ),
@@ -493,12 +488,12 @@ class StepFourContent extends StatelessWidget {
                         height: 200,
                         width: 0.7, // Height of the divider
                         color: Colors.grey, // Color of the divider
-                        margin: EdgeInsets.symmetric(
+                        margin: const EdgeInsets.symmetric(
                           vertical: 10.0,
                           horizontal: 0,
                         ), // Margin around the divider
                       ),
-                      Flexible(
+                      const Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
                         child: Padding(
@@ -579,7 +574,7 @@ class StepFourContent extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Flexible(
+                      const Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
                         child: Padding(
@@ -656,7 +651,7 @@ class StepFourContent extends StatelessWidget {
                         height: 200,
                         width: 0.7, // Height of the divider
                         color: Colors.grey, // Color of the divider
-                        margin: EdgeInsets.symmetric(
+                        margin: const EdgeInsets.symmetric(
                           vertical: 10.0,
                           horizontal: 0,
                         ), // Margin around the divider

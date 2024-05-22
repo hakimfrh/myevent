@@ -35,7 +35,7 @@ class _ListEventState extends State<ListEvent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 9, left: 9, top: 10),
+              padding: const EdgeInsets.only(right: 9, left: 9, top: 10),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 decoration: BoxDecoration(
@@ -55,7 +55,7 @@ class _ListEventState extends State<ListEvent> {
                 ),
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 15, left: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -78,7 +78,7 @@ class _ListEventState extends State<ListEvent> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 25, right: 10, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -99,7 +99,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 9, left: 9),
+                    padding: const EdgeInsets.only(right: 9, left: 9),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -113,7 +113,7 @@ class _ListEventState extends State<ListEvent> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        color: Color(0xFFFFFFFF),
+                        color: const Color(0xFFFFFFFF),
                         child: Container(
                           
                           height: 170,
@@ -125,7 +125,7 @@ class _ListEventState extends State<ListEvent> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 2,
-                                offset: Offset(2, 2),
+                                offset: const Offset(2, 2),
                               ),
                             ],
                           ),
@@ -272,7 +272,7 @@ class _ListEventState extends State<ListEvent> {
                       ),
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 25, right: 10, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -293,7 +293,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 9, left: 9),
+                    padding: const EdgeInsets.only(right: 9, left: 9),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -307,7 +307,7 @@ class _ListEventState extends State<ListEvent> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        color: Color(0xFFFFFFFF),
+                        color: const Color(0xFFFFFFFF),
                         child: Container(
                           
                           height: 170,
@@ -319,7 +319,7 @@ class _ListEventState extends State<ListEvent> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 2,
-                                offset: Offset(2, 2),
+                                offset: const Offset(2, 2),
                               ),
                             ],
                           ),
@@ -466,7 +466,7 @@ class _ListEventState extends State<ListEvent> {
                       ),
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 25, right: 10, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -487,7 +487,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 9, left: 9),
+                    padding: const EdgeInsets.only(right: 9, left: 9),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -501,7 +501,7 @@ class _ListEventState extends State<ListEvent> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        color: Color(0xFFFFFFFF),
+                        color: const Color(0xFFFFFFFF),
                         child: Container(
                           
                           height: 170,
@@ -513,7 +513,7 @@ class _ListEventState extends State<ListEvent> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 2,
-                                offset: Offset(2, 2),
+                                offset: const Offset(2, 2),
                               ),
                             ],
                           ),
@@ -660,7 +660,7 @@ class _ListEventState extends State<ListEvent> {
                       ),
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 25, right: 10, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -681,7 +681,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 9, left: 9),
+                    padding: const EdgeInsets.only(right: 9, left: 9),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -695,7 +695,7 @@ class _ListEventState extends State<ListEvent> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        color: Color(0xFFFFFFFF),
+                        color: const Color(0xFFFFFFFF),
                         child: Container(
                           
                           height: 170,
@@ -707,7 +707,7 @@ class _ListEventState extends State<ListEvent> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 2,
-                                offset: Offset(2, 2),
+                                offset: const Offset(2, 2),
                               ),
                             ],
                           ),
@@ -854,7 +854,7 @@ class _ListEventState extends State<ListEvent> {
                       ),
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 25, right: 10, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -875,7 +875,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(right: 9, left: 9),
+                    padding: const EdgeInsets.only(right: 9, left: 9),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -889,7 +889,7 @@ class _ListEventState extends State<ListEvent> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        color: Color(0xFFFFFFFF),
+                        color: const Color(0xFFFFFFFF),
                         child: Container(
                           
                           height: 170,
@@ -901,7 +901,7 @@ class _ListEventState extends State<ListEvent> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 1,
                                 blurRadius: 2,
-                                offset: Offset(2, 2),
+                                offset: const Offset(2, 2),
                               ),
                             ],
                           ),
@@ -1059,20 +1059,20 @@ class _ListEventState extends State<ListEvent> {
         onPressed: () {
           _scaffoldKey.currentState!.openEndDrawer();
         },
-        child: Icon(Icons.filter_alt_rounded, color: Colors.white),
-        backgroundColor: Color(0xFF512E67),
+        child: const Icon(Icons.filter_alt_rounded, color: Colors.white),
+        backgroundColor: const Color(0xFF512E67),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       endDrawer: Drawer(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.zero, // Remove curved edge
         ),
         child: ListView(
-          padding: EdgeInsets.only(),
+          padding: const EdgeInsets.only(),
           children: <Widget>[
             ListTile(
               leading: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   size: 20,
                 ),
@@ -1080,7 +1080,7 @@ class _ListEventState extends State<ListEvent> {
                   Navigator.of(context).pop(); // Close the drawer
                 },
               ),
-              title: Text(
+              title: const Text(
                 "Sortir Event",
                 style: TextStyle(
                   fontSize: 20,
@@ -1090,12 +1090,12 @@ class _ListEventState extends State<ListEvent> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1115,10 +1115,10 @@ class _ListEventState extends State<ListEvent> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Provinsi",
                     style: TextStyle(
                       fontSize: 15,
@@ -1127,7 +1127,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+                    padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -1149,21 +1149,21 @@ class _ListEventState extends State<ListEvent> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: ClearButtonProps(isVisible: true),
+                          clearButtonProps: const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Kabupaten",
                     style: TextStyle(
                       fontSize: 15,
@@ -1172,7 +1172,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+                    padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -1194,21 +1194,21 @@ class _ListEventState extends State<ListEvent> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: ClearButtonProps(isVisible: true),
+                          clearButtonProps: const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Kecamatan",
                     style: TextStyle(
                       fontSize: 15,
@@ -1217,7 +1217,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+                    padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -1240,11 +1240,11 @@ class _ListEventState extends State<ListEvent> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: ClearButtonProps(isVisible: true),
+                          clearButtonProps: const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
@@ -1255,11 +1255,11 @@ class _ListEventState extends State<ListEvent> {
                     height: 1,
                     width: 300, // Height of the divider
                     color: Colors.black, // Color of the divider
-                    margin: EdgeInsets.symmetric(
+                    margin: const EdgeInsets.symmetric(
                         vertical: 20.0,
                         horizontal: 10), // Margin around the divider
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1280,13 +1280,13 @@ class _ListEventState extends State<ListEvent> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        minimumSize: Size(500, 40),
-                        backgroundColor: Color(0xFF512E67),
+                        minimumSize: const Size(500, 40),
+                        backgroundColor: const Color(0xFF512E67),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () async {
@@ -1342,7 +1342,7 @@ class _ListEventState extends State<ListEvent> {
                       children: [
                         Text(
                           "${selectedDateTime != null ? DateFormat('yyyy-MM-dd').format(selectedDateTime!) : 'Pilih Tanggal'}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Rubik',
@@ -1353,7 +1353,7 @@ class _ListEventState extends State<ListEvent> {
                           height: 10,
                           width: 1, // Height of the divider
                           color: Colors.white, // Color of the divider
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               vertical: 10.0,
                               horizontal: 10), // Margin around the divider
                         ),
@@ -1364,15 +1364,15 @@ class _ListEventState extends State<ListEvent> {
                         // ),
                         Text(
                           "${selectedDateTime != null ? DateFormat('HH:mm:ss').format(selectedDateTime!) : 'Pilih Waktu'}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Rubik',
                             color: Colors.white,
                           ),
                         ),
-                        Spacer(),
-                        Icon(Icons.calendar_month_outlined,
+                        const Spacer(),
+                        const Icon(Icons.calendar_month_outlined,
                             color: Colors.white, size: 18),
                       ],
                     ),
@@ -1381,11 +1381,11 @@ class _ListEventState extends State<ListEvent> {
                     height: 1,
                     width: 300, // Height of the divider
                     color: Colors.black, // Color of the divider
-                    margin: EdgeInsets.symmetric(
+                    margin: const EdgeInsets.symmetric(
                         vertical: 20.0,
                         horizontal: 10), // Margin around the divider
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1405,7 +1405,7 @@ class _ListEventState extends State<ListEvent> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Column(
@@ -1413,9 +1413,9 @@ class _ListEventState extends State<ListEvent> {
                     children: <Widget>[
                       Text(
                         'Price: ${formatCurrency(_currentValue)}',
-                        style: TextStyle(fontSize: 20.0),
+                        style: const TextStyle(fontSize: 20.0),
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       Container(
                         width: 300.0,
                         child: Slider(
@@ -1437,11 +1437,11 @@ class _ListEventState extends State<ListEvent> {
                     height: 1,
                     width: 300, // Height of the divider
                     color: Colors.black, // Color of the divider
-                    margin: EdgeInsets.symmetric(
+                    margin: const EdgeInsets.symmetric(
                         vertical: 20.0,
                         horizontal: 10), // Margin around the divider
                   ),
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -1461,10 +1461,10 @@ class _ListEventState extends State<ListEvent> {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
-                  Text(
+                  const Text(
                     "Kecamatan",
                     style: TextStyle(
                       fontSize: 15,
@@ -1473,7 +1473,7 @@ class _ListEventState extends State<ListEvent> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 0),
+                    padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -1496,18 +1496,18 @@ class _ListEventState extends State<ListEvent> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: ClearButtonProps(isVisible: true),
+                          clearButtonProps: const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Row(
@@ -1521,30 +1521,30 @@ class _ListEventState extends State<ListEvent> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.black,
                           side:
-                              BorderSide(color: Colors.black), // Outline hitam
-                          minimumSize: Size(130, 40), // Lebar dan tinggi tombol
+                              const BorderSide(color: Colors.black), // Outline hitam
+                          minimumSize: const Size(130, 40), // Lebar dan tinggi tombol
 
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(10), // Radius sudut
                           ),
                         ),
-                        child: Text('Reset'),
+                        child: const Text('Reset'),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       ElevatedButton(
                         onPressed: () {
                           // Aksi untuk tombol "Terapkan"
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF512E67), // Warna ungu
-                          fixedSize: Size(130, 40), // Lebar dan tinggi tombol
+                          backgroundColor: const Color(0xFF512E67), // Warna ungu
+                          fixedSize: const Size(130, 40), // Lebar dan tinggi tombol
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(10), // Radius sudut
                           ),
                         ),
-                        child: Text('Terapkan',
+                        child: const Text('Terapkan',
                             style: TextStyle(color: Colors.white)),
                       ),
                     ],
