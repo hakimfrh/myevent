@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:myevent/event/detail_event.dart';
+import 'package:myevent/database/api.dart';
+import 'package:myevent/event/card_event_list.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:myevent/model/eventt.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:intl/intl.dart'; // Import package intl untuk menggunakan DateFormat
+import 'package:http/http.dart' as http;
 
 class ListEvent extends StatefulWidget {
   const ListEvent({super.key});
@@ -15,9 +19,16 @@ class _ListEventState extends State<ListEvent> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> _dropdownFormKey = GlobalKey<FormState>();
   late String _selectedValue;
-  double _currentValue = 500; // initial value for the slider
 
+  double _currentValue = 500; // initial value for the slider
   DateTime? selectedDateTime;
+  List<Eventt> eventList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getEvent();
+  }
 
   String formatCurrency(double value) {
     // Gunakan pustaka intl untuk memformat angka menjadi format mata uang Rupiah
@@ -25,1035 +36,88 @@ class _ListEventState extends State<ListEvent> {
     return formatCurrency.format(value);
   } // Deklarasikan variabel selectedDateTime di luar fungsi onPressedasikan variabel dateTimeList di luar fungsi onPressed
 
+  void getEvent() async {
+    var response = await http.get(Uri.parse(Api.urlEvent));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body)['event_list'];
+
+      for (int i = 0; i < data.length; i++) {
+        Map<String, dynamic> eventMap = data[i];
+        Eventt event = Eventt.fromJson(eventMap);
+        if (!mounted) return;
+        setState(() {
+          eventList.add(event);
+        });
+      }
+    } else {
+      // Request failed, handle error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 9, left: 9, top: 10),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(color: Colors.grey),
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 9, left: 9, top: 10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search...',
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {},
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (value) {},
+                    ),
+                  ),
                 ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {},
-                    ),
-                    border: InputBorder.none,
+                const Padding(
+                  padding: EdgeInsets.only(top: 15, left: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Event yang Tersedia",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                      ),
+                    ],
                   ),
-                  onChanged: (value) {},
                 ),
-              ),
+              ],
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 15, left: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "Event yang Tersedia",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                  ),
-                ],
-              ),
-            ),
-            SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25, right: 10, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Text(
-                          "28 Agustus 2013",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 9, left: 9),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Event()),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        color: const Color(0xFFFFFFFF),
-                        child: Container(
-                          
-                          height: 170,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        'images/event1.png',
-                                        width: 80,
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 20,
-                                        indent: 30,
-                                        endIndent: 30,
-                                      ),
-                                      Flexible(
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              5.0, 15, 20, 0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "SUNDAY SERVICE",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 19,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Harga Mulai Dari :",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Rp. 150.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 17,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                  Text(
-                                                    "Rp. 300.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Image.asset(
-                                                    'images/lokasi.png',
-                                                    width: 8,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "Jember, IDN",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  Image.asset(
-                                                    'images/wa.png',
-                                                    width: 10,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "081726371286",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25, right: 10, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Text(
-                          "28 Agustus 2013",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 9, left: 9),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Event()),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        color: const Color(0xFFFFFFFF),
-                        child: Container(
-                          
-                          height: 170,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        'images/event1.png',
-                                        width: 80,
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 20,
-                                        indent: 30,
-                                        endIndent: 30,
-                                      ),
-                                      Flexible(
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              5.0, 15, 20, 0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "SUNDAY SERVICE",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 19,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Harga Mulai Dari :",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Rp. 150.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 17,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                  Text(
-                                                    "Rp. 300.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Image.asset(
-                                                    'images/lokasi.png',
-                                                    width: 8,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "Jember, IDN",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  Image.asset(
-                                                    'images/wa.png',
-                                                    width: 10,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "081726371286",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25, right: 10, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Text(
-                          "28 Agustus 2013",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 9, left: 9),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Event()),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        color: const Color(0xFFFFFFFF),
-                        child: Container(
-                          
-                          height: 170,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        'images/event1.png',
-                                        width: 80,
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 20,
-                                        indent: 30,
-                                        endIndent: 30,
-                                      ),
-                                      Flexible(
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              5.0, 15, 20, 0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "SUNDAY SERVICE",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 19,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Harga Mulai Dari :",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Rp. 150.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 17,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                  Text(
-                                                    "Rp. 300.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Image.asset(
-                                                    'images/lokasi.png',
-                                                    width: 8,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "Jember, IDN",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  Image.asset(
-                                                    'images/wa.png',
-                                                    width: 10,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "081726371286",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25, right: 10, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Text(
-                          "28 Agustus 2013",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 9, left: 9),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Event()),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        color: const Color(0xFFFFFFFF),
-                        child: Container(
-                          
-                          height: 170,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        'images/event1.png',
-                                        width: 80,
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 20,
-                                        indent: 30,
-                                        endIndent: 30,
-                                      ),
-                                      Flexible(
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              5.0, 15, 20, 0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "SUNDAY SERVICE",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 19,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Harga Mulai Dari :",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Rp. 150.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 17,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                  Text(
-                                                    "Rp. 300.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Image.asset(
-                                                    'images/lokasi.png',
-                                                    width: 8,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "Jember, IDN",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  Image.asset(
-                                                    'images/wa.png',
-                                                    width: 10,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "081726371286",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 25, right: 10, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 10),
-                        Text(
-                          "28 Agustus 2013",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 9, left: 9),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Event()),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 10),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        color: const Color(0xFFFFFFFF),
-                        child: Container(
-                          
-                          height: 170,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(2, 2),
-                              ),
-                            ],
-                          ),
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: Container(
-                                  margin:
-                                      const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        'images/event1.png',
-                                        width: 80,
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 20,
-                                        indent: 30,
-                                        endIndent: 30,
-                                      ),
-                                      Flexible(
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              5.0, 15, 20, 0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "SUNDAY SERVICE",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w800,
-                                                  fontSize: 19,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Festival yang menggabungkan seni, musik, dan aktivitas hijau untuk mempromosikan kesadaran lingkungan dan kreativitas.",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.normal,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Text(
-                                                "Harga Mulai Dari :",
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                softWrap: true,
-                                              ),
-                                              const SizedBox(height: 5),
-                                              const Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    "Rp. 150.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 17,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                  Text(
-                                                    "Rp. 300.000",
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 15,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                    softWrap: true,
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Image.asset(
-                                                    'images/lokasi.png',
-                                                    width: 8,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "Jember, IDN",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  Image.asset(
-                                                    'images/wa.png',
-                                                    width: 10,
-                                                  ),
-                                                  const SizedBox(width: 5),
-                                                  const Text(
-                                                    "081726371286",
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Rubik',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: ListView.builder(
+                // scrollDirection: Axis.vertical,
+                // shrinkWrap: true,
+                itemCount: eventList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Eventt event = eventList[index];
+                  return CardEventList(event: event,);
+                }),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -1153,7 +217,8 @@ class _ListEventState extends State<ListEvent> {
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: const ClearButtonProps(isVisible: true),
+                          clearButtonProps:
+                              const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
@@ -1198,7 +263,8 @@ class _ListEventState extends State<ListEvent> {
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: const ClearButtonProps(isVisible: true),
+                          clearButtonProps:
+                              const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
@@ -1244,7 +310,8 @@ class _ListEventState extends State<ListEvent> {
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: const ClearButtonProps(isVisible: true),
+                          clearButtonProps:
+                              const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
@@ -1500,7 +567,8 @@ class _ListEventState extends State<ListEvent> {
                                   vertical: 12.0, horizontal: 16.0),
                             ),
                           ),
-                          clearButtonProps: const ClearButtonProps(isVisible: true),
+                          clearButtonProps:
+                              const ClearButtonProps(isVisible: true),
                           onChanged: print,
                           // selectedItem: "Pilih Lokasi",
                         ),
@@ -1520,9 +588,10 @@ class _ListEventState extends State<ListEvent> {
                         },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          side:
-                              const BorderSide(color: Colors.black), // Outline hitam
-                          minimumSize: const Size(130, 40), // Lebar dan tinggi tombol
+                          side: const BorderSide(
+                              color: Colors.black), // Outline hitam
+                          minimumSize:
+                              const Size(130, 40), // Lebar dan tinggi tombol
 
                           shape: RoundedRectangleBorder(
                             borderRadius:
@@ -1537,8 +606,10 @@ class _ListEventState extends State<ListEvent> {
                           // Aksi untuk tombol "Terapkan"
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF512E67), // Warna ungu
-                          fixedSize: const Size(130, 40), // Lebar dan tinggi tombol
+                          backgroundColor:
+                              const Color(0xFF512E67), // Warna ungu
+                          fixedSize:
+                              const Size(130, 40), // Lebar dan tinggi tombol
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(10), // Radius sudut
