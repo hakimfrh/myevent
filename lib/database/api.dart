@@ -11,6 +11,7 @@ class Api {
   static const String urlSendCode = "$serverIp/api/sendcode";
 
   static const String urlEvent = "$serverIp/api/event";
+  static const String urlEventBooth = "$serverIp/api/event/getBooth";
   static const String urlEventHarga = "$serverIp/api/event/getBoothRange";
 
   static const String urlOrder = "$serverIp/api/order/getOrder";

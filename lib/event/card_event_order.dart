@@ -43,7 +43,7 @@ class CardEventOrderState extends State<CardEventOrder> {
 
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/event');
+        Get.toNamed('/event',arguments: order.booth!.event);
       },
       child: Column(
         children: [
@@ -183,7 +183,7 @@ class CardEventOrderState extends State<CardEventOrder> {
                                     const SizedBox(height: 5),
                                     // Text festival
                                     Text(
-                                      order.booth!.event!.deskripsi,
+                                      order.booth!.event!.deskripsi.substring(0,150),
                                       style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,

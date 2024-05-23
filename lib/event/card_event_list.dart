@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myevent/database/api.dart';
 import 'package:myevent/event/detail_event.dart';
@@ -97,10 +98,7 @@ class _CardEventListState extends State<CardEventList> {
           padding: const EdgeInsets.only(right: 9, left: 9),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Event()),
-              );
+              Get.toNamed('/event',arguments: event);
             },
             child: Card(
               margin:

@@ -1,5 +1,12 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:myevent/database/api.dart';
+import 'package:myevent/event/card_booth.dart';
+import 'package:myevent/model/booth.dart';
+import 'package:myevent/model/eventt.dart';
 import 'package:myevent/pembayaran.dart';
 import 'dart:ui';
 
@@ -10,6 +17,79 @@ class Event extends StatefulWidget {
 
 class _EventState extends State<Event> {
   double _scrollOffset = 0.0;
+  final Eventt event = Get.arguments as Eventt;
+  List<Booth> boothList = [];
+  String imageData = '';
+  String hargaMin = '0';
+  String hargaMax = '0';
+  String slot = '0';
+  String boothDesc =
+      'Booth ini tersedia dalam berbagai ukuran dan posisi strategis di sekitar area festival. Fasilitas yang disediakan termasuk : area pameran dengan staf yang ramah perlengkapan promosi, koneksi listrik dan Wi-Fi. Tambahan peralatan seperti layar proyeksi atau sound system juga tersedia.';
+
+  @override
+  void initState() {
+    super.initState();
+    getHarga();
+    getBooth();
+    getImage();
+  }
+
+  void getImage() async {
+    try {
+      // final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=527&h=701'));
+      final response = await http
+          .get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=30&h=40'));
+      if (response.statusCode == 200) {
+        String data = json.decode(response.body)['base64Image'];
+        if (!mounted) return;
+        setState(() {
+          imageData = data.replaceAll(RegExp(r'\s'), '');
+        });
+      } else {}
+    } catch (e) {}
+  }
+
+  void getHarga() async {
+    final response = await http
+        .get(Uri.parse('${Api.urlEventHarga}?id_event=${event.idEvent}'));
+    if (response.statusCode == 200) {
+      String dataMax = json.decode(response.body)['max_harga_booth'].toString();
+      String dataMin = json.decode(response.body)['min_harga_booth'].toString();
+      if (!mounted) return;
+      setState(() {
+        hargaMax = dataMax;
+        hargaMin = dataMin;
+      });
+    } else {
+      throw Exception('Failed to load image');
+    }
+  }
+
+  void getBooth() async {
+    var response = await http
+        .get(Uri.parse('${Api.urlEventBooth}?id_event=${event.idEvent}'));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body)['booth_list'];
+
+      for (int i = 0; i < data.length; i++) {
+        Map<String, dynamic> boothMap = data[i];
+        Booth booth = Booth.fromJson(boothMap);
+        if (!mounted) return;
+        setState(() {
+          boothList.add(booth);
+        });
+      }
+    } else {
+      // Request failed, handle error
+    }
+  }
+
+  String formatCurrency(double value) {
+    // Gunakan pustaka intl untuk memformat angka menjadi format mata uang Rupiah
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp');
+    String result = formatCurrency.format(value);
+    return result.substring(0, result.length - 3);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +138,9 @@ class _EventState extends State<Event> {
                     alignment: Alignment.bottomLeft,
                     child: Container(
                       margin: const EdgeInsets.only(left: 0.0, bottom: 0.0),
-                      child: const Text(
-                        'SUNDAY SERVICE!',
-                        style: TextStyle(
+                      child: Text(
+                        event.namaEvent,
+                        style: const TextStyle(
                           fontSize: 18.0,
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.bold,
@@ -72,29 +152,29 @@ class _EventState extends State<Event> {
                     alignment: Alignment.bottomLeft,
                     child: Container(
                       margin: const EdgeInsets.only(left: 0.0, bottom: 20.0),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.location_pin,
+                          const Icon(Icons.location_pin,
                               color: Colors.red, size: 10), // Example icon
-                          SizedBox(
+                          const SizedBox(
                               width: 5), // Add spacing between icon and text
                           Text(
-                            'Jember,Gelora',
-                            style: TextStyle(
+                            event.alamat,
+                            style: const TextStyle(
                               fontSize: 8.0,
                               fontFamily: 'Rubik',
                               fontWeight: FontWeight.bold,
                             ),
                           ),
 
-                          SizedBox(width: 5),
-                          Icon(Icons.calendar_month,
+                          const SizedBox(width: 5),
+                          const Icon(Icons.calendar_month,
                               color: Colors.white, size: 10), // Example icon
-                          SizedBox(
+                          const SizedBox(
                               width: 5), // Add spacing between icon and text
                           Text(
-                            '28 Agustus 2024',
-                            style: TextStyle(
+                            event.pelaksanaanEvent.toString(),
+                            style: const TextStyle(
                               fontSize: 8.0,
                               fontFamily: 'Rubik',
                               fontWeight: FontWeight.bold,
@@ -109,10 +189,21 @@ class _EventState extends State<Event> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    'images/event1.png',
-                    fit: BoxFit.cover,
-                  ),
+                  imageData != ''
+                      ? Image.memory(
+                          base64Decode(imageData),
+                          fit: BoxFit.cover,
+                          // width: 80,
+                        )
+                      : const SizedBox(
+                          height: 50.0,
+                          width: 50.0,
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                  // Image.asset(
+                  //   'images/event1.png',
+                  //   fit: BoxFit.cover,
+                  // ),
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
@@ -129,7 +220,7 @@ class _EventState extends State<Event> {
                   ),
                 ],
               ),
-              stretchModes: <StretchMode>[
+              stretchModes: const <StretchMode>[
                 StretchMode.zoomBackground,
                 StretchMode.blurBackground,
                 StretchMode.fadeTitle,
@@ -162,7 +253,7 @@ class _EventState extends State<Event> {
             delegate: SliverChildListDelegate(
               [
                 const SizedBox(height: 20.0),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
@@ -175,14 +266,14 @@ class _EventState extends State<Event> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(),
+                                padding: const EdgeInsets.only(),
                                 child: Padding(
-                                  padding: EdgeInsets.only(),
+                                  padding: const EdgeInsets.only(),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment
                                         .start, // Rata kiri untuk teks dalam Column
                                     children: [
-                                      Text(
+                                      const Text(
                                         'Harga :',
                                         style: TextStyle(
                                           fontSize: 12.0,
@@ -190,27 +281,29 @@ class _EventState extends State<Event> {
                                           fontWeight: FontWeight.normal,
                                         ),
                                       ),
-                                      SizedBox(height: 5),
+                                      const SizedBox(height: 5),
                                       Padding(
-                                        padding: EdgeInsets.only(),
+                                        padding: const EdgeInsets.only(),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment
                                               .start, // Rata kiri untuk teks dalam Row
                                           children: [
                                             Text(
-                                              'Rp. 50.000',
-                                              style: TextStyle(
+                                              formatCurrency(
+                                                  double.parse(hargaMin)),
+                                              style: const TextStyle(
                                                 fontSize: 20.0,
                                                 fontFamily: 'Rubik',
                                                 fontWeight: FontWeight.w900,
                                               ),
                                             ),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 20,
                                             ),
                                             Text(
-                                              'Rp. 150.000',
-                                              style: TextStyle(
+                                              formatCurrency(
+                                                  double.parse(hargaMax)),
+                                              style: const TextStyle(
                                                 fontSize: 20.0,
                                                 fontFamily: 'Rubik',
                                                 fontWeight: FontWeight.w900,
@@ -223,14 +316,14 @@ class _EventState extends State<Event> {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 50,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(),
+                                padding: const EdgeInsets.only(),
                                 child: Column(
                                   children: [
-                                    Text(
+                                    const Text(
                                       'Slot : ',
                                       style: TextStyle(
                                         fontSize: 12.0,
@@ -238,10 +331,10 @@ class _EventState extends State<Event> {
                                         fontWeight: FontWeight.normal,
                                       ),
                                     ),
-                                    SizedBox(height: 5),
+                                    const SizedBox(height: 5),
                                     Text(
-                                      '293',
-                                      style: TextStyle(
+                                      slot,
+                                      style: const TextStyle(
                                         fontSize: 16.0,
                                         fontFamily: 'Rubik',
                                         fontWeight: FontWeight.w900,
@@ -258,15 +351,15 @@ class _EventState extends State<Event> {
                   ],
                 ),
 
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsets.only(right: 25.0, left: 25.0, top: 10.0),
+                      padding: const EdgeInsets.only(
+                          right: 25.0, left: 25.0, top: 10.0),
                       child: Text(
-                        'Festival yang menggabungkan beragam bentuk seni, meliputi seni visual, pertunjukan teater, instalasi seni, serta genre musik yang beragam, diselaraskan dengan serangkaian aktivitas hijau seperti workshop daur ulang, pameran produk ramah lingkungan, dan demonstrasi praktik-praktik berkelanjutan dalam kehidupan sehari-hari. Tujuan utamanya adalah untuk meningkatkan kesadaran akan isu-isu lingkungan, mendorong kreativitas dalam membangun solusi-solusi inovatif, serta menginspirasi tindakan nyata yang mendukung keberlanjutan lingkungan.',
-                        style: TextStyle(
+                        event.deskripsi,
+                        style: const TextStyle(
                           fontSize: 14.0,
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.normal,
@@ -301,73 +394,36 @@ class _EventState extends State<Event> {
                   ],
                 ),
 
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 20, top: 10.0), // Add margin here
-                        width: 180.0, // Specify the width here
-                        height: 100.0, // Specify the height here
-                        child: Card(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 7.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Booth A :',
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    Image.asset(
-                                      'images/booth.png',
-                                      width: 130,
-                                      height: 60,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                SizedBox(
+                  height: 100,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      // shrinkWrap: true,
+                      itemCount: boothList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Booth booth = boothList[index];
+                        return GestureDetector(
+                          child: CardBooth(
+                            booth: booth,
                           ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 20, top: 10.0), // Add margin here
-                        width: 180.0, // Specify the width here
-                        height: 100.0, // Specify the height here
-                        child: const Card(
-                          child: Center(
-                            child: Text(
-                              'Besok Selesai',
-                              style: TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                          onTap: () {
+                            setState(() {
+                              boothDesc = boothList[index].deskripsiBooth;
+                            });
+                          },
+                        );
+                      }),
                 ),
 
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding:
-                          EdgeInsets.only(right: 25.0, left: 25.0, top: 10.0),
+                      padding: const EdgeInsets.only(
+                          right: 25.0, left: 25.0, top: 10.0),
                       child: Text(
-                        'Booth ini tersedia dalam berbagai ukuran dan posisi strategis di sekitar area festival. Fasilitas yang disediakan termasuk : area pameran dengan staf yang ramah perlengkapan promosi, koneksi listrik dan Wi-Fi. Tambahan peralatan seperti layar proyeksi atau sound system juga tersedia.',
-                        style: TextStyle(
+                        boothDesc,
+                        style: const TextStyle(
                           fontSize: 14.0,
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.normal,
@@ -422,7 +478,6 @@ class _EventState extends State<Event> {
         child: FloatingActionButton(
           onPressed: () {
             // Fungsi yang akan dijalankan saat tombol ditekan
-            print('Floating Action Button ditekan');
             _showBottomSheet(
                 context); // Panggil fungsi untuk menampilkan bottom sheet
           },
