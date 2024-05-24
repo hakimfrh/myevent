@@ -445,6 +445,7 @@ class _EventState extends State<Event> {
                           onTap: () {
                             setState(() {
                               boothDesc = boothList[index].deskripsiBooth;
+                              selectedIndex = index;
                             });
                           },
                         );
