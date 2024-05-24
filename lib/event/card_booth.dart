@@ -61,12 +61,13 @@ class _CardBoothState extends State<CardBooth> {
                   imageData != ''
                       ? Image.memory(
                           base64Decode(imageData),
-                          fit: BoxFit.cover,
-                          // width: 80,
+                          // fit: BoxFit.cover,
+                          height: 50,
+                          // width: 130,
                         )
                       : const SizedBox(
-                          height: 50.0,
-                          width: 50.0,
+                          height: 25.0,
+                          width: 25.0,
                           child: Center(child: CircularProgressIndicator()),
                         ),
                   // Image.asset(

@@ -12,6 +12,8 @@ class Api {
 
   static const String urlEvent = "$serverIp/api/event";
   static const String urlEventBooth = "$serverIp/api/event/getBooth";
+  static const String urlEventBoothTotal = "$serverIp/api/event/getBoothTotal";
+  static const String urlEventBoothAvailable = "$serverIp/api/event/getBoothAvailable";
   static const String urlEventHarga = "$serverIp/api/event/getBoothRange";
 
   static const String urlOrder = "$serverIp/api/order/getOrder";

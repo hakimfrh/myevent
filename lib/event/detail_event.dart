@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,19 +27,24 @@ class _EventState extends State<Event> {
   String boothDesc =
       'Booth ini tersedia dalam berbagai ukuran dan posisi strategis di sekitar area festival. Fasilitas yang disediakan termasuk : area pameran dengan staf yang ramah perlengkapan promosi, koneksi listrik dan Wi-Fi. Tambahan peralatan seperti layar proyeksi atau sound system juga tersedia.';
 
+  // List<Map<String, dynamic>> boothAvailable = [];
+  List<int> boothRemaining = [];
+  List<List<String>> boothAvailable = [];
+  int selectedIndex = 0;
   @override
   void initState() {
     super.initState();
     getHarga();
+    getSlot();
     getBooth();
+    getBoothAvailable();
     getImage();
   }
 
   void getImage() async {
     try {
-      // final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=527&h=701'));
-      final response = await http
-          .get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=30&h=40'));
+      final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=527&h=701'));
+      // final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=30&h=40'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];
         if (!mounted) return;
@@ -47,6 +53,20 @@ class _EventState extends State<Event> {
         });
       } else {}
     } catch (e) {}
+  }
+
+  void getSlot() async {
+    final response = await http
+        .get(Uri.parse('${Api.urlEventBoothTotal}?id_event=${event.idEvent}'));
+    if (response.statusCode == 200) {
+      String dataSlot = json.decode(response.body)['booth_total'].toString();
+      if (!mounted) return;
+      setState(() {
+        slot = dataSlot;
+      });
+    } else {
+      throw Exception('Failed to load image');
+    }
   }
 
   void getHarga() async {
@@ -84,7 +104,22 @@ class _EventState extends State<Event> {
     }
   }
 
-  String formatCurrency(double value) {
+  void getBoothAvailable() async {
+    var response = await http.get(
+        Uri.parse('${Api.urlEventBoothAvailable}?id_event=${event.idEvent}'));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body)['booth_available'];
+
+      for (var booth in data) {
+        boothAvailable.add(List<String>.from(booth['booth_available']));
+        boothRemaining.add(booth['booth_remaining']);
+      }
+    } else {
+      // Request failed, handle error
+    }
+  }
+
+  String formatCurrency(int value) {
     // Gunakan pustaka intl untuk memformat angka menjadi format mata uang Rupiah
     final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp');
     String result = formatCurrency.format(value);
@@ -173,7 +208,8 @@ class _EventState extends State<Event> {
                           const SizedBox(
                               width: 5), // Add spacing between icon and text
                           Text(
-                            event.pelaksanaanEvent.toString(),
+                            event.pelaksanaanEvent.toString().substring(0,
+                                event.pelaksanaanEvent.toString().length - 7),
                             style: const TextStyle(
                               fontSize: 8.0,
                               fontFamily: 'Rubik',
@@ -290,7 +326,7 @@ class _EventState extends State<Event> {
                                           children: [
                                             Text(
                                               formatCurrency(
-                                                  double.parse(hargaMin)),
+                                                  int.parse(hargaMin)),
                                               style: const TextStyle(
                                                 fontSize: 20.0,
                                                 fontFamily: 'Rubik',
@@ -302,7 +338,7 @@ class _EventState extends State<Event> {
                                             ),
                                             Text(
                                               formatCurrency(
-                                                  double.parse(hargaMax)),
+                                                  int.parse(hargaMax)),
                                               style: const TextStyle(
                                                 fontSize: 20.0,
                                                 fontFamily: 'Rubik',
@@ -479,7 +515,8 @@ class _EventState extends State<Event> {
           onPressed: () {
             // Fungsi yang akan dijalankan saat tombol ditekan
             _showBottomSheet(
-                context); // Panggil fungsi untuk menampilkan bottom sheet
+              context,
+            ); // Panggil fungsi untuk menampilkan bottom sheet
           },
           backgroundColor: const Color(0xFF512E67),
           mini: false, // Mengatur ukuran menjadi non-mini
@@ -511,214 +548,269 @@ class _EventState extends State<Event> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
-}
 
-void _showBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext bc) {
-      Color _buttonColor = Colors.transparent; // Warna default
-      Color _borderColor = Colors.black; // Warna border default
-      bool _isButtonClicked = false; // Status tombol "Both 1"
+  void _showBottomSheet(BuildContext context) async {
+    if (boothList.isEmpty || boothAvailable.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Loading... harap tunggu"),
+        duration: Durations.short4,
+      ));
+      return;
+    }
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        Color _buttonColor = Colors.transparent; // Warna default
+        Color _borderColor = Colors.black; // Warna border default
+        // bool _isButtonClicked = false; // Status tombol "Both 1"
 
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Container(
-            child: Wrap(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 10,
-                    left: 20,
-                    right: 0,
-                    bottom: 0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          setState(() {
-                            if (_isButtonClicked) {
-                              // Kembalikan ke warna semula
-                              _buttonColor = Colors.transparent;
-                              _borderColor = Colors.black;
-                            } else {
-                              _buttonColor = const Color(
-                                  0xFF512E67); // Ubah warna saat tombol ditekan
-                              _borderColor = const Color(
-                                  0xFF512E67); // Ubah warna border saat tombol ditekan
-                            }
-                            _isButtonClicked =
-                                !_isButtonClicked; // Ubah status tombol
-                          });
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // Radius sudut
-                          ),
-                          side: BorderSide(color: _borderColor), // Warna border
-                          backgroundColor:
-                              _buttonColor, // Gunakan warna yang telah diatur
-                        ),
-                        child: Text(
-                          'Both 1',
-                          style: TextStyle(
-                              color: _isButtonClicked
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 12),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 0, left: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Sisa Slot : ',
-                        style: TextStyle(
-                            fontSize: 14.0, fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        '19 Stand',
-                        style: TextStyle(
-                            fontSize: 14.0, fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 5,
-                    left: 20,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Rp. 150.000',
-                        style: const TextStyle(
-                            fontSize: 28.0, fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Nomor Stand :',
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 180, // Menentukan lebar TextField
-                              height: 50, // Menentukan tinggi TextField
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  labelText: '', // Label teks untuk input field
-                                  hintText: '', // Hint teks untuk input field
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        10), // Menambahkan radius sudut
-                                  ), // Tampilan border input field
-
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal:
-                                          20), // Padding konten dalam input field
-                                ),
-                                onChanged: (text) {
-                                  // Fungsi yang akan dijalankan saat teks berubah
-                                  print('Input field berubah: $text');
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              child: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      left: 20,
+                      right: 0,
+                      bottom: 0,
+                    ),
+                    child: SizedBox(
+                      height: 50,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: boothList.length,
+                        itemBuilder: (context, index) {
+                          Booth booth = boothList[index];
+                          //   mainAxisAlignment: MainAxisAlignment.start,
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          return Row(
+                            children: [
+                              OutlinedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    selectedIndex = index;
+                                    // print(boothAvailable[selectedIndex]);
+                                    // if (index != selectedIndex) {
+                                    //   // Kembalikan ke warna semula
+                                    //   _buttonColor = Colors.transparent;
+                                    //   _borderColor = Colors.black;
+                                    // } else {
+                                    //   _buttonColor = const Color(
+                                    //       0xFF512E67); // Ubah warna saat tombol ditekan
+                                    //   _borderColor = const Color(
+                                    //       0xFF512E67); // Ubah warna border saat tombol ditekan
+                                    // }
+                                    // isButtonClicked =
+                                    //     !isButtonClicked; // Ubah status tombol
+                                  });
                                 },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 10,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Pembayaran()),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color(0xFF512E67), // Warna ungu
-                                fixedSize: const Size(
-                                    370, 50), // Lebar dan tinggi tombol
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(10), // Radius sudut
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Radius sudut
+                                  ),
+                                  side: BorderSide(
+                                      color: index == selectedIndex
+                                          ? const Color(0xFF512E67)
+                                          : Colors.black), // Warna border
+                                  backgroundColor: index == selectedIndex
+                                      ? const Color(0xFF512E67)
+                                      : Colors
+                                          .transparent, // Gunakan warna yang telah diatur
+                                ),
+                                child: Text(
+                                  booth.tipeBooth,
+                                  style: TextStyle(
+                                      color: index == selectedIndex
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 12),
                                 ),
                               ),
-                              child: const Text('Pesan Sekarang',
-                                  style: TextStyle(color: Colors.white)),
-                            ),
-                          ],
-                        ),
+                              const SizedBox(width: 10),
+                            ],
+                          );
+                        },
+                        // ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0, left: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Sisa Slot : ',
+                          style: TextStyle(
+                              fontSize: 14.0, fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          boothRemaining[selectedIndex].toString(),
+                          style: const TextStyle(
+                              fontSize: 14.0, fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5,
+                      left: 20,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          formatCurrency(boothList[selectedIndex].hargaBooth),
+                          style: const TextStyle(
+                              fontSize: 28.0, fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Nomor Stand :',
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 370, // Menentukan lebar TextField
+                                // height: 50, // Menentukan tinggi TextField
+                                // child: TextField(
+                                //   decoration: InputDecoration(
+                                //     labelText:
+                                //         '', // Label teks untuk input field
+                                //     hintText: '', // Hint teks untuk input field
+                                //     border: OutlineInputBorder(
+                                //       borderRadius: BorderRadius.circular(
+                                //           10), // Menambahkan radius sudut
+                                //     ), // Tampilan border input field
+
+                                //     contentPadding: const EdgeInsets.symmetric(
+                                //         horizontal:
+                                //             20), // Padding konten dalam input field
+                                //   ),
+                                //   onChanged: (text) {
+                                //     // Fungsi yang akan dijalankan saat teks berubah
+                                //     print('Input field berubah: $text');
+                                //   },
+                                // ),
+                                child: DropdownSearch<String>(
+                                  // popupProps: const PopupProps.menu(
+                                  //   showSearchBox: true,
+                                  //   showSelectedItems: true,
+                                  //   // disabledItemFn: (String s) =>
+                                  //   //     s.startsWith('I'),
+                                  // ),
+                                  items: List<String>.from(
+                                      boothAvailable[selectedIndex]),
+                                  dropdownDecoratorProps:
+                                      DropDownDecoratorProps(
+                                    dropdownSearchDecoration: InputDecoration(
+                                      hintText: "Pilih Nomor Booth",
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 12.0, horizontal: 16.0),
+                                    ),
+                                  ),
+                                  clearButtonProps:
+                                      const ClearButtonProps(isVisible: true),
+                                  onChanged: print,
+                                  // selectedItem: "Pilih Lokasi",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 10,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Pembayaran()),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color(0xFF512E67), // Warna ungu
+                                  fixedSize: const Size(
+                                      370, 50), // Lebar dan tinggi tombol
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        10), // Radius sudut
+                                  ),
+                                ),
+                                child: const Text('Pesan Sekarang',
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }
 
 
