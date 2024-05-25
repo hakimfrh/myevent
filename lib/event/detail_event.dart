@@ -8,8 +8,12 @@ import 'package:myevent/database/api.dart';
 import 'package:myevent/event/card_booth.dart';
 import 'package:myevent/model/booth.dart';
 import 'package:myevent/model/eventt.dart';
+import 'package:myevent/model/order.dart';
 import 'package:myevent/pembayaran.dart';
 import 'dart:ui';
+
+
+
 
 class Event extends StatefulWidget {
   @override
@@ -31,6 +35,7 @@ class _EventState extends State<Event> {
   List<int> boothRemaining = [];
   List<List<String>> boothAvailable = [];
   int selectedIndex = 0;
+  String nomorBooth = '';
   @override
   void initState() {
     super.initState();
@@ -43,7 +48,8 @@ class _EventState extends State<Event> {
 
   void getImage() async {
     try {
-      final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=527&h=701'));
+      final response = await http
+          .get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=527&h=701'));
       // final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=30&h=40'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];
@@ -117,6 +123,40 @@ class _EventState extends State<Event> {
     } else {
       // Request failed, handle error
     }
+  }
+
+  void makeOrder() async {
+    // try {
+    if (nomorBooth.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Pilih nomor booth"),
+        duration: Durations.short4,
+      ));
+      return;
+    }
+    print('nomor booth: ${nomorBooth}');
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Membuat Order"),
+      duration: Durations.short4,
+    ));
+    var formData = <String, String>{
+      'id': 1.toString(),
+      'id_booth': boothList[selectedIndex].idBooth.toString(),
+      'nomor_booth': nomorBooth,
+      'harga_bayar': boothList[selectedIndex].hargaBooth.toString(),
+    };
+
+    var response = await http.post(Uri.parse(Api.urlOrderMake), body: formData);
+    if (response.statusCode == 200) {
+      Order order = Order.fromJson(jsonDecode(response.body)['order_detail']);
+      Get.toNamed('/pembayaran', arguments: order);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Error"),
+        duration: Durations.short4,
+      ));
+    }
+    // } catch (e) {}
   }
 
   String formatCurrency(int value) {
@@ -753,9 +793,16 @@ class _EventState extends State<Event> {
                                               vertical: 12.0, horizontal: 16.0),
                                     ),
                                   ),
+                                  validator: (String? value) {
+                                    return value == null?'Pilih nomor booth':null;
+                                  },
+                                  autoValidateMode: AutovalidateMode.onUserInteraction,
                                   clearButtonProps:
                                       const ClearButtonProps(isVisible: true),
-                                  onChanged: print,
+                                  onChanged: (value) {
+                                    nomorBooth = value ?? '';
+                                    
+                                  },
                                   // selectedItem: "Pilih Lokasi",
                                 ),
                               ),
@@ -778,12 +825,13 @@ class _EventState extends State<Event> {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Pembayaran()),
-                                  );
+                                  makeOrder();
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //       builder: (context) =>
+                                  //           const Pembayaran()),
+                                  // );
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:

@@ -16,11 +16,11 @@ class Order {
   @JsonKey(name: 'harga_bayar')
   final int hargaBayar;
   @JsonKey(name: 'img_bukti_transfer')
-  final String imgBuktiTransfer;
+  final String? imgBuktiTransfer;
   @JsonKey(name: 'tgl_order')
   final String tglOrder;
   @JsonKey(name: 'tgl_verifikasi')
-  final String tglVerifikasi;
+  final String? tglVerifikasi;
   final int id;
   @JsonKey(name: 'id_booth')
   final int idBooth;
@@ -30,9 +30,9 @@ class Order {
     required this.statusOrder,
     required this.nomorBooth,
     required this.hargaBayar,
-    required this.imgBuktiTransfer,
+    this.imgBuktiTransfer,
     required this.tglOrder,
-    required this.tglVerifikasi,
+    this.tglVerifikasi,
     required this.id,
     required this.idBooth,
     this.booth,

@@ -17,6 +17,7 @@ class Api {
   static const String urlEventHarga = "$serverIp/api/event/getBoothRange";
 
   static const String urlOrder = "$serverIp/api/order/getOrder";
+  static const String urlOrderMake = "$serverIp/api/order/makeOrder";
   static const String urlOrderCount = "$serverIp/api/order/getOrder";
 
 

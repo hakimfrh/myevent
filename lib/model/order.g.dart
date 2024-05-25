@@ -11,9 +11,9 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       statusOrder: json['status_order'] as String,
       nomorBooth: json['nomor_booth'] as String,
       hargaBayar: (json['harga_bayar'] as num).toInt(),
-      imgBuktiTransfer: json['img_bukti_transfer'] as String,
+      imgBuktiTransfer: json['img_bukti_transfer'] as String?,
       tglOrder: json['tgl_order'] as String,
-      tglVerifikasi: json['tgl_verifikasi'] as String,
+      tglVerifikasi: json['tgl_verifikasi'] as String?,
       id: (json['id'] as num).toInt(),
       idBooth: (json['id_booth'] as num).toInt(),
       booth: json['booth'] == null
