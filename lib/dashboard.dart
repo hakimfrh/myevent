@@ -118,7 +118,8 @@ class HomeState extends State<Home> {
   List<Order> orderList = [];
 
   void getOrder() async {
-    var response = await http.get(Uri.parse('${Api.urlOrder}?user_id=${user.id}'));
+    var response =
+        await http.get(Uri.parse('${Api.urlOrder}?user_id=${user.id}'));
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body)['order_list'];
 
@@ -126,7 +127,7 @@ class HomeState extends State<Home> {
         Map<String, dynamic> orderMap = data[i];
         // print(orderMap.toString());
         Order order = Order.fromJson(orderMap);
-        if(!mounted) return;
+        if (!mounted) return;
         setState(() {
           orderList.add(order);
         });
@@ -445,7 +446,11 @@ class HomeState extends State<Home> {
             // Build each list item dynamically
             itemBuilder: (BuildContext context, int index) {
               Order order = orderList[index];
-              return CardEventOrder(order: order);
+              return GestureDetector(
+                onTap: () {
+                  Get.toNamed('/pembayaran', arguments: order);
+                },
+                child: CardEventOrder(order: order));
             },
           ),
           const SliverToBoxAdapter(

@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:another_stepper/another_stepper.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/order.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const Pembayaran());
@@ -17,10 +21,27 @@ class Pembayaran extends StatefulWidget {
   State<Pembayaran> createState() => _PembayaranState();
 }
 
-List<Order> eventList = [];
+Order order = Get.arguments as Order;
+List<Order> eventList = [
+  order,
+];
 
 class _PembayaranState extends State<Pembayaran> {
   int activeIndex = 1;
+  int getOrderStatusPage() {
+    if (order.statusOrder == 'validasi') return 1;
+    if (order.statusOrder == 'ditolak') return 1;
+    if (order.statusOrder == 'diterima') return 2;
+    if (order.statusOrder == 'menunggu pembayaran') return 2;
+    if (order.statusOrder == 'validasi pembayaran') return 3;
+    if (order.statusOrder == 'terverivikasi') return 3;
+    return 3;
+  }
+
+  void initState() {
+    super.initState();
+    activeIndex = getOrderStatusPage();
+  }
 
   List<StepperData> getStepperData() {
     return [
@@ -288,6 +309,8 @@ class StepThreeContent extends StatefulWidget {
 }
 
 class _StepThreeContentState extends State<StepThreeContent> {
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
   late Timer _timer;
   late DateTime _endTime;
   late Duration _remainingTime;
@@ -320,6 +343,74 @@ class _StepThreeContentState extends State<StepThreeContent> {
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  Future<void> _requestPermission(Permission permission) async {
+    if (await permission.isDenied) {
+      await permission.request();
+    }
+  }
+
+  Future<void> _showPicker(BuildContext context) async {
+    await _requestPermission(Permission.camera);
+    await _requestPermission(Permission.storage);
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Pilih dari galery'),
+                onTap: () {
+                  _imgFromGallery();
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Ambil foto'),
+                onTap: () {
+                  _imgFromCamera();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _imgFromGallery() async {
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
+  Future<void> _imgFromCamera() async {
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 
   @override
@@ -444,6 +535,37 @@ class _StepThreeContentState extends State<StepThreeContent> {
                       ), // Margin around the divider
                     ),
                   ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _showPicker(context);
+                  },
+                  child: CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.grey[200],
+                    child: _image != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.file(
+                              _image!,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            width: 100,
+                            height: 100,
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                  ),
                 ),
               ],
             ),

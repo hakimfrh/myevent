@@ -42,7 +42,7 @@ class CardEventOrderState extends State<CardEventOrder> {
     }
 
     return GestureDetector(
-      onTap: () {
+      onDoubleTap: () {
         Get.toNamed('/event',arguments: order.booth!.event);
       },
       child: Column(

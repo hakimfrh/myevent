@@ -19,11 +19,13 @@ dependencies:
   google_sign_in: ^6.2.1
   horizontal_stepper_flutter: ^1.0.3
   http: ^1.2.0
+  image_picker: ^1.0.8
   intl: ^0.19.0
   json_annotation: ^4.9.0
   json_serializable: ^6.7.1
   omni_datetime_picker: ^1.1.0
   path: ^1.8.3
+  permission_handler: ^11.3.1
   sqflite: ^2.3.2
 
 dev_dependencies:
