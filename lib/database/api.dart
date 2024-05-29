@@ -1,5 +1,5 @@
 class Api {
-  static const String serverIp = "http://192.168.1.4:8000";
+  static const String serverIp = "http://192.168.1.240:8000";
 
   static const String urlImage = "$serverIp/api/image";
   
@@ -18,6 +18,7 @@ class Api {
 
   static const String urlOrder = "$serverIp/api/order/getOrder";
   static const String urlOrderMake = "$serverIp/api/order/makeOrder";
+  static const String urlOrderBayar = "$serverIp/api/order/uploadBayar";
   static const String urlOrderCount = "$serverIp/api/order/getOrder";
 
 

@@ -10,6 +10,7 @@ import 'package:myevent/database/firebase.dart';
 import 'package:myevent/model/user.dart';
 // import 'package:myevent/database/sql_user.dart';
 import 'package:http/http.dart' as http;
+import 'package:myevent/model/user_controller.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -21,6 +22,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UserController().clearUser();
+    FirebaseController.logout();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -380,7 +388,9 @@ class _LoginState extends State<Login> {
         if (response.statusCode == 200) {
           // Request successful, parse the response body
           User user = User.fromMap(json["user"]);
-          Get.offNamed('/dashboard', arguments: user);
+          UserController().user = user;
+          Get.offNamed('/dashboard');
+          // Get.offNamed('/dashboard', arguments: user);
         } else {
           // Request failed, handle error
           _showAlertDialog(
@@ -421,7 +431,6 @@ class _LoginState extends State<Login> {
   }
 
   void continueWithGoogle() async {
-    FirebaseController.logout();
     final user = await FirebaseController.loginWithGoogle();
     if (user != null) {
       String uid = await FirebaseController.getId();

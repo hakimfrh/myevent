@@ -3,12 +3,16 @@ import 'package:another_stepper/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myevent/database/api.dart';
 import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/order.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dart:convert';
+import 'package:path/path.dart' as path;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const Pembayaran());
@@ -25,6 +29,8 @@ Order order = Get.arguments as Order;
 List<Order> eventList = [
   order,
 ];
+File? _image;
+String _buttonText = 'Selanjutnya';
 
 class _PembayaranState extends State<Pembayaran> {
   int activeIndex = 1;
@@ -39,8 +45,12 @@ class _PembayaranState extends State<Pembayaran> {
   }
 
   void initState() {
+    order = Get.arguments as Order;
+    _image = null;
     super.initState();
     activeIndex = getOrderStatusPage();
+    if(activeIndex == 1) _buttonText = 'Kembali';
+    if(activeIndex == 3) _buttonText = 'Kembali';
   }
 
   List<StepperData> getStepperData() {
@@ -145,6 +155,19 @@ class _PembayaranState extends State<Pembayaran> {
   }
 
   void _goToNextStep() {
+    if(activeIndex == 1){
+      Get.back();
+      return;
+    }
+    if(activeIndex == 2){
+      uploadBayar();
+      return;
+    }
+    if(activeIndex == 3){
+      Get.back();
+      return;
+    }
+    
     if (activeIndex < stepWidgets.length - 1) {
       setState(() {
         activeIndex += 1;
@@ -166,6 +189,40 @@ class _PembayaranState extends State<Pembayaran> {
     const StepThreeContent(),
     const StepFourContent(),
   ];
+
+  void uploadBayar() async {
+    if (_image == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Upload bukti pembayaran"),
+        duration: Durations.short4,
+      ));
+      print('gambarnya gaada');
+      return;
+    }
+    String base64Image = base64Encode(_image!.readAsBytesSync());
+    String imageType = path.extension(_image!.path);
+
+    var formData = <String, String>{
+      'id_order': order.idOrder.toString(),
+      'image_data': base64Image,
+      'image_type': imageType,
+    };
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Mengunggah bukti bayar"),
+        duration: Durations.short4,
+      ));
+    var response = await http.post(Uri.parse(Api.urlOrderBayar), body: formData);
+    if(response.statusCode == 200){
+      setState(() {
+        activeIndex = 3;
+      });
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+        content: Text(jsonDecode(response.body)['message']),
+        duration: Durations.short4,
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +281,7 @@ class _PembayaranState extends State<Pembayaran> {
                           backgroundColor:
                               const Color(0xFF512E67), // Atur warna teks button
                         ),
-                        child: const Text('Selanjutnya'),
+                        child: Text(_buttonText),
                       ),
                     ),
                   ),
@@ -309,7 +366,6 @@ class StepThreeContent extends StatefulWidget {
 }
 
 class _StepThreeContentState extends State<StepThreeContent> {
-  File? _image;
   final ImagePicker _picker = ImagePicker();
   late Timer _timer;
   late DateTime _endTime;
@@ -473,7 +529,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 200,
+                      height: 80,
                       width: 0.7, // Height of the divider
                       color: Colors.grey, // Color of the divider
                       margin: const EdgeInsets.symmetric(
@@ -499,26 +555,46 @@ class _StepThreeContentState extends State<StepThreeContent> {
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.normal),
                             ),
+                            Text(
+                              "Waktu Pemesanan",
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.normal),
+                            ),
+                            Text(
+                              "Batas waktu pembayaran",
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.normal),
+                            ),
                           ],
                         ),
                       ),
                     ),
-                    const Flexible(
+                    Flexible(
                       flex: 1,
                       fit: FlexFit.tight,
                       child: Padding(
-                        padding: EdgeInsets.only(top: 20, right: 20),
+                        padding: const EdgeInsets.only(top: 20, right: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
+                            const Text(
                               "08816283756",
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
-                            Text(
+                            const Text(
                               "Sevri Vendrain",
                               style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              order.tglOrder,
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              order.tglVerifikasi ?? '-',
+                              style: const TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -526,7 +602,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
                       ),
                     ),
                     Container(
-                      height: 200,
+                      height: 80,
                       width: 0.7, // Height of the divider
                       color: Colors.grey, // Color of the divider
                       margin: const EdgeInsets.symmetric(
@@ -536,36 +612,59 @@ class _StepThreeContentState extends State<StepThreeContent> {
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    _showPicker(context);
-                  },
-                  child: CircleAvatar(
-                    radius: 55,
-                    backgroundColor: Colors.grey[200],
-                    child: _image != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.file(
-                              _image!,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            width: 100,
-                            height: 100,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: Text(
+                        'Bukti Pembayaran :',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        _showPicker(context);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        child: _image != null
+                            ? Image.file(
+                                _image!,
+                                isAntiAlias: true,
+                                // width: 100,
+                                // height: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                width: 100,
+                                height: 100,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.grey[800],
+                                    ),
+                                    const Text(
+                                      'Klik untuk memilih gambar',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.normal),
+                                    )
+                                  ],
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

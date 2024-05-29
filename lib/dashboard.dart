@@ -8,6 +8,7 @@ import 'package:myevent/getx_state.dart';
 import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/order.dart';
 import 'package:myevent/model/user.dart';
+import 'package:myevent/model/user_controller.dart';
 import 'package:myevent/navigation_drawer.dart';
 import 'package:myevent/user_list.dart';
 import 'model/eventt.dart';
@@ -101,7 +102,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  final User user = User(
+   User user = User(
       id: 1,
       name: 'Mamang',
       phone: '01923901283',
@@ -140,6 +141,12 @@ class HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    User? currentUser = UserController().user;
+    if(currentUser == null){
+      Get.toNamed('/login');
+      return;
+    }
+    user = currentUser;
     getOrder();
   }
 

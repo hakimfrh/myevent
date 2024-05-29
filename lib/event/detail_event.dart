@@ -9,6 +9,7 @@ import 'package:myevent/event/card_booth.dart';
 import 'package:myevent/model/booth.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/order.dart';
+import 'package:myevent/model/user_controller.dart';
 import 'package:myevent/pembayaran.dart';
 import 'dart:ui';
 
@@ -140,7 +141,7 @@ class _EventState extends State<Event> {
       duration: Durations.short4,
     ));
     var formData = <String, String>{
-      'id': 1.toString(),
+      'id': UserController().user!.id.toString(),
       'id_booth': boothList[selectedIndex].idBooth.toString(),
       'nomor_booth': nomorBooth,
       'harga_bayar': boothList[selectedIndex].hargaBooth.toString(),
