@@ -11,6 +11,7 @@ class Api {
   static const String urlSendCode = "$serverIp/api/sendcode";
 
   static const String urlEvent = "$serverIp/api/event";
+  static const String urlEventGet = "$serverIp/api/event/getEvent";
   static const String urlEventBooth = "$serverIp/api/event/getBooth";
   static const String urlEventBoothTotal = "$serverIp/api/event/getBoothTotal";
   static const String urlEventBoothAvailable = "$serverIp/api/event/getBoothAvailable";

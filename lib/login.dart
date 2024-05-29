@@ -1,16 +1,20 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth_platform_interface/src/user_info.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:myevent/database/api.dart';
 import 'package:myevent/database/firebase.dart';
+import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/user.dart';
 // import 'package:myevent/database/sql_user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myevent/model/user_controller.dart';
+import 'package:uni_links/uni_links.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -22,13 +26,187 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  StreamSubscription? _sub;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     UserController().clearUser();
     FirebaseController.logout();
+    initUniLinks();
   }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  //BACKEND HERE
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordHidden = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordHidden = !_isPasswordHidden;
+    });
+  }
+
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      String email = _emailController.text;
+      String password = _passwordController.text;
+
+      try {
+        var response = await http
+            .get(Uri.parse("${Api.urlLogin}?login=$email&password=$password"));
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          // Request successful, parse the response body
+          User user = User.fromMap(json["user"]);
+          UserController().user = user;
+          Get.offNamed('/dashboard');
+          // Get.offNamed('/dashboard', arguments: user);
+        } else {
+          // Request failed, handle error
+          _showAlertDialog(
+              "ERROR CODE ${response.statusCode}", json["message"].toString());
+        }
+      } catch (e) {
+        // Handle socket connection error
+        _showAlertDialog("ERROR", e.toString());
+      }
+    }
+  }
+
+  Future<void> _showAlertDialog(String title, String text) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(text),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ya'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void continueWithGoogle() async {
+    final user = await FirebaseController.loginWithGoogle();
+    if (user != null) {
+      String uid = await FirebaseController.getId();
+      String email = await FirebaseController.getEmail();
+
+      // String phone = await FirebaseController.getPhone();
+      // List<UserInfo>? listInfo = await FirebaseController.getInfo();
+      // String info = listInfo.toString();
+      // String text = "UID: $uid\nemail: $email\nphone: $phone\n info: $info";
+      // _showAlertDialog("Firebase Login", text);
+
+      try {
+        var response = await http.get(Uri.parse(
+            "${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          // Request successful, parse the response body
+          User user = User.fromMap(json["user"]);
+          Get.offNamed('/dashboard', arguments: user);
+        } else {
+          // Request failed, handle error
+          _showAlertDialog(
+              "ERROR CODE ${response.statusCode}", json["message"].toString());
+        }
+      } catch (e) {
+        // Handle socket connection error
+        _showAlertDialog("ERROR", e.toString());
+      }
+    }
+  }
+
+  Future<void> initUniLinks() async {
+    // Handle incoming links
+    _sub = uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        List<String> pathSegments = uri.pathSegments;
+        if (pathSegments.length == 3 &&
+            pathSegments[0] == 'event' &&
+            pathSegments[1] == 'detail') {
+          String eventId = pathSegments[2];
+          // Navigator.pushNamed(context, '/details', arguments: eventId);
+          // _showAlertDialog('open from url', eventId);
+          getEvent(eventId).then((event) {
+            if (event != null) {
+              if (UserController().user == null) {
+                _showAlertDialog('Anda belum login',
+                    'Silahkan login terlebih dahulu untuk menggunakan aplikasi');
+              } else {
+                Get.toNamed('/event', arguments: event);
+              }
+            }
+          });
+        }
+      }
+    }, onError: (Object err) {
+      // Handle error
+    });
+
+    // Handle the initial link
+    try {
+      final initialUri = await getInitialUri();
+      if (initialUri != null) {
+        List<String> pathSegments = initialUri.pathSegments;
+        if (pathSegments.length == 3 &&
+            pathSegments[0] == 'event' &&
+            pathSegments[1] == 'detail') {
+          String eventId = pathSegments[2];
+          // Navigator.pushNamed(context, '/details', arguments: eventId);
+          // _showAlertDialog('open from url', eventId);
+          getEvent(eventId).then((event) {
+            if (UserController().user == null) {
+              _showAlertDialog('Anda belum login',
+                  'Silahkan login terlebih dahulu untuk menggunakan aplikasi');
+            } else {
+              Get.toNamed('/event', arguments: event);
+            }
+          });
+        }
+      }
+    } on PlatformException {
+      // Handle exception
+    } on FormatException {
+      // Handle exception
+    }
+  }
+
+  Future<Eventt?> getEvent(String eventId) async {
+    var response =
+        await http.get(Uri.parse('${Api.urlEventGet}?id_event=$eventId'));
+    if (response.statusCode == 200) {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      Eventt event = Eventt.fromJson(json['event']);
+      return event;
+    } else {
+      // Request failed, handle error
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -334,131 +512,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
-  }
-
-  //BACKEND HERE
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordHidden = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _isPasswordHidden = !_isPasswordHidden;
-    });
-  }
-
-  // void _login() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     String email = _emailController.text;
-  //     String password = _passwordController.text;
-  //     final dbUser = UserDatabase();
-  //     await dbUser.initializeDatabase();
-  //     User user = await dbUser.login(email, password);
-
-  //     if (!mounted) return;
-  //     if (user.id == null) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text('User tidak ditemukan || email atau password salah'),
-  //           duration: Duration(seconds: 2),
-  //         ),
-  //       );
-  //     } else {
-  //       // Navigator.push(
-  //       //   context,
-  //       //   MaterialPageRoute(
-  //       //     builder: (context) => const Dashboard(),
-  //       //     settings: RouteSettings(arguments: user), ////data => argumen
-  //       //   ),
-  //       // );
-
-  //       Get.offNamed('/dashboard', arguments: user);
-  //     }
-  //   }
-  // }
-  void _login() async {
-    if (_formKey.currentState!.validate()) {
-      String email = _emailController.text;
-      String password = _passwordController.text;
-
-      try {
-        var response = await http
-            .get(Uri.parse("${Api.urlLogin}?login=$email&password=$password"));
-        Map<String, dynamic> json = jsonDecode(response.body);
-        if (response.statusCode == 200) {
-          // Request successful, parse the response body
-          User user = User.fromMap(json["user"]);
-          UserController().user = user;
-          Get.offNamed('/dashboard');
-          // Get.offNamed('/dashboard', arguments: user);
-        } else {
-          // Request failed, handle error
-          _showAlertDialog(
-              "ERROR CODE ${response.statusCode}", json["message"].toString());
-        }
-      } catch (e) {
-        // Handle socket connection error
-        _showAlertDialog("ERROR", e.toString());
-      }
-    }
-  }
-
-  Future<void> _showAlertDialog(String title, String text) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(text),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Ya'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void continueWithGoogle() async {
-    final user = await FirebaseController.loginWithGoogle();
-    if (user != null) {
-      String uid = await FirebaseController.getId();
-      String email = await FirebaseController.getEmail();
-
-      // String phone = await FirebaseController.getPhone();
-      // List<UserInfo>? listInfo = await FirebaseController.getInfo();
-      // String info = listInfo.toString();
-      // String text = "UID: $uid\nemail: $email\nphone: $phone\n info: $info";
-      // _showAlertDialog("Firebase Login", text);
-
-      try {
-        var response = await http.get(Uri.parse(
-            "${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
-        Map<String, dynamic> json = jsonDecode(response.body);
-        if (response.statusCode == 200) {
-          // Request successful, parse the response body
-          User user = User.fromMap(json["user"]);
-          Get.offNamed('/dashboard', arguments: user);
-        } else {
-          // Request failed, handle error
-          _showAlertDialog(
-              "ERROR CODE ${response.statusCode}", json["message"].toString());
-        }
-      } catch (e) {
-        // Handle socket connection error
-        _showAlertDialog("ERROR", e.toString());
-      }
-    }
   }
 }
