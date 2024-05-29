@@ -15,6 +15,10 @@ class FirebaseController {
     return userCredential.user;
   }
 
+  static Future<User?> getCurrentUser() async {
+    return FirebaseAuth.instance.currentUser;
+  }
+
   static Future<String> getId() async{
      final currentUser = FirebaseAuth.instance.currentUser;
       final uid = currentUser?.uid;

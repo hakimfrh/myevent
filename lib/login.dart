@@ -14,6 +14,7 @@ import 'package:myevent/model/user.dart';
 // import 'package:myevent/database/sql_user.dart';
 import 'package:http/http.dart' as http;
 import 'package:myevent/model/user_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 
 final _formKey = GlobalKey<FormState>();
@@ -32,8 +33,10 @@ class _LoginState extends State<Login> {
     // TODO: implement initState
     super.initState();
     UserController().clearUser();
-    FirebaseController.logout();
-    initUniLinks();
+    // FirebaseController.logout();
+    autoLogin().then((v) {
+      initUniLinks();
+    });
   }
 
   @override
@@ -66,6 +69,11 @@ class _LoginState extends State<Login> {
           // Request successful, parse the response body
           User user = User.fromMap(json["user"]);
           UserController().user = user;
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          await prefs.setString('login', email);
+          await prefs.setString('pass', password);
+
           Get.offNamed('/dashboard');
           // Get.offNamed('/dashboard', arguments: user);
         } else {
@@ -76,6 +84,58 @@ class _LoginState extends State<Login> {
       } catch (e) {
         // Handle socket connection error
         _showAlertDialog("ERROR", e.toString());
+      }
+    }
+  }
+
+  Future<void> autoLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? login = prefs.getString('login');
+    String? password = prefs.getString('pass');
+    if (login != null && password != null) {
+      try {
+        prefs.getString('name');
+        var response = await http
+            .get(Uri.parse("${Api.urlLogin}?login=$login&password=$password"));
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          // Request successful, parse the response body
+          User user = User.fromMap(json["user"]);
+          UserController().user = user;
+
+          Get.offNamed('/dashboard');
+          // Get.offNamed('/dashboard', arguments: user);
+        } else {
+          // Request failed, handle error
+          _showAlertDialog(
+              "ERROR CODE ${response.statusCode}", json["message"].toString());
+        }
+      } catch (e) {
+        // Handle socket connection error
+        _showAlertDialog("ERROR", e.toString());
+      }
+    }
+
+    final currentUser = await FirebaseController.getCurrentUser();
+    if (currentUser != null) {
+      String uid = await FirebaseController.getId();
+      String email = await FirebaseController.getEmail();
+      try {
+        var response = await http.get(Uri.parse(
+            "${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
+        Map<String, dynamic> json = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          // Request successful, parse the response body
+          User user = User.fromMap(json["user"]);
+          Get.offNamed('/dashboard', arguments: user);
+        } else {
+          // // Request failed, handle error
+          // _showAlertDialog(
+          //     "ERROR CODE ${response.statusCode}", json["message"].toString());
+        }
+      } catch (e) {
+        // Handle socket connection error
+        // _showAlertDialog("ERROR", e.toString());
       }
     }
   }
@@ -131,6 +191,7 @@ class _LoginState extends State<Login> {
           // Request failed, handle error
           _showAlertDialog(
               "ERROR CODE ${response.statusCode}", json["message"].toString());
+          FirebaseController.logout();
         }
       } catch (e) {
         // Handle socket connection error

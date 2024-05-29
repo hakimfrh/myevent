@@ -59,12 +59,17 @@ class DashboardState extends State<Dashboard> {
               ),
             ),
             const Spacer(), // Spacer untuk jarak di antara teks dan gambar berikutnya
-            const CircleAvatar(
+            GestureDetector(
+              onTap: () {
+                UserController().logout();
+                Get.toNamed('/login');
+              },
+                child: const CircleAvatar(
               // Third image as CircleAvatar
               radius: 18, // Add the desired radius here
               backgroundImage:
                   AssetImage('images/profile.png'), // Add your image asset here
-            ),
+            )),
           ],
         ),
       ),

@@ -1,3 +1,6 @@
+import 'package:myevent/database/firebase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'user.dart';
 
 class UserController {
@@ -19,5 +22,12 @@ class UserController {
 
   void clearUser() {
     _user = null;
+  }
+
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('login');
+    await prefs.remove('pass');
+    FirebaseController.logout();
   }
 }
