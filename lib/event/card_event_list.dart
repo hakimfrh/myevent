@@ -30,6 +30,22 @@ class _CardEventListState extends State<CardEventList> {
     getImage();
   }
 
+  String trimString(String s) {
+    int length = 150;
+    if (s.length <= length) return s;
+
+    List<String> sList = s.split(' ');
+    String result = '';
+    int index = 0;
+    while (result.length < length) {
+      result += sList[index];
+      result += ' ';
+      index++;
+    }
+    result += '. Baca Selengkapnya...';
+    return result;
+  }
+
   void getImage() async {
     try {
       final response = await http
@@ -64,7 +80,7 @@ class _CardEventListState extends State<CardEventList> {
     // Gunakan pustaka intl untuk memformat angka menjadi format mata uang Rupiah
     final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp');
     String result = formatCurrency.format(value);
-    return result.substring(0, result.length-3);
+    return result.substring(0, result.length - 3);
   } // Deklarasikan variabel selectedDateTime di luar fungsi onPressedasikan variabel dateTimeList di luar fungsi onPressed
 
   @override
@@ -98,7 +114,7 @@ class _CardEventListState extends State<CardEventList> {
           padding: const EdgeInsets.only(right: 9, left: 9),
           child: GestureDetector(
             onTap: () {
-              Get.toNamed('/event',arguments: event);
+              Get.toNamed('/event', arguments: event);
             },
             child: Card(
               margin:
@@ -156,7 +172,7 @@ class _CardEventListState extends State<CardEventList> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                     Text(
+                                    Text(
                                       event.namaEvent,
                                       style: const TextStyle(
                                         color: Colors.black,
@@ -167,8 +183,8 @@ class _CardEventListState extends State<CardEventList> {
                                       softWrap: true,
                                     ),
                                     const SizedBox(height: 5),
-                                     Text(
-                                      event.deskripsi,
+                                    Text(
+                                      trimString(event.deskripsi),
                                       style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -178,7 +194,7 @@ class _CardEventListState extends State<CardEventList> {
                                       softWrap: true,
                                     ),
                                     const SizedBox(height: 5),
-                                     const Text(
+                                    const Text(
                                       'Harga mulai dari:',
                                       style: TextStyle(
                                         color: Colors.black,
@@ -189,12 +205,13 @@ class _CardEventListState extends State<CardEventList> {
                                       softWrap: true,
                                     ),
                                     const SizedBox(height: 5),
-                                     Row(
+                                    Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          formatCurrency(double.parse(hargaMin)),
+                                          formatCurrency(
+                                              double.parse(hargaMin)),
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -203,8 +220,9 @@ class _CardEventListState extends State<CardEventList> {
                                           textAlign: TextAlign.start,
                                           softWrap: true,
                                         ),
-                                         Text(
-                                          formatCurrency(double.parse(hargaMax)),
+                                        Text(
+                                          formatCurrency(
+                                              double.parse(hargaMax)),
                                           style: const TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold,
@@ -227,7 +245,7 @@ class _CardEventListState extends State<CardEventList> {
                                           width: 8,
                                         ),
                                         const SizedBox(width: 5),
-                                         Text(
+                                        Text(
                                           event.alamat,
                                           style: const TextStyle(
                                             fontSize: 10,
@@ -241,8 +259,8 @@ class _CardEventListState extends State<CardEventList> {
                                           width: 10,
                                         ),
                                         const SizedBox(width: 5),
-                                         Text(
-                                          event.whatsapp??'',
+                                        Text(
+                                          event.whatsapp ?? '',
                                           style: const TextStyle(
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,

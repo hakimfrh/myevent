@@ -30,20 +30,37 @@ class CardEventOrderState extends State<CardEventOrder> {
   @override
   Widget build(BuildContext context) {
     String eventColor;
-    String status = order.booth!.event!.status.toLowerCase();
-    if (status == 'selesai') {
+    String status = order.statusOrder.toLowerCase();
+    if (status == 'selesai' ||
+        status == 'diterima' ||
+        status == 'terverivikasi' ||
+        status == 'validasi pembayaran') {
       eventColor = '1';
-    } else if (status.contains('menunggu')) {
-      eventColor = '2';
     } else if (status == 'ditolak') {
       eventColor = '3';
     } else {
-      eventColor = '3';
+      eventColor = '2';
+    }
+
+    String trimString(String s) {
+      int length = 150;
+      if (s.length <= length) return s;
+      
+      List<String> sList = s.split(' ');
+      String result = '';
+      int index = 0;
+      while (result.length < length) {
+        result += sList[index];
+        result += ' ';
+        index++;
+      }
+      result += '. Baca Selengkapnya...';
+      return result;
     }
 
     return GestureDetector(
       onDoubleTap: () {
-        Get.toNamed('/event',arguments: order.booth!.event);
+        Get.toNamed('/event', arguments: order.booth!.event);
       },
       child: Column(
         children: [
@@ -125,7 +142,7 @@ class CardEventOrderState extends State<CardEventOrder> {
                             Padding(
                               padding: const EdgeInsets.only(right: 16.0),
                               child: Text(
-                                order.booth!.event!.status,
+                                order.statusOrder.toLowerCase(),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 11,
@@ -183,7 +200,7 @@ class CardEventOrderState extends State<CardEventOrder> {
                                     const SizedBox(height: 5),
                                     // Text festival
                                     Text(
-                                      order.booth!.event!.deskripsi.substring(0,150),
+                                      trimString(order.booth!.event!.deskripsi),
                                       style: const TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.normal,
@@ -300,8 +317,8 @@ class CardEventOrderState extends State<CardEventOrder> {
 
   void getImage() async {
     try {
-      final response = await http
-          .get(Uri.parse('${Api.urlImage}/${order.booth!.event!.uploadPamflet}?w=136&h=181'));
+      final response = await http.get(Uri.parse(
+          '${Api.urlImage}/${order.booth!.event!.uploadPamflet}?w=136&h=181'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];
         if (!mounted) return;
@@ -310,7 +327,7 @@ class CardEventOrderState extends State<CardEventOrder> {
         });
       } else {}
     } catch (e) {
-      if(retry <= 3){
+      if (retry <= 3) {
         retry++;
         getImage();
       }
@@ -318,8 +335,8 @@ class CardEventOrderState extends State<CardEventOrder> {
   }
 
   void getHarga() async {
-    final response = await http
-        .get(Uri.parse('${Api.urlEventHarga}?id_event=${order.booth!.event!.idEvent}'));
+    final response = await http.get(Uri.parse(
+        '${Api.urlEventHarga}?id_event=${order.booth!.event!.idEvent}'));
     if (response.statusCode == 200) {
       String dataMax = json.decode(response.body)['max_harga_booth'].toString();
       String dataMin = json.decode(response.body)['min_harga_booth'].toString();

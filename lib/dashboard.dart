@@ -102,7 +102,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-   User user = User(
+  User user = User(
       id: 1,
       name: 'Mamang',
       phone: '01923901283',
@@ -142,7 +142,7 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     User? currentUser = UserController().user;
-    if(currentUser == null){
+    if (currentUser == null) {
       Get.toNamed('/login');
       return;
     }
@@ -454,10 +454,10 @@ class HomeState extends State<Home> {
             itemBuilder: (BuildContext context, int index) {
               Order order = orderList[index];
               return GestureDetector(
-                onTap: () {
-                  Get.toNamed('/pembayaran', arguments: order);
-                },
-                child: CardEventOrder(order: order));
+                  onTap: () {
+                    Get.toNamed('/pembayaran', arguments: order);
+                  },
+                  child: CardEventOrder(order: order));
             },
           ),
           const SliverToBoxAdapter(
