@@ -18,9 +18,11 @@ class Order {
   @JsonKey(name: 'img_bukti_transfer')
   final String? imgBuktiTransfer;
   @JsonKey(name: 'tgl_order')
-  final String tglOrder;
+  final DateTime tglOrder;
   @JsonKey(name: 'tgl_verifikasi')
-  final String? tglVerifikasi;
+  final DateTime? tglVerifikasi;
+  @JsonKey(name: 'tgl_bayar')
+  final DateTime? tglBayar;
   final int id;
   @JsonKey(name: 'id_booth')
   final int idBooth;
@@ -33,6 +35,7 @@ class Order {
     this.imgBuktiTransfer,
     required this.tglOrder,
     this.tglVerifikasi,
+    this.tglBayar,
     required this.id,
     required this.idBooth,
     this.booth,

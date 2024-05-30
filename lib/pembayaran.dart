@@ -370,11 +370,12 @@ class _StepThreeContentState extends State<StepThreeContent> {
   late Timer _timer;
   late DateTime _endTime;
   late Duration _remainingTime;
+  final DateTime _startTime = order.tglVerifikasi??DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    _endTime = DateTime.now().add(const Duration(minutes: 30));
+    _endTime = _startTime.add(const Duration(hours: 24));
     _remainingTime = _endTime.difference(DateTime.now());
 
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -588,12 +589,12 @@ class _StepThreeContentState extends State<StepThreeContent> {
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              order.tglOrder,
+                              order.tglOrder.toString(),
                               style: const TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              order.tglVerifikasi ?? '-',
+                              order.tglVerifikasi.toString(),
                               style: const TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
@@ -677,6 +678,12 @@ class _StepThreeContentState extends State<StepThreeContent> {
 
 class StepFourContent extends StatelessWidget {
   const StepFourContent({super.key});
+String formatCurrency(int value) {
+    // Gunakan pustaka intl untuk memformat angka menjadi format mata uang Rupiah
+    final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp');
+    String result = formatCurrency.format(value);
+    return result.substring(0, result.length - 3);
+  } // Deklarasikan variabel selectedDateTime di luar fungsi onPressedasikan variabel dateTimeList di luar fungsi onPressed
 
   @override
   Widget build(BuildContext context) {
@@ -795,73 +802,73 @@ class StepFourContent extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Flexible(
+                       Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
                         child: Padding(
-                          padding: EdgeInsets.only(top: 20, right: 20),
+                          padding: const EdgeInsets.only(top: 20, right: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "Selesai",
-                                style: TextStyle(
+                                order.statusOrder,
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Text(
-                                "17:00",
-                                style: TextStyle(
+                                DateFormat.Hm().format(order.tglBayar??DateTime(0)),
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Text(
-                                "17 - 03 - 2024",
-                                style: TextStyle(
+                                DateFormat.yMd().format(order.tglBayar??DateTime(0)),
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Text(
-                                "010927322824",
-                                style: TextStyle(
+                                order.booth!.event!.noRekening,
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Text(
-                                "Sevri Vendrain",
-                                style: TextStyle(
+                                order.booth!.event!.namaRekening,
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Text(
-                                "ID012963625317",
-                                style: TextStyle(
+                                order.idOrder.toString(),
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Text(
-                                "Booth A17",
-                                style: TextStyle(
+                                '${order.booth!.tipeBooth} - ${order.nomorBooth}',
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Text(
-                                "Rp. 150.000",
-                                style: TextStyle(
+                                formatCurrency(order.booth!.hargaBooth),
+                                style: const TextStyle(
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                             ],

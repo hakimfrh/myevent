@@ -12,8 +12,13 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
       nomorBooth: json['nomor_booth'] as String,
       hargaBayar: (json['harga_bayar'] as num).toInt(),
       imgBuktiTransfer: json['img_bukti_transfer'] as String?,
-      tglOrder: json['tgl_order'] as String,
-      tglVerifikasi: json['tgl_verifikasi'] as String?,
+      tglOrder: DateTime.parse(json['tgl_order'] as String),
+      tglVerifikasi: json['tgl_verifikasi'] == null
+          ? null
+          : DateTime.parse(json['tgl_verifikasi'] as String),
+      tglBayar: json['tgl_bayar'] == null
+          ? null
+          : DateTime.parse(json['tgl_bayar'] as String),
       id: (json['id'] as num).toInt(),
       idBooth: (json['id_booth'] as num).toInt(),
       booth: json['booth'] == null
@@ -27,8 +32,9 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
       'nomor_booth': instance.nomorBooth,
       'harga_bayar': instance.hargaBayar,
       'img_bukti_transfer': instance.imgBuktiTransfer,
-      'tgl_order': instance.tglOrder,
-      'tgl_verifikasi': instance.tglVerifikasi,
+      'tgl_order': instance.tglOrder.toIso8601String(),
+      'tgl_verifikasi': instance.tglVerifikasi?.toIso8601String(),
+      'tgl_bayar': instance.tglBayar?.toIso8601String(),
       'id': instance.id,
       'id_booth': instance.idBooth,
       'booth': instance.booth,
