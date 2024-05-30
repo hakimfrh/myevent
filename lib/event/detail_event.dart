@@ -13,9 +13,6 @@ import 'package:myevent/model/user_controller.dart';
 import 'package:myevent/pembayaran.dart';
 import 'dart:ui';
 
-
-
-
 class Event extends StatefulWidget {
   @override
   _EventState createState() => _EventState();
@@ -37,6 +34,7 @@ class _EventState extends State<Event> {
   List<List<String>> boothAvailable = [];
   int selectedIndex = 0;
   String nomorBooth = '';
+  int isEnrolled = -1;
   @override
   void initState() {
     super.initState();
@@ -45,7 +43,10 @@ class _EventState extends State<Event> {
     getBooth();
     getBoothAvailable();
     getImage();
+    getStatus();
   }
+
+  void getStatus() async {}
 
   void getImage() async {
     try {
@@ -594,11 +595,20 @@ class _EventState extends State<Event> {
   void _showBottomSheet(BuildContext context) async {
     if (boothList.isEmpty || boothAvailable.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Loading... harap tunggu"),
+        content: Text("Loading... harap tunggu."),
         duration: Durations.short4,
       ));
       return;
     }
+
+    if (event.userId == UserController().user!.id) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Anda tidak dapat membeli event anda sendiri !"),
+        duration: Durations.medium2,
+      ));
+      return;
+    }
+    
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
@@ -795,14 +805,16 @@ class _EventState extends State<Event> {
                                     ),
                                   ),
                                   validator: (String? value) {
-                                    return value == null?'Pilih nomor booth':null;
+                                    return value == null
+                                        ? 'Pilih nomor booth'
+                                        : null;
                                   },
-                                  autoValidateMode: AutovalidateMode.onUserInteraction,
+                                  autoValidateMode:
+                                      AutovalidateMode.onUserInteraction,
                                   clearButtonProps:
                                       const ClearButtonProps(isVisible: true),
                                   onChanged: (value) {
                                     nomorBooth = value ?? '';
-                                    
                                   },
                                   // selectedItem: "Pilih Lokasi",
                                 ),

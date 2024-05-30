@@ -77,9 +77,15 @@ class _LoginState extends State<Login> {
           Get.offNamed('/dashboard');
           // Get.offNamed('/dashboard', arguments: user);
         } else {
-          // Request failed, handle error
-          _showAlertDialog(
-              "ERROR CODE ${response.statusCode}", json["message"].toString());
+          if (json['message'].toString().toLowerCase().contains('user')) {
+            _showAlertDialog("Email tidak terdaftar","Email yang anda gunakan belum didaftaran. Silahkan daftarkan akun anda terlebih dahulu");
+            FirebaseController.logout();
+            Get.toNamed('/register');
+          } else {
+            // Request failed, handle error
+            _showAlertDialog("ERROR CODE ${response.statusCode}",
+                json["message"].toString());
+          }
         }
       } catch (e) {
         // Handle socket connection error
