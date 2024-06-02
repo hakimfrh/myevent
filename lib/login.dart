@@ -100,7 +100,6 @@ class _LoginState extends State<Login> {
     String? password = prefs.getString('pass');
     if (login != null && password != null) {
       try {
-        prefs.getString('name');
         var response = await http
             .get(Uri.parse("${Api.urlLogin}?login=$login&password=$password"));
         Map<String, dynamic> json = jsonDecode(response.body);
@@ -133,7 +132,9 @@ class _LoginState extends State<Login> {
         if (response.statusCode == 200) {
           // Request successful, parse the response body
           User user = User.fromMap(json["user"]);
-          Get.offNamed('/dashboard', arguments: user);
+          UserController().user = user;
+          Get.offNamed('/dashboard');
+          // Get.offNamed('/dashboard', arguments: user);
         } else {
           // // Request failed, handle error
           // _showAlertDialog(
