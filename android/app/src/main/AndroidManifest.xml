@@ -5,7 +5,7 @@
     <application
         android:label="myevent"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         
         <activity
             android:name=".MainActivity"
@@ -41,7 +41,7 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data   android:scheme="http" />
                 <data   android:scheme="https" />
-                <data   android:host="192.168.1.240"
+                <data   android:host="192.168.137.1"
                         android:port="8000"
                         android:pathPrefix="/event/detail"/>
             </intent-filter>

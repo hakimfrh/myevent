@@ -15,6 +15,8 @@ dependencies:
   firebase_core: ^2.27.0
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.10
   get: ^4.6.6
   google_sign_in: ^6.2.1
   horizontal_stepper_flutter: ^1.0.3
@@ -35,6 +37,11 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   build_runner: ^2.4.9
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "images/logo_splash.png"
 
 flutter:
   uses-material-design: true

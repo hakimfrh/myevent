@@ -24,7 +24,7 @@ class _CardBoothState extends State<CardBooth> {
   void getImage() async {
     try {
       final response = await http.get(
-          Uri.parse('${Api.urlImage}/${booth.uploadGambarBooth}?w=236&h=314'));
+          Uri.parse('${Api.urlImage}?image_path=${booth.uploadGambarBooth}&w=236&h=314'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];
         if (!mounted) return;

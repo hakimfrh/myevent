@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:myevent/database/api.dart';
 import '../model/order.dart';
 
@@ -84,231 +85,283 @@ class CardEventOrderState extends State<CardEventOrder> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Card(
-              margin: const EdgeInsets.symmetric(vertical: 10.0),
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+  margin: const EdgeInsets.symmetric(vertical: 10.0),
+  elevation: 2,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0),
+  ),
+  color: Colors.white,
+  child: Container(
+    height: 180,
+    child: Stack(
+      children: [
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 23,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(5.0),
+                topRight: Radius.circular(5.0),
               ),
-              color: Colors.white,
-              child: Container(
-                height: 200,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        height: 23,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(5.0),
-                            topRight: Radius.circular(5.0),
-                          ),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              eventColor == '1'
-                                  ? const Color(0xFFF35AE24)
-                                  : eventColor == '2'
-                                      ? const Color(0xFFFFFC107)
-                                      : const Color(0xFFFF3D3D),
-                              eventColor == '1'
-                                  ? const Color(0xFF16480F)
-                                  : eventColor == '2'
-                                      ? const Color(0xFF997404)
-                                      : const Color(0xFF992424)
-                            ],
-                            // colors: [Color(0xFFF35AE24), Color(0xFF16480F)],
-                            // colors: [Color(0xFFFFFC107), Color(0xFF997404)],
-                            // colors: [Color(0xFFFF3D3D), Color(0xFF992424)],
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: Text(
-                                "Id Event : ${order.booth!.event!.idEvent}",
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Text(
-                                order.statusOrder.toLowerCase(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // Image.asset(
-                            //   'images/event1.png',
-                            //   width: 80,
-                            // ),
-                            imageData != ''
-                                ? Image.memory(
-                                    base64Decode(imageData),
-                                    // fit: BoxFit.cover,
-                                    width: 80,
-                                  )
-                                : CircularProgressIndicator(),
-                            const SizedBox(width: 10.0),
-                            const VerticalDivider(
-                              color: Colors.grey, // Warna garis
-                              thickness: 1, // Ketebalan garis
-                              width: 20, // Lebar garis
-                              indent: 30, // Jarak dari atas
-                              endIndent: 30, // Jarak dari bawah
-                            ),
-                            Flexible(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(5.0, 15, 20, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      order.booth!.event!.namaEvent,
-                                      // ignore: prefer_const_constructors
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 19,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      softWrap: true,
-                                    ),
-                                    const SizedBox(height: 5),
-                                    // Text festival
-                                    Text(
-                                      trimString(order.booth!.event!.deskripsi),
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 10,
-                                      ),
-                                      textAlign: TextAlign.start,
-                                      softWrap: true,
-                                    ),
-                                    const SizedBox(height: 5),
-                                    const Text(
-                                      "Harga Mulai Dari :",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 10,
-                                      ),
-                                      textAlign: TextAlign.start,
-                                      softWrap: true,
-                                    ),
-                                    const SizedBox(
-                                        height:
-                                            5), // Tambahkan jarak sebelum teks harga
-                                    // Row untuk menampilkan harga
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        // Teks harga pertama
-                                        Text(
-                                          'Rp. $hargaMin',
-                                          // '123',
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 17,
-                                          ),
-                                          textAlign: TextAlign.start,
-                                          softWrap: true,
-                                        ),
-                                        // Teks harga kedua
-                                        Text(
-                                          'Rp. $hargaMax',
-                                          // '123',
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                          ),
-                                          textAlign: TextAlign.start,
-                                          softWrap: true,
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Image.asset(
-                                          'images/lokasi.png',
-                                          width:
-                                              8, // Add the desired width here
-                                        ),
-                                        const SizedBox(
-                                            width:
-                                                5), // Tambahkan jarak antara gambar dan teks
-                                        Text(
-                                          order.booth!.event!.alamat,
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Rubik',
-                                          ),
-                                        ),
-                                        const Spacer(), // Spacer untuk mendorong teks harga ke sisi kanan
-                                        // Teks harga
-                                        Image.asset(
-                                          'images/wa.png',
-                                          width:
-                                              10, // Add the desired width here
-                                        ),
-                                        const SizedBox(
-                                            width:
-                                                5), // Tambahkan jarak antara gambar dan teks
-                                        Text(
-                                          order.booth!.event!.whatsapp ?? '',
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Rubik',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  eventColor == '1'
+                      ? const Color(0xFFF35AE24)
+                      : eventColor == '2'
+                          ? const Color(0xFFFFFC107)
+                          : const Color(0xFFFF3D3D),
+                  eventColor == '1'
+                      ? const Color(0xFF16480F)
+                      : eventColor == '2'
+                          ? const Color(0xFF997404)
+                          : const Color(0xFF992424)
+                ],
               ),
             ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(
+                    "Id Event : ${order.booth!.event!.idEvent}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Text(
+                    order.statusOrder.toLowerCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Center(
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(15.0, 20, 0, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                imageData != ''
+                    ? Image.memory(
+                        base64Decode(imageData),
+                        width: 70,
+                      )
+                    : CircularProgressIndicator(),
+                const SizedBox(width: 10.0),
+                const VerticalDivider(
+                  color: Colors.grey,
+                  thickness: 1,
+                  width: 20,
+                  indent: 30,
+                  endIndent: 30,
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5.0, 20, 25, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          order.booth!.event!.namaEvent,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 22,
+                          ),
+                          textAlign: TextAlign.start,
+                          softWrap: true,
+                        ),
+                        SizedBox(height: 5,),
+                          
+                           FutureBuilder<void>(
+    future: Future.delayed(const Duration(milliseconds: 1170)), // Menunda perubahan selama 500 milidetik
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Text(
+          'Loading...', // Teks sementara saat menunggu
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+      } else {
+        return Text(
+          NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ')
+              .format(double.parse(hargaMin)),
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w400,
+            fontSize: 24,
+          ),
+          textAlign: TextAlign.start,
+          softWrap: true,
+        );
+      }
+    },
+  ),
+
+  //yang dibawah itu yang belum dikasih format ke rupiah, jika nanti terjadi error, 
+  //pake yang di bawah saja, karena untuk mengganti currency nya itu datanya harus terpanggil dulu baru bisa di ubah ,
+  // masalahnya loading setiap hape itu beda beda, nah jika belum terpanggil dulu datanya, dan akan di ubahcurecynya maka akan eror sebentar,
+  // nanti jika datanya telah dipanggil baru tidak akan terjadi error. bebas dah mau pake yang mana
+
+                          // Text(
+                          //     NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ')
+                          //             .format(double.parse(hargaMin)),
+                          //         style: const TextStyle(
+                          //           color: Colors.black,
+                          //           fontWeight: FontWeight.bold,
+                          //           fontSize: 24,
+                          //         ),
+                          //         textAlign: TextAlign.start,
+                          //         softWrap: true,
+                          //       ),
+                                                      SizedBox(height: 5,),
+
+                              Text(
+                                'Booth Gold - A',
+                                // 'Rp. $hargaMin',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 14,
+                                ),
+                                textAlign: TextAlign.start,
+                                softWrap: true,
+                              ),
+                              SizedBox(height: 5,),
+                        // const SizedBox(height: 5),
+                        // Text(
+                        //   trimString(order.booth!.event!.deskripsi),
+                        //   style: const TextStyle(
+                        //     color: Colors.black,
+                        //     fontWeight: FontWeight.normal,
+                        //     fontSize: 10,
+                        //   ),
+                        //   textAlign: TextAlign.start,
+                        //   softWrap: true,
+                        // ),
+                        // const SizedBox(height: 5),
+                        // const Text(
+                        //   "Harga Mulai Dari :",
+                        //   style: TextStyle(
+                        //     color: Colors.black,
+                        //     fontWeight: FontWeight.bold,
+                        //     fontSize: 10,
+                        //   ),
+                        //   textAlign: TextAlign.start,
+                        //   softWrap: true,
+                        // ),
+                        // const SizedBox(height: 5),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Expanded(
+                        //       child: Text(
+                        //         'Rp. $hargaMin',
+                        //         style: const TextStyle(
+                        //           color: Colors.black,
+                        //           fontWeight: FontWeight.bold,
+                        //           fontSize: 17,
+                        //         ),
+                        //         textAlign: TextAlign.start,
+                        //         softWrap: true,
+                        //       ),
+                        //     ),
+                            
+                        //     // Expanded(
+                        //     //   child: Text(
+                        //     //     'Rp. $hargaMax',
+                        //     //     style: const TextStyle(
+                        //     //       color: Colors.black,
+                        //     //       fontWeight: FontWeight.bold,
+                        //     //       fontSize: 15,
+                        //     //     ),
+                        //     //     textAlign: TextAlign.end,
+                        //     //     softWrap: true,
+                        //     //   ),
+                        //     // ),
+                        //   ],
+                        // ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Image.asset(
+                              'images/lokasi.png',
+                              width: 8,
+                            ),
+                            const SizedBox(width: 5),
+                            Expanded(
+                              child: Text(
+                                order.booth!.event!.alamat,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Rubik',
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                        Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Icon(
+                                    Icons.date_range,
+                                    size: 15,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Expanded(
+                                    child: Text(
+                                    order.booth!.event!.pelaksanaanEvent.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Rubik',
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
           )
         ],
       ),
@@ -318,7 +371,7 @@ class CardEventOrderState extends State<CardEventOrder> {
   void getImage() async {
     try {
       final response = await http.get(Uri.parse(
-          '${Api.urlImage}/${order.booth!.event!.uploadPamflet}?w=136&h=181'));
+          '${Api.urlImage}?image_path=${order.booth!.event!.uploadPamflet}&w=136&h=181'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];
         if (!mounted) return;

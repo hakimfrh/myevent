@@ -5,10 +5,10 @@ import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/firebase_options.dart';
 import 'package:myevent/login.dart';
 import 'package:myevent/forgotpassword/forgotpassword.dart';
-import 'package:myevent/navigation_drawer.dart';
+import 'package:myevent/search_event.dart';
 import 'package:myevent/register.dart';
 import 'package:myevent/pembayaran.dart';
-import 'package:myevent/user_list.dart';
+import 'package:myevent/riwayat.dart';
 import 'package:get/get.dart';
 
 void main() async {

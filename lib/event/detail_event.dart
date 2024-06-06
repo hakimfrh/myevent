@@ -51,7 +51,7 @@ class _EventState extends State<Event> {
   void getImage() async {
     try {
       final response = await http
-          .get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=527&h=701'));
+          .get(Uri.parse('${Api.urlImage}?image_path=${event.uploadPamflet}&w=527&h=701'));
       // final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=30&h=40'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];

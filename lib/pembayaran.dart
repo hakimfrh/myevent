@@ -692,11 +692,28 @@ String formatCurrency(int value) {
         padding: const EdgeInsets.only(
           top: 10,
         ),
+       child:  Container(
+        height: 520,
+      margin: const EdgeInsets.only(top: 0,left: 24,right: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
+              padding: const EdgeInsets.only(left: 15, top: 0, right: 15),
               child: Column(
                 children: [
                   Image.asset(
@@ -708,24 +725,18 @@ String formatCurrency(int value) {
                     "Pembayaran Terkirim",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                   ),
+                  
+                  SizedBox(height: 40,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: 200,
-                        width: 0.7, // Height of the divider
-                        color: Colors.grey, // Color of the divider
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 0,
-                        ), // Margin around the divider
-                      ),
-                      const Flexible(
+                      
+                      Flexible(
                         flex: 1,
                         fit: FlexFit.tight,
                         child: Padding(
-                          padding: EdgeInsets.only(top: 20, left: 20),
+                          padding: EdgeInsets.only(top: 20, left: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -736,7 +747,7 @@ String formatCurrency(int value) {
                                     fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 "Waktu :",
@@ -745,7 +756,7 @@ String formatCurrency(int value) {
                                     fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 "Tanggal :",
@@ -754,7 +765,7 @@ String formatCurrency(int value) {
                                     fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 "Nomor Rekening Tujuan :",
@@ -763,7 +774,7 @@ String formatCurrency(int value) {
                                     fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 "Rekening Atas Nama :",
@@ -772,7 +783,7 @@ String formatCurrency(int value) {
                                     fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 "ID Transaksi :",
@@ -781,7 +792,7 @@ String formatCurrency(int value) {
                                     fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 "Jenis Booth :",
@@ -790,7 +801,7 @@ String formatCurrency(int value) {
                                     fontWeight: FontWeight.normal),
                               ),
                               SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 "Harga :",
@@ -806,7 +817,7 @@ String formatCurrency(int value) {
                         flex: 1,
                         fit: FlexFit.tight,
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 20, right: 20),
+                          padding: const EdgeInsets.only(top: 20, right: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -816,7 +827,7 @@ String formatCurrency(int value) {
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 DateFormat.Hm().format(order.tglBayar??DateTime(0)),
@@ -824,7 +835,7 @@ String formatCurrency(int value) {
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 DateFormat.yMd().format(order.tglBayar??DateTime(0)),
@@ -832,7 +843,7 @@ String formatCurrency(int value) {
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 order.booth!.event!.noRekening,
@@ -840,7 +851,7 @@ String formatCurrency(int value) {
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 order.booth!.event!.namaRekening,
@@ -848,7 +859,7 @@ String formatCurrency(int value) {
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 order.idOrder.toString(),
@@ -856,7 +867,7 @@ String formatCurrency(int value) {
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 '${order.booth!.tipeBooth} - ${order.nomorBooth}',
@@ -864,7 +875,7 @@ String formatCurrency(int value) {
                                     fontSize: 12, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(
-                                height: 8,
+                                height: 14,
                               ),
                               Text(
                                 formatCurrency(order.booth!.hargaBooth),
@@ -875,15 +886,7 @@ String formatCurrency(int value) {
                           ),
                         ),
                       ),
-                      Container(
-                        height: 200,
-                        width: 0.7, // Height of the divider
-                        color: Colors.grey, // Color of the divider
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 0,
-                        ), // Margin around the divider
-                      ),
+                     
                     ],
                   ),
                 ],
@@ -891,6 +894,8 @@ String formatCurrency(int value) {
             ),
           ],
         ),
+      ),
+    ),
       ),
     );
   }
