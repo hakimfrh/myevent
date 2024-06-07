@@ -213,7 +213,7 @@ class HomeState extends State<Home> {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              user.name,
+                              user.name??'',
                               style: const TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 30,

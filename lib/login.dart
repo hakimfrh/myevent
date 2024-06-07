@@ -186,7 +186,7 @@ class _LoginState extends State<Login> {
       // String text = "UID: $uid\nemail: $email\nphone: $phone\n info: $info";
       // _showAlertDialog("Firebase Login", text);
 
-      try {
+      // try {
         var response = await http.get(Uri.parse(
             "${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
         Map<String, dynamic> json = jsonDecode(response.body);
@@ -200,10 +200,10 @@ class _LoginState extends State<Login> {
               "ERROR CODE ${response.statusCode}", json["message"].toString());
           FirebaseController.logout();
         }
-      } catch (e) {
+      // } catch (e) {
         // Handle socket connection error
-        _showAlertDialog("ERROR", e.toString());
-      }
+        // _showAlertDialog("ERROR", e.toString());
+      // }
     }
   }
 

@@ -33,7 +33,9 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data   android:scheme="http" />
                 <data   android:scheme="https" />
-                <data   android:host="oranghitamlegam.cloud"/>
+                <data   android:host="localhost"
+                        android:port="8000"
+                        android:pathPrefix="/event/detail"/>
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>

@@ -370,7 +370,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
   late Timer _timer;
   late DateTime _endTime;
   late Duration _remainingTime;
-  final DateTime _startTime = order.tglVerifikasi??DateTime.now();
+  final DateTime _startTime = order.tglDiterima??DateTime.now();
 
   @override
   void initState() {

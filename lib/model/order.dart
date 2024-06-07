@@ -23,10 +23,15 @@ class Order {
   final DateTime? tglVerifikasi;
   @JsonKey(name: 'tgl_bayar')
   final DateTime? tglBayar;
+  @JsonKey(name: 'tgl_diterima')
+  final DateTime? tglDiterima;
+  @JsonKey(name: 'tgl_ditolak')
+  final DateTime? tglDitolak;
   final int id;
   @JsonKey(name: 'id_booth')
   final int idBooth;
   final Booth? booth;
+  
   Order({
     required this.idOrder,
     required this.statusOrder,
@@ -36,10 +41,13 @@ class Order {
     required this.tglOrder,
     this.tglVerifikasi,
     this.tglBayar,
+    this.tglDiterima,
+    this.tglDitolak,
     required this.id,
     required this.idBooth,
     this.booth,
   });
+ 
   
  
 
