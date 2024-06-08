@@ -74,11 +74,20 @@ class _LoginState extends State<Login> {
           await prefs.setString('login', email);
           await prefs.setString('pass', password);
 
+          String? cityName = prefs.getString('cityName');
+          double? latitude = prefs.getDouble('latitude');
+          double? longitude = prefs.getDouble('longitude');
+
+          if (cityName != null) UserController().cityName = cityName;
+          if (latitude != null) UserController().latitude = latitude;
+          if (longitude != null) UserController().longitude = longitude;
+
           Get.offNamed('/dashboard');
           // Get.offNamed('/dashboard', arguments: user);
         } else {
           if (json['message'].toString().toLowerCase().contains('user')) {
-            _showAlertDialog("Email tidak terdaftar","Email yang anda gunakan belum didaftaran. Silahkan daftarkan akun anda terlebih dahulu");
+            _showAlertDialog("Email tidak terdaftar",
+                "Email yang anda gunakan belum didaftaran. Silahkan daftarkan akun anda terlebih dahulu");
             FirebaseController.logout();
             Get.toNamed('/register');
           } else {
@@ -108,6 +117,14 @@ class _LoginState extends State<Login> {
           User user = User.fromMap(json["user"]);
           UserController().user = user;
 
+          String? cityName = prefs.getString('cityName');
+          double? latitude = prefs.getDouble('latitude');
+          double? longitude = prefs.getDouble('longitude');
+
+          if (cityName != null) UserController().cityName = cityName;
+          if (latitude != null) UserController().latitude = latitude;
+          if (longitude != null) UserController().longitude = longitude;
+
           Get.offNamed('/dashboard');
           // Get.offNamed('/dashboard', arguments: user);
         } else {
@@ -133,6 +150,15 @@ class _LoginState extends State<Login> {
           // Request successful, parse the response body
           User user = User.fromMap(json["user"]);
           UserController().user = user;
+
+          String? cityName = prefs.getString('cityName');
+          double? latitude = prefs.getDouble('latitude');
+          double? longitude = prefs.getDouble('longitude');
+
+          if (cityName != null) UserController().cityName = cityName;
+          if (latitude != null) UserController().latitude = latitude;
+          if (longitude != null) UserController().longitude = longitude;
+
           Get.offNamed('/dashboard');
           // Get.offNamed('/dashboard', arguments: user);
         } else {
@@ -187,22 +213,32 @@ class _LoginState extends State<Login> {
       // _showAlertDialog("Firebase Login", text);
 
       // try {
-        var response = await http.get(Uri.parse(
-            "${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
-        Map<String, dynamic> json = jsonDecode(response.body);
-        if (response.statusCode == 200) {
-          // Request successful, parse the response body
-          User user = User.fromMap(json["user"]);
-          Get.offNamed('/dashboard', arguments: user);
-        } else {
-          // Request failed, handle error
-          _showAlertDialog(
-              "ERROR CODE ${response.statusCode}", json["message"].toString());
-          FirebaseController.logout();
-        }
+      var response = await http.get(
+          Uri.parse("${Api.urlContinueGoogle}?email=$email&firebase_id=$uid"));
+      Map<String, dynamic> json = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        // Request successful, parse the response body
+        User user = User.fromMap(json["user"]);
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? cityName = prefs.getString('cityName');
+        double? latitude = prefs.getDouble('latitude');
+        double? longitude = prefs.getDouble('longitude');
+
+        if (cityName != null) UserController().cityName = cityName;
+        if (latitude != null) UserController().latitude = latitude;
+        if (longitude != null) UserController().longitude = longitude;
+
+        Get.offNamed('/dashboard', arguments: user);
+      } else {
+        // Request failed, handle error
+        _showAlertDialog(
+            "ERROR CODE ${response.statusCode}", json["message"].toString());
+        FirebaseController.logout();
+      }
       // } catch (e) {
-        // Handle socket connection error
-        // _showAlertDialog("ERROR", e.toString());
+      // Handle socket connection error
+      // _showAlertDialog("ERROR", e.toString());
       // }
     }
   }

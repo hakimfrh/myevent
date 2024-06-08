@@ -40,13 +40,16 @@ class LocationService {
   }
 
   Future<String> getCityName(Position position) async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(position.latitude, position.longitude);
     if (placemarks.isNotEmpty) {
       // print (placemarks);
       String provinsi = placemarks[0].administrativeArea ?? 'Unknown';
       String kota = placemarks[0].subAdministrativeArea ?? 'Unknown';
       String kecamatan = placemarks[0].locality ?? 'Unknown';
-      return '$kecamatan, $kota, $provinsi';
+
+      kota = kota.substring(kota.indexOf(' '));
+      return '$kota, $provinsi';
     }
     return 'Unknown';
   }

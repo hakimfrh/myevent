@@ -42,6 +42,10 @@ class UserController {
       cityName = await locationService.getCityName(position);
       latitude = position.latitude;
       longitude = position.longitude;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('cityName', cityName!);
+      await prefs.setDouble('latitude', latitude!);
+      await prefs.setDouble('longitude', longitude!);
       return 'ok';
     } catch (e) {
       return e.toString();
