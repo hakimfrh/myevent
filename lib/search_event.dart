@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:myevent/database/api.dart';
+import 'package:myevent/services/api.dart';
 import 'package:myevent/event/card_event_list.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:myevent/model/eventt.dart';
@@ -20,6 +20,7 @@ class _ListEventState extends State<ListEvent> {
   GlobalKey<FormState> _dropdownFormKey = GlobalKey<FormState>();
   late String _selectedValue;
 
+  String search = '';
   double _currentValue = 500; // initial value for the slider
   DateTime? selectedDateTime;
   List<Eventt> eventList = [];
@@ -37,10 +38,19 @@ class _ListEventState extends State<ListEvent> {
   } // Deklarasikan variabel selectedDateTime di luar fungsi onPressedasikan variabel dateTimeList di luar fungsi onPressed
 
   void getEvent() async {
-    var response = await http.get(Uri.parse(Api.urlEvent));
+    String arguments = '';
+    if (search.isNotEmpty) {
+      if (arguments.isEmpty) {
+        arguments += '?';
+      } else {
+        arguments += '&';
+      }
+      arguments += 'search=$search';
+    }
+    var response = await http.get(Uri.parse('${Api.urlEvent}$arguments'));
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body)['event_list'];
-
+      eventList = [];
       for (int i = 0; i < data.length; i++) {
         Map<String, dynamic> eventMap = data[i];
         Eventt event = Eventt.fromJson(eventMap);
@@ -78,11 +88,23 @@ class _ListEventState extends State<ListEvent> {
                         hintText: 'Search...',
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.search),
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              getEvent();
+                            });
+                          },
                         ),
                         border: InputBorder.none,
                       ),
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        search = value;
+                      },
+                      onSubmitted: (value) {
+                        search = value;
+                        setState(() {
+                              getEvent();
+                            });
+                      },
                     ),
                   ),
                 ),
@@ -114,7 +136,9 @@ class _ListEventState extends State<ListEvent> {
                 itemCount: eventList.length,
                 itemBuilder: (BuildContext context, int index) {
                   Eventt event = eventList[index];
-                  return CardEventList(event: event,);
+                  return CardEventList(
+                    event: event,
+                  );
                 }),
           ),
         ],

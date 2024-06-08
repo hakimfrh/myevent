@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myevent/database/api.dart';
+import 'package:myevent/services/api.dart';
 import 'package:myevent/model/user.dart';
-import 'package:myevent/database/sql_user.dart';
+import 'package:myevent/services/sql_user.dart';
 import 'package:http/http.dart' as http;
 
 final _stepOneKey = GlobalKey<FormState>();

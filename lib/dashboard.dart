@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myevent/database/api.dart';
+import 'package:myevent/services/api.dart';
 import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/getx_state.dart';
 import 'package:myevent/event/card_event_order.dart';
@@ -62,7 +62,7 @@ class DashboardState extends State<Dashboard> {
             GestureDetector(
               onTap: () {
                 UserController().logout();
-                Get.toNamed('/login');
+                Get.offNamed('/login');
               },
                 child: const CircleAvatar(
               // Third image as CircleAvatar
@@ -148,7 +148,7 @@ class HomeState extends State<Home> {
     super.initState();
     User? currentUser = UserController().user;
     if (currentUser == null) {
-      Get.toNamed('/login');
+      Get.offNamed('/login');
       return;
     }
     user = currentUser;

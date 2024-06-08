@@ -17,6 +17,8 @@ dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.10
+  geocoding: ^3.0.0
+  geolocator: ^11.1.0
   get: ^4.6.6
   google_sign_in: ^6.2.1
   horizontal_stepper_flutter: ^1.0.3

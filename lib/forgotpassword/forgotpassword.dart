@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myevent/database/api.dart';
+import 'package:myevent/services/api.dart';
 import 'package:http/http.dart' as http;
 
 class ForgotPassword extends StatefulWidget {

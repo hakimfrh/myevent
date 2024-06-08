@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:myevent/database/api.dart';
+import 'package:myevent/services/api.dart';
 import 'package:myevent/event/card_booth.dart';
 import 'package:myevent/model/booth.dart';
 import 'package:myevent/model/eventt.dart';
@@ -23,12 +23,12 @@ class _EventState extends State<Event> {
   final Eventt event = Get.arguments as Eventt;
   List<Booth> boothList = [];
   String imageData = '';
+  String imageDataDenah = '';
   String hargaMin = '0';
   String hargaMax = '0';
   String slot = '0';
   String boothDesc =
       'Booth ini tersedia dalam berbagai ukuran dan posisi strategis di sekitar area festival. Fasilitas yang disediakan termasuk : area pameran dengan staf yang ramah perlengkapan promosi, koneksi listrik dan Wi-Fi. Tambahan peralatan seperti layar proyeksi atau sound system juga tersedia.';
-
   // List<Map<String, dynamic>> boothAvailable = [];
   List<int> boothRemaining = [];
   List<List<String>> boothAvailable = [];
@@ -42,22 +42,54 @@ class _EventState extends State<Event> {
     getSlot();
     getBooth();
     getBoothAvailable();
-    getImage();
+    getImagePamflet();
+    getImageDenah();
     getStatus();
   }
 
-  void getStatus() async {}
+  void getStatus() async {
+    final response = await http
+        .get(Uri.parse('${Api.urlEventIsEnrolled}?id_event=${event.idEvent}&id_user=${UserController().user!.id.toString()}'));
+    if (response.statusCode == 200) {
+      String data = json.decode(response.body)['enrolled'].toString();
+      if (!mounted) return;
+      setState(() {
+        if(data == 'true'){
+          isEnrolled = 1;
+        }else{
+          isEnrolled = 0;
+        }
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 
-  void getImage() async {
+  void getImagePamflet() async {
     try {
-      final response = await http
-          .get(Uri.parse('${Api.urlImage}?image_path=${event.uploadPamflet}&w=527&h=701'));
+      final response = await http.get(Uri.parse(
+          '${Api.urlImage}?image_path=${event.uploadPamflet}&w=527&h=701'));
       // final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=30&h=40'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];
         if (!mounted) return;
         setState(() {
           imageData = data.replaceAll(RegExp(r'\s'), '');
+        });
+      } else {}
+    } catch (e) {}
+  }
+
+  void getImageDenah() async {
+    try {
+      final response = await http.get(Uri.parse(
+          '${Api.urlImage}?image_path=${event.uploadDenah}&w=527&h=701'));
+      // final response = await http.get(Uri.parse('${Api.urlImage}/${event.uploadPamflet}?w=30&h=40'));
+      if (response.statusCode == 200) {
+        String data = json.decode(response.body)['base64Image'];
+        if (!mounted) return;
+        setState(() {
+          imageDataDenah = data.replaceAll(RegExp(r'\s'), '');
         });
       } else {}
     } catch (e) {}
@@ -73,7 +105,7 @@ class _EventState extends State<Event> {
         slot = dataSlot;
       });
     } else {
-      throw Exception('Failed to load image');
+      throw Exception('Failed to load data');
     }
   }
 
@@ -107,6 +139,7 @@ class _EventState extends State<Event> {
           boothList.add(booth);
         });
       }
+      boothDesc = boothList[0].deskripsiBooth;
     } else {
       // Request failed, handle error
     }
@@ -250,8 +283,8 @@ class _EventState extends State<Event> {
                           const SizedBox(
                               width: 5), // Add spacing between icon and text
                           Text(
-                            event.pelaksanaanEvent.toString().substring(0,
-                                event.pelaksanaanEvent.toString().length - 7),
+                            DateFormat('EEEE dd-MM-yyyy', 'id_ID')
+                                .format(event.pelaksanaanEvent),
                             style: const TextStyle(
                               fontSize: 8.0,
                               fontFamily: 'Rubik',
@@ -539,7 +572,19 @@ class _EventState extends State<Event> {
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Image.asset('images/denah_booth.png')],
+                  children: [
+                    imageData != ''
+                        ? Image.memory(
+                            base64Decode(imageData),
+                            fit: BoxFit.cover,
+                            // width: 80,
+                          )
+                        : const SizedBox(
+                            height: 50.0,
+                            width: 50.0,
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                  ],
                 ),
                 const SizedBox(
                   height: 90,
@@ -593,12 +638,20 @@ class _EventState extends State<Event> {
   }
 
   void _showBottomSheet(BuildContext context) async {
-    if (boothList.isEmpty || boothAvailable.isEmpty) {
+    if (boothList.isEmpty || boothAvailable.isEmpty || isEnrolled<0) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Loading... harap tunggu."),
         duration: Durations.short4,
       ));
       return;
+    }
+
+    if(isEnrolled == 1){
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("anda telah terdaftar"),
+        duration: Durations.short4,
+      ));
+      // return; 
     }
 
     if (event.userId == UserController().user!.id) {
@@ -608,7 +661,7 @@ class _EventState extends State<Event> {
       ));
       return;
     }
-    
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {

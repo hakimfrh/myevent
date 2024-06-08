@@ -1,4 +1,4 @@
-import 'package:myevent/database/firebase.dart';
+import 'package:myevent/services/firebase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'user.dart';

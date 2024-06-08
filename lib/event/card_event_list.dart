@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:myevent/database/api.dart';
+import 'package:myevent/services/api.dart';
 import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:http/http.dart' as http;
@@ -48,8 +48,8 @@ class _CardEventListState extends State<CardEventList> {
 
   void getImage() async {
     try {
-      final response = await http
-          .get(Uri.parse('${Api.urlImage}?image_path=${event.uploadPamflet}&w=136&h=181'));
+      final response = await http.get(Uri.parse(
+          '${Api.urlImage}?image_path=${event.uploadPamflet}&w=136&h=181'));
       if (response.statusCode == 200) {
         String data = json.decode(response.body)['base64Image'];
         if (!mounted) return;
@@ -97,8 +97,7 @@ class _CardEventListState extends State<CardEventList> {
             children: [
               const SizedBox(height: 10),
               Text(
-                // "28 Agustus 2013",
-                event.pelaksanaanEvent.toString(),
+                DateFormat('EEEE dd-MM-yyyy', 'id_ID').format(event.pelaksanaanEvent),
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.normal,
@@ -116,187 +115,196 @@ class _CardEventListState extends State<CardEventList> {
             onTap: () {
               Get.toNamed('/event', arguments: event);
             },
-            child:Card(
-  margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
-  elevation: 0,
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10.0),
-  ),
-  color: const Color(0xFFFFFFFF),
-  child: Container(
-    height: 180,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.5),
-          spreadRadius: 1,
-          blurRadius: 2,
-          offset: const Offset(2, 2),
-        ),
-      ],
-    ),
-    child: Stack(
-      children: [
-        Center(
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                imageData != ''
-                    ? Image.memory(
-                        base64Decode(imageData),
-                        width: 80,
-                      )
-                    : const CircularProgressIndicator(),
-                const SizedBox(width: 10.0),
-                const VerticalDivider(
-                  color: Colors.grey,
-                  thickness: 1,
-                  width: 20,
-                  indent: 30,
-                  endIndent: 30,
+            child: Card(
+              margin:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              color: const Color(0xFFFFFFFF),
+              child: Container(
+                height: 180,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 2,
+                      offset: const Offset(2, 2),
+                    ),
+                  ],
                 ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(5.0, 18, 25, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          event.namaEvent,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.center,
-                          softWrap: true,
-                          maxLines: 1, // Set maximum lines to 1
-                          overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          trimString(event.deskripsi),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 10,
-                          ),
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                          maxLines: 2, // Set maximum lines to 2
-                          overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Harga mulai dari:',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.start,
-                          softWrap: true,
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Flexible(
-      child: Text(
-        formatCurrency(double.parse(hargaMin)),
-        style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 17,
-        ),
-        textAlign: TextAlign.start,
-        softWrap: true,
-      ),
-    ),
-    Text(
-      '-',
-      style: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-        fontSize: 15,
-      ),
-      textAlign: TextAlign.center,
-      softWrap: true,
-    ),
-    Flexible(
-      child: Text(
-        formatCurrency(double.parse(hargaMax)),
-        style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-        ),
-        textAlign: TextAlign.start,
-        softWrap: true,
-      ),
-    ),
-  ],
-),
-
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Row(
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Image.asset(
-                              'images/lokasi.png',
-                              width: 8,
+                            imageData != ''
+                                ? Image.memory(
+                                    base64Decode(imageData),
+                                    width: 80,
+                                  )
+                                : const CircularProgressIndicator(),
+                            const SizedBox(width: 10.0),
+                            const VerticalDivider(
+                              color: Colors.grey,
+                              thickness: 1,
+                              width: 20,
+                              indent: 30,
+                              endIndent: 30,
                             ),
-                            const SizedBox(width: 5),
-                            Expanded(
-                              child: Text(
-                                event.alamat,
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Rubik',
+                            Flexible(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(5.0, 18, 25, 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      event.namaEvent,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 20,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      softWrap: true,
+                                      maxLines: 1, // Set maximum lines to 1
+                                      overflow: TextOverflow
+                                          .ellipsis, // Add ellipsis for overflow
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      trimString(event.deskripsi),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 10,
+                                      ),
+                                      textAlign: TextAlign.start,
+                                      softWrap: true,
+                                      maxLines: 2, // Set maximum lines to 2
+                                      overflow: TextOverflow
+                                          .ellipsis, // Add ellipsis for overflow
+                                    ),
+                                    const SizedBox(height: 10),
+                                    const Text(
+                                      'Harga mulai dari:',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                      textAlign: TextAlign.start,
+                                      softWrap: true,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            formatCurrency(
+                                                double.parse(hargaMin)),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                            softWrap: true,
+                                          ),
+                                        ),
+                                        Text(
+                                          '-',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          softWrap: true,
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            formatCurrency(
+                                                double.parse(hargaMax)),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                            softWrap: true,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          'images/lokasi.png',
+                                          width: 8,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: Text(
+                                            event.alamat,
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Rubik',
+                                            ),
+                                            overflow: TextOverflow
+                                                .ellipsis, // Add ellipsis for overflow
+                                          ),
+                                        ),
+                                        SizedBox(width: 15),
+                                        Image.asset(
+                                          'images/wa.png',
+                                          width: 10,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: Text(
+                                            event.whatsapp ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Rubik',
+                                            ),
+                                            overflow: TextOverflow
+                                                .ellipsis, // Add ellipsis for overflow
+                                            textAlign: TextAlign
+                                                .end, // Align text to the right
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
                               ),
                             ),
-                            SizedBox(width: 15),
-                            Image.asset(
-                              'images/wa.png',
-                              width: 10,
-                            ),
-                            const SizedBox(width: 5),
-                          Expanded(
-                            child: Text(
-                              event.whatsapp ?? '',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Rubik',
-                              ),
-                              overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
-                              textAlign: TextAlign.end, // Align text to the right
-                            ),
-                          ),
-
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ],
-    ),
-  ),
-),
           ),
         ),
       ],

@@ -1,9 +1,11 @@
+// ignore_for_file: unnecessary_const
+
 import 'dart:async';
 import 'package:another_stepper/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:myevent/database/api.dart';
+import 'package:myevent/services/api.dart';
 import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/order.dart';
@@ -30,6 +32,7 @@ List<Order> eventList = [
   order,
 ];
 File? _image;
+String imageData = '';
 String _buttonText = 'Selanjutnya';
 
 class _PembayaranState extends State<Pembayaran> {
@@ -44,13 +47,29 @@ class _PembayaranState extends State<Pembayaran> {
     return 3;
   }
 
+  @override
   void initState() {
     order = Get.arguments as Order;
     _image = null;
     super.initState();
     activeIndex = getOrderStatusPage();
-    if(activeIndex == 1) _buttonText = 'Kembali';
-    if(activeIndex == 3) _buttonText = 'Kembali';
+    if (activeIndex == 1) _buttonText = 'Kembali';
+    if (activeIndex == 3) _buttonText = 'Kembali';
+    if (activeIndex == 3) getImage();
+  }
+
+  void getImage() async {
+    try {
+      final response = await http.get(Uri.parse(
+          '${Api.urlImage}?image_path=${order.imgBuktiTransfer}&w=136&h=181'));
+      if (response.statusCode == 200) {
+        String data = json.decode(response.body)['base64Image'];
+        if (!mounted) return;
+        setState(() {
+          imageData = data.replaceAll(RegExp(r'\s'), '');
+        });
+      } else {}
+    } catch (e) {}
   }
 
   List<StepperData> getStepperData() {
@@ -155,19 +174,19 @@ class _PembayaranState extends State<Pembayaran> {
   }
 
   void _goToNextStep() {
-    if(activeIndex == 1){
+    if (activeIndex == 1) {
       Get.back();
       return;
     }
-    if(activeIndex == 2){
+    if (activeIndex == 2) {
       uploadBayar();
       return;
     }
-    if(activeIndex == 3){
+    if (activeIndex == 3) {
       Get.back();
       return;
     }
-    
+
     if (activeIndex < stepWidgets.length - 1) {
       setState(() {
         activeIndex += 1;
@@ -208,16 +227,17 @@ class _PembayaranState extends State<Pembayaran> {
       'image_type': imageType,
     };
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Mengunggah bukti bayar"),
-        duration: Durations.short4,
-      ));
-    var response = await http.post(Uri.parse(Api.urlOrderBayar), body: formData);
-    if(response.statusCode == 200){
+      content: Text("Mengunggah bukti bayar"),
+      duration: Durations.short4,
+    ));
+    var response =
+        await http.post(Uri.parse(Api.urlOrderBayar), body: formData);
+    if (response.statusCode == 200) {
       setState(() {
         activeIndex = 3;
       });
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(jsonDecode(response.body)['message']),
         duration: Durations.short4,
       ));
@@ -370,7 +390,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
   late Timer _timer;
   late DateTime _endTime;
   late Duration _remainingTime;
-  final DateTime _startTime = order.tglDiterima??DateTime.now();
+  final DateTime _startTime = order.tglDiterima ?? DateTime.now();
 
   @override
   void initState() {
@@ -678,7 +698,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
 
 class StepFourContent extends StatelessWidget {
   const StepFourContent({super.key});
-String formatCurrency(int value) {
+  String formatCurrency(int value) {
     // Gunakan pustaka intl untuk memformat angka menjadi format mata uang Rupiah
     final formatCurrency = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp');
     String result = formatCurrency.format(value);
@@ -692,210 +712,241 @@ String formatCurrency(int value) {
         padding: const EdgeInsets.only(
           top: 10,
         ),
-       child:  Container(
-        height: 520,
-      margin: const EdgeInsets.only(top: 0,left: 24,right: 24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
+        child: Container(
+          height: 520,
+          margin: const EdgeInsets.only(top: 0, left: 24, right: 24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 15, top: 0, right: 15),
-              child: Column(
-                children: [
-                  Image.asset(
-                    'images/fpsucc.png',
-                    width: 100,
-                    height: 100,
-                  ),
-                  const Text(
-                    "Pembayaran Terkirim",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                  ),
-                  
-                  SizedBox(height: 40,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          child: Padding(
+            padding: const EdgeInsets.all(0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 0, right: 15),
+                  child: Column(
                     children: [
-                      
-                      Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 20, left: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Status :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                "Waktu :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                "Tanggal :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                "Nomor Rekening Tujuan :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                "Rekening Atas Nama :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                "ID Transaksi :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                "Jenis Booth :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                              SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                "Harga :",
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ],
-                          ),
-                        ),
+                      Image.asset(
+                        'images/fpsucc.png',
+                        width: 100,
+                        height: 100,
                       ),
-                       Flexible(
-                        flex: 1,
-                        fit: FlexFit.tight,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20, right: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                order.statusOrder,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                DateFormat.Hm().format(order.tglBayar??DateTime(0)),
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                DateFormat.yMd().format(order.tglBayar??DateTime(0)),
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                order.booth!.event!.noRekening,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                order.booth!.event!.namaRekening,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                order.idOrder.toString(),
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                '${order.booth!.tipeBooth} - ${order.nomorBooth}',
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 14,
-                              ),
-                              Text(
-                                formatCurrency(order.booth!.hargaBooth),
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ),
+                      const Text(
+                        "Pembayaran Terkirim",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w800),
                       ),
-                     
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: const Padding(
+                              padding: EdgeInsets.only(top: 20, left: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Status :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    "Waktu :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    "Tanggal :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    "Nomor Rekening Tujuan :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    "Rekening Atas Nama :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    "ID Transaksi :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    "Jenis Booth :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    "Harga :",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.tight,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, right: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    order.statusOrder,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    DateFormat.Hm()
+                                        .format(order.tglBayar ?? DateTime(0)),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    DateFormat('EEEE dd-MM-yyyy', 'id_ID')
+                                        .format(order.tglBayar ?? DateTime(0)),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    order.booth!.event!.noRekening,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    order.booth!.event!.namaRekening,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    order.idOrder.toString(),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    '${order.booth!.tipeBooth} - ${order.nomorBooth}',
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    formatCurrency(order.booth!.hargaBooth),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Text(
+                              'Bukti Pembayaran :',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          imageData != ''
+                              ? Image.memory(
+                                  base64Decode(imageData),
+                                  width: 80,
+                                )
+                              : const CircularProgressIndicator(),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
       ),
     );
   }

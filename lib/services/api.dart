@@ -1,5 +1,5 @@
 class Api {
-  static const String serverIp = "http://192.168.1.18:8000";
+  static const String serverIp = "http://192.168.1.240:8000";
   // static const String serverIp = "http://192.168.137.1:8000";
 
   static const String urlImage = "$serverIp/api/image";
@@ -12,6 +12,7 @@ class Api {
   static const String urlSendCode = "$serverIp/api/sendcode";
 
   static const String urlEvent = "$serverIp/api/event";
+  static const String urlEventIsEnrolled = "$serverIp/api/event/isEnrolled";
   static const String urlEventGet = "$serverIp/api/event/getEvent";
   static const String urlEventBooth = "$serverIp/api/event/getBooth";
   static const String urlEventBoothTotal = "$serverIp/api/event/getBoothTotal";
