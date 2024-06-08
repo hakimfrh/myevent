@@ -7,7 +7,7 @@ import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/order.dart';
 import 'package:myevent/model/user.dart';
-import 'package:myevent/model/user_controller.dart';
+import 'package:myevent/services/user_controller.dart';
 
 class UserList extends StatefulWidget {
   const UserList({super.key});

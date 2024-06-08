@@ -9,7 +9,7 @@ import 'package:myevent/event/card_booth.dart';
 import 'package:myevent/model/booth.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/order.dart';
-import 'package:myevent/model/user_controller.dart';
+import 'package:myevent/services/user_controller.dart';
 import 'package:myevent/pembayaran.dart';
 import 'dart:ui';
 

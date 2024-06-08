@@ -13,7 +13,7 @@ import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/user.dart';
 // import 'package:myevent/database/sql_user.dart';
 import 'package:http/http.dart' as http;
-import 'package:myevent/model/user_controller.dart';
+import 'package:myevent/services/user_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uni_links/uni_links.dart';
 

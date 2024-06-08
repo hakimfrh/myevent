@@ -8,7 +8,7 @@ import 'package:myevent/getx_state.dart';
 import 'package:myevent/event/card_event_order.dart';
 import 'package:myevent/model/order.dart';
 import 'package:myevent/model/user.dart';
-import 'package:myevent/model/user_controller.dart';
+import 'package:myevent/services/user_controller.dart';
 import 'package:myevent/search_event.dart';
 import 'package:myevent/riwayat.dart';
 import 'model/eventt.dart';
@@ -22,6 +22,7 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
+  String location = 'Klik untuk cari lokasi';
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Home(),
@@ -35,6 +36,17 @@ class DashboardState extends State<Dashboard> {
     });
   }
 
+  void refreshLocation() async {
+    String result = await UserController().refreshLocation();
+    if(result == 'ok'){
+      setState(() {
+        location = UserController().cityName??'Lokasi tak diketahui';
+      });
+    }else{
+      throw result;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,30 +58,42 @@ class DashboardState extends State<Dashboard> {
               width: 40, // Add the desired width here
             ),
             const Spacer(),
-            Image.asset(
-              'images/lokasi.png',
-              width: 23, // Add the desired width here
-            ),
-            const Text(
-              "Jember, IDN",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Rubik',
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  location = 'Memuat Lokasi';
+                });
+                refreshLocation();
+              },
+              child: Row(
+                children: [
+                  Image.asset(
+                    'images/lokasi.png',
+                    width: 23, // Add the desired width here
+                  ),
+                  Text(
+                    location,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Rubik',
+                    ),
+                  ),
+                ],
               ),
             ),
             const Spacer(), // Spacer untuk jarak di antara teks dan gambar berikutnya
             GestureDetector(
-              onTap: () {
-                UserController().logout();
-                Get.offNamed('/login');
-              },
+                onTap: () {
+                  UserController().logout();
+                  Get.offNamed('/login');
+                },
                 child: const CircleAvatar(
-              // Third image as CircleAvatar
-              radius: 18, // Add the desired radius here
-              backgroundImage:
-                  AssetImage('images/profile.png'), // Add your image asset here
-            )),
+                  // Third image as CircleAvatar
+                  radius: 18, // Add the desired radius here
+                  backgroundImage: AssetImage(
+                      'images/profile.png'), // Add your image asset here
+                )),
           ],
         ),
       ),
@@ -213,7 +237,7 @@ class HomeState extends State<Home> {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              user.name??'',
+                              user.name ?? '',
                               style: const TextStyle(
                                   fontFamily: 'Rubik',
                                   fontSize: 30,
