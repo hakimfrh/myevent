@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -17,21 +19,32 @@ class _UbahPasswordState extends State<UbahPassword> {
   final TextEditingController _oldPassword = TextEditingController();
   final TextEditingController _newPassword = TextEditingController();
   final TextEditingController _rePassword = TextEditingController();
+  String errorPassword = '';
 
   void updatepassword() async {
     var formData = <String, dynamic>{};
-    formData['id'] = UserController().user!.id;
+    formData['id'] = UserController().user!.id.toString();
     formData['current_password'] = _oldPassword.text;
     formData['new_password'] = _rePassword.text;
 
-    var response = await http.post(Uri.parse(Api.urlRegister), body: formData);
+    var response =
+        await http.post(Uri.parse(Api.urlUpdatePassword), body: formData);
     if (response.statusCode == 200) {
       // Request successful, parse the response body
       // _showAlertLogout(response.statusCode.toString(), response.body.toString());
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Registrasi Berhasil. Silahkan Login")));
-      Get.offNamed('/login');
-    } else {}
+          const SnackBar(content: Text("Password berhasil diubah")));
+      Get.offNamed('/dashboard');
+    } else {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      String message = json['message'].toString().toLowerCase();
+      if (message.contains('password')) {
+        setState(() {
+          errorPassword = 'Password Salah';
+        });
+        _formKey.currentState!.validate();
+      }
+    }
   }
 
   @override
@@ -70,11 +83,16 @@ class _UbahPasswordState extends State<UbahPassword> {
                       prefixIcon: const Icon(Icons.password),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                     ),
+                    onChanged: (value) {
+                      errorPassword = '';
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Masukkan Password Lama';
                       } else if (!value.contains(RegExp(r'^[a-zA-Z0-9_]+$'))) {
                         return 'Password Lama Tidak Valid';
+                      } else if (errorPassword.isNotEmpty) {
+                        return errorPassword;
                       } else {
                         return null;
                       }
@@ -144,7 +162,9 @@ class _UbahPasswordState extends State<UbahPassword> {
                       if (value == null || value.isEmpty) {
                         return 'Masukkan Password Lagi';
                       } else if (!value.contains(RegExp(r'^[a-zA-Z0-9_]+$'))) {
-                        return 'Masukkan Password Lagi Tidak Valid';
+                        return 'Password Tidak Valid';
+                      } else if (value != _newPassword.text) {
+                        return 'Password Tidak Sama';
                       } else {
                         return null;
                       }

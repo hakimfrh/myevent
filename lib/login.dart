@@ -219,7 +219,8 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200) {
         // Request successful, parse the response body
         User user = User.fromMap(json["user"]);
-
+        UserController().user = user;
+        
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String? cityName = prefs.getString('cityName');
         double? latitude = prefs.getDouble('latitude');

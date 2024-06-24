@@ -35,6 +35,7 @@ List<Order> eventList = [
 File? _image;
 String imageData = '';
 String _buttonText = 'Selanjutnya';
+String orderStatus = '';
 
 class _PembayaranState extends State<Pembayaran> {
   int activeIndex = 1;
@@ -59,7 +60,14 @@ class _PembayaranState extends State<Pembayaran> {
     if (activeIndex == 1) _buttonText = 'Kembali';
     if (activeIndex == 2) _buttonText = 'Kirim Pembayaran';
     if (activeIndex == 3) _buttonText = 'Kembali';
-    if (activeIndex == 3) getImage();
+    // if (activeIndex == 3) getImage();
+
+    String status = order.statusOrder.toLowerCase();
+    if(status == 'validasi') orderStatus = 'Validasi';
+    if(status == 'ditolak') orderStatus = 'Ditolak';
+    if(status == 'diterima') orderStatus = 'Menunggu Pembayaran';
+    if(status == 'menunggu pembayaran') orderStatus = 'Verifikasi Pembayaran';
+    if(status == 'terverivikasi') orderStatus = 'Selesai';
     super.initState();
   }
 
@@ -859,7 +867,7 @@ class StepFourContent extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    order.statusOrder,
+                                    orderStatus,
                                     style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
@@ -935,27 +943,36 @@ class StepFourContent extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 16),
-                            child: Text(
-                              'Bukti Pembayaran :',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          imageData != ''
-                              ? Image.memory(
-                                  base64Decode(imageData),
-                                  // width: 80,
-                                  fit: BoxFit.cover,
-                                )
-                              : const CircularProgressIndicator(),
-                        ],
-                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 24),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(order.statusOrder=='terverifikasi'?'Pemesanan telah selesai, Cek Email kamu':''),
+                          ],
+                        ),
+                      )
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     const Padding(
+                      //       padding: EdgeInsets.only(left: 16),
+                      //       child: Text(
+                      //         'Bukti Pembayaran :',
+                      //         textAlign: TextAlign.left,
+                      //         style: TextStyle(
+                      //             fontSize: 12, fontWeight: FontWeight.bold),
+                      //       ),
+                      //     ),
+                      //     imageData != ''
+                      //         ? Image.memory(
+                      //             base64Decode(imageData),
+                      //             // width: 80,
+                      //             fit: BoxFit.cover,
+                      //           )
+                      //         : const CircularProgressIndicator(),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

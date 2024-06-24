@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myevent/model/user.dart';
 import 'package:myevent/services/api.dart';
+import 'package:myevent/services/user_controller.dart';
 import 'package:myevent/ubahpassword.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,15 +17,18 @@ class EditProfile extends StatefulWidget {
   State<EditProfile> createState() => _EditProfileState();
 }
 
-final _formKey = GlobalKey<FormState>();
+final _editUserFormKey = GlobalKey<FormState>();
 
 class _EditProfileState extends State<EditProfile> {
   User user = Get.arguments as User;
 
   final TextEditingController _namaLengkapController = TextEditingController();
-  final TextEditingController _namaPerusahaanController = TextEditingController();
-  final TextEditingController _deskripsiPerusahaanController = TextEditingController();
-  final TextEditingController _alamatPerusahaanController = TextEditingController();
+  final TextEditingController _namaPerusahaanController =
+      TextEditingController();
+  final TextEditingController _deskripsiPerusahaanController =
+      TextEditingController();
+  final TextEditingController _alamatPerusahaanController =
+      TextEditingController();
   final TextEditingController _nomorTelpController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -40,7 +45,7 @@ class _EditProfileState extends State<EditProfile> {
     _usernameController.text = user.username ?? '';
   }
 
-  void updateuser() async{
+  void updateuser() async {
     User userUpdate = User(
       id: user.id,
       name: _namaLengkapController.text,
@@ -63,11 +68,15 @@ class _EditProfileState extends State<EditProfile> {
       var response =
           await http.post(Uri.parse(Api.urlUpdateUser), body: formData);
       if (response.statusCode == 200) {
+        Map<String, dynamic> json = jsonDecode(response.body);
+        User user = User.fromMap(json["user"]);
+        UserController().user = user;
+
         // Request successful, parse the response body
         // _showAlertLogout(response.statusCode.toString(), response.body.toString());
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("User Berhasil Diupdate.")));
-            Get.offNamed('/dashboard');
+            const SnackBar(content: Text("User Berhasil Diupdate.")));
+        Get.offNamed('/dashboard');
       } else {
         // Request failed, handle error
         Map<String, dynamic> json = jsonDecode(response.body);
@@ -85,7 +94,7 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          key: _editUserFormKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -388,7 +397,6 @@ class _EditProfileState extends State<EditProfile> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                           ),
-
                           const SizedBox(
                             height: 20,
                           ),
@@ -398,13 +406,12 @@ class _EditProfileState extends State<EditProfile> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const UbahPassword()),
+                                    builder: (context) => const UbahPassword()),
                               );
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Color.fromARGB(255, 255, 255, 255), // Warna ungu
+                              backgroundColor: Color.fromARGB(
+                                  255, 255, 255, 255), // Warna ungu
                               fixedSize: const Size(
                                   370, 50), // Lebar dan tinggi tombol
                               shape: RoundedRectangleBorder(
@@ -434,6 +441,39 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                             child: const Text('Simpan',
                                 style: TextStyle(color: Colors.white)),
+                          ),
+                          const SizedBox(height: 24.0),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: "Ingin Logout? ",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: "Logout",
+                                  style: const TextStyle(
+                                    color: Colors
+                                        .blue, // Ubah warna teks "Daftar" sesuai kebutuhan
+                                    fontWeight: FontWeight
+                                        .bold, // Contoh: Menjadikan teks "Daftar" tebal
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      UserController().logout();
+                                      Get.offNamed('/login');
+
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) => const Register()),
+                                      // );
+                                    },
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myevent/services/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:myevent/event/card_event_order.dart';
@@ -20,12 +21,21 @@ class UserList extends StatefulWidget {
 final List<String> categories = [
   'Semua',
   'validasi',
-  'diterima',
   'ditolak',
+  'diterima',
   'menunggu pembayaran',
-  'validasi pembayaran',
   'terverifikasi'
 ];
+
+final List<String> categoriesName = [
+  'Semua',
+  'validasi',
+  'Ditolak',
+  'Menunggu Pembayaran',
+  'Verifikasi Pembayaran',
+  'Selesai'
+];
+   
 int selectedindex = 0;
 
 List<Order> orderList = [];
@@ -74,7 +84,7 @@ class _UserListState extends State<UserList> {
             padding: EdgeInsets.only(left: 10, right: 0, top: 5, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(categories.length, (index) {
+              children: List.generate(categoriesName.length, (index) {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
@@ -98,7 +108,7 @@ class _UserListState extends State<UserList> {
                           : null,
                     ),
                     child: Text(
-                      categories[index],
+                      categoriesName[index],
                       style: TextStyle(
                         color: selectedindex == index
                             ? Colors.white
@@ -115,7 +125,11 @@ class _UserListState extends State<UserList> {
               itemCount: orderList.length, // Jumlah total item dalam daftar
               itemBuilder: (context, index) {
                 Order event = orderList[index];
-                return CardEventOrder(order: event);
+                return GestureDetector(
+                    onTap: () {
+                      Get.toNamed('/pembayaran', arguments: event);
+                    },
+                    child: CardEventOrder(order: event));
               },
             ),
           )
