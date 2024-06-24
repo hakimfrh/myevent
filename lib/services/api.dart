@@ -25,7 +25,7 @@ class Api {
   static const String urlOrder = "$serverIp/api/order/getOrder";
   static const String urlOrderMake = "$serverIp/api/order/makeOrder";
   static const String urlOrderBayar = "$serverIp/api/order/uploadBayar";
-  static const String urlOrderCount = "$serverIp/api/order/getOrder";
+  static const String urlOrderCount = "$serverIp/api/order/getCountOrder";
 
 
 }

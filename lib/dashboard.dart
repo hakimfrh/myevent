@@ -151,6 +151,9 @@ class HomeState extends State<Home> {
       ''; // Variabel state untuk menyimpan nilai yang dipilih
 
   List<Order> orderList = [];
+  String orderCount = '0';
+  String orderCountMonth = '0';
+  String orderSelesai = '0';
 
   void getOrder() async {
     var response =
@@ -172,6 +175,24 @@ class HomeState extends State<Home> {
     }
   }
 
+void getOrderCount() async {
+    final response = await http
+        .get(Uri.parse('${Api.urlOrderCount}?user_id=${UserController().user!.id}'));
+    if (response.statusCode == 200) {
+      int totalOrder = json.decode(response.body)['total_orders'];
+      int totalOrderBulan = json.decode(response.body)['orders_this_month'];
+      int totalTerverifikasi = json.decode(response.body)['terverifikasi_orders'];
+      if (!mounted) return;
+      setState(() {
+        orderCount = totalOrder.toString();
+        orderCountMonth = totalOrderBulan.toString();
+        orderSelesai = totalTerverifikasi.toString();
+      });
+    } else {
+      throw Exception('Failed to load image');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -182,6 +203,7 @@ class HomeState extends State<Home> {
     }
     user = currentUser;
     getOrder();
+    getOrderCount();
   }
 
   @override
@@ -289,39 +311,39 @@ class HomeState extends State<Home> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
-                            "25",
-                            style: TextStyle(
+                           Text(
+                            orderCount,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
                               fontSize: 35,
                             ),
                           ),
-                          const SizedBox(width: 40.0),
-                          Container(
-                            height: 40.0,
-                            width: 1.0,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 40.0),
-                          const Text(
-                            "11",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 35,
-                            ),
-                          ),
-                          const SizedBox(width: 30.0),
+                          const SizedBox(width: 50.0),
                           Container(
                             height: 40.0,
                             width: 1.0,
                             color: Colors.white,
                           ),
                           const SizedBox(width: 50.0),
-                          const Text(
-                            "20",
-                            style: TextStyle(
+                           Text(
+                            orderSelesai,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 35,
+                            ),
+                          ),
+                          const SizedBox(width: 50.0),
+                          Container(
+                            height: 40.0,
+                            width: 1.0,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 50.0),
+                           Text(
+                            orderCountMonth,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
                               fontSize: 35,
@@ -334,7 +356,7 @@ class HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Event yang \ntelah diikuti",
+                            "Total Order\nKeseluruhan",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.normal,
@@ -345,7 +367,7 @@ class HomeState extends State<Home> {
                           ),
                           SizedBox(width: 65.0),
                           Text(
-                            "Event diikuti \nbulan ini",
+                            "Total Order\nSelesai",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.normal,
@@ -356,7 +378,7 @@ class HomeState extends State<Home> {
                           ),
                           SizedBox(width: 65.0),
                           Text(
-                            "Total Event \n diikuti",
+                            "Total Order\nBulan Ini",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.normal,
