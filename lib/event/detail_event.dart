@@ -48,15 +48,15 @@ class _EventState extends State<Event> {
   }
 
   void getStatus() async {
-    final response = await http
-        .get(Uri.parse('${Api.urlEventIsEnrolled}?id_event=${event.idEvent}&id_user=${UserController().user!.id.toString()}'));
+    final response = await http.get(Uri.parse(
+        '${Api.urlEventIsEnrolled}?id_event=${event.idEvent}&id_user=${UserController().user!.id.toString()}'));
     if (response.statusCode == 200) {
       String data = json.decode(response.body)['enrolled'].toString();
       if (!mounted) return;
       setState(() {
-        if(data == 'true'){
+        if (data == 'true') {
           isEnrolled = 1;
-        }else{
+        } else {
           isEnrolled = 0;
         }
       });
@@ -255,6 +255,7 @@ class _EventState extends State<Event> {
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.bold,
                         ),
+                        //  overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
@@ -570,22 +571,30 @@ class _EventState extends State<Event> {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    imageData != ''
-                        ? Image.memory(
-                            base64Decode(imageData),
-                            fit: BoxFit.cover,
-                            // width: 80,
-                          )
-                        : const SizedBox(
-                            height: 50.0,
-                            width: 50.0,
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                  ],
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      imageDataDenah != ''
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // Atur radius di sini
+                              child: Image.memory(
+                                base64Decode(imageDataDenah),
+                                fit: BoxFit.cover,
+                                // width: 80,
+                              ),
+                            )
+                          : SizedBox(
+                              height: 50.0,
+                              width: 50.0,
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                    ],
+                  ),
                 ),
+
                 const SizedBox(
                   height: 90,
                 ),
@@ -596,49 +605,101 @@ class _EventState extends State<Event> {
           ),
         ],
       ),
-      floatingActionButton: Container(
-        width: 300.0, // Menetapkan lebar
-        height: 50.0, // Menetapkan tinggi
-        child: FloatingActionButton(
-          onPressed: () {
-            // Fungsi yang akan dijalankan saat tombol ditekan
-            _showBottomSheet(
-              context,
-            ); // Panggil fungsi untuk menampilkan bottom sheet
-          },
-          backgroundColor: const Color(0xFF512E67),
-          mini: false, // Mengatur ukuran menjadi non-mini
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0), // Menyesuaikan sudut
-            // Mengatur bentuk, misalnya StadiumBorder(), bisa digunakan untuk sudut yang lebih bulat
-          ),
-          elevation: 6.0, // Warna latar belakang
-          child: const Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: 30.0), // Menambahkan padding horizontal
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Pesan Sekarang', // Teks
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 250.0,
+            height: 50.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                // Logika untuk tombol
+                _showBottomSheet(context);
+              },
+              backgroundColor: const Color(0xFF512E67),
+              mini: false,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 6.0,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  'Pesan',
                   style: TextStyle(
-                    fontSize: 16.0, // Ukuran teks
-                    fontWeight: FontWeight.bold, // Ketebalan teks
-                    color: Colors.white, // Warna teks
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
+                  textAlign: TextAlign.left,
                 ),
-                Icon(Icons.add, color: Colors.white), // Icon
-              ],
+              ),
             ),
-          ), // Efek bayangan
-        ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: 50.0,
+            height: 50.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                // Logika untuk tombol kedua
+              },
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
+              mini: false,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                side: BorderSide(
+                    color: Colors.black, width: 1), // Menambahkan outline putih
+              ),
+              elevation: 6.0,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Image(
+                  image: AssetImage('images/wa.png'),
+                  width: 20,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: 50.0,
+            height: 50.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                // Logika untuk tombol ketiga
+              },
+              backgroundColor: Color.fromARGB(255, 255, 255, 255),
+              mini: true,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                side: BorderSide(
+                    color: Colors.black, width: 1), // Menambahkan outline putih
+              ),
+              elevation: 6.0,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Icon(
+                  Icons.location_on,
+                  size: 24.0,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
   void _showBottomSheet(BuildContext context) async {
-    if (boothList.isEmpty || boothAvailable.isEmpty || isEnrolled<0) {
+    if (boothList.isEmpty || boothAvailable.isEmpty || isEnrolled < 0) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Loading... harap tunggu."),
         duration: Durations.short4,
@@ -646,12 +707,12 @@ class _EventState extends State<Event> {
       return;
     }
 
-    if(isEnrolled == 1){
+    if (isEnrolled == 1) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("anda telah terdaftar"),
         duration: Durations.short4,
       ));
-      // return; 
+      // return;
     }
 
     if (event.userId == UserController().user!.id) {
@@ -927,8 +988,6 @@ class _EventState extends State<Event> {
     );
   }
 }
-
-
 
 // Padding(
 //               padding: EdgeInsets.only(

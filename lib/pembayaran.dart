@@ -27,6 +27,7 @@ class Pembayaran extends StatefulWidget {
   State<Pembayaran> createState() => _PembayaranState();
 }
 
+bool isValid = true;
 Order order = Get.arguments as Order;
 List<Order> eventList = [
   order,
@@ -41,21 +42,25 @@ class _PembayaranState extends State<Pembayaran> {
     if (order.statusOrder == 'validasi') return 1;
     if (order.statusOrder == 'ditolak') return 1;
     if (order.statusOrder == 'diterima') return 2;
-    if (order.statusOrder == 'menunggu pembayaran') return 2;
-    if (order.statusOrder == 'validasi pembayaran') return 3;
+    if (order.statusOrder == 'menunggu pembayaran') return 3;
+    // if (order.statusOrder == 'validasi pembayaran') return 3;
     if (order.statusOrder == 'terverivikasi') return 3;
     return 3;
   }
 
   @override
   void initState() {
+    eventList = [];
     order = Get.arguments as Order;
+    eventList.add(order);
+
     _image = null;
-    super.initState();
     activeIndex = getOrderStatusPage();
     if (activeIndex == 1) _buttonText = 'Kembali';
+    if (activeIndex == 2) _buttonText = 'Kirim Pembayaran';
     if (activeIndex == 3) _buttonText = 'Kembali';
     if (activeIndex == 3) getImage();
+    super.initState();
   }
 
   void getImage() async {
@@ -210,6 +215,13 @@ class _PembayaranState extends State<Pembayaran> {
   ];
 
   void uploadBayar() async {
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Waktu Pembayaran Telah Habis"),
+        duration: Durations.short4,
+      ));
+    return;
+    }
     if (_image == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Upload bukti pembayaran"),
@@ -404,6 +416,7 @@ class _StepThreeContentState extends State<StepThreeContent> {
         if (_remainingTime.isNegative) {
           _timer.cancel();
           _remainingTime = Duration.zero;
+          isValid = false;
         }
       });
     });
@@ -598,23 +611,25 @@ class _StepThreeContentState extends State<StepThreeContent> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            const Text(
-                              "08816283756",
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                            const Text(
-                              "Sevri Vendrain",
+                            Text(
+                              order.booth!.event!.noRekening,
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              order.tglOrder.toString(),
+                              order.booth!.event!.namaRekening,
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              DateFormat('EEEE dd-MM-yyyy', 'id_ID')
+                                  .format(order.tglOrder),
                               style: const TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              order.tglVerifikasi.toString(),
+                              DateFormat('EEEE dd-MM-yyyy', 'id_ID').format(
+                                  order.tglDiterima!.add(Duration(days: 1))),
                               style: const TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
@@ -935,7 +950,8 @@ class StepFourContent extends StatelessWidget {
                           imageData != ''
                               ? Image.memory(
                                   base64Decode(imageData),
-                                  width: 80,
+                                  // width: 80,
+                                  fit: BoxFit.cover,
                                 )
                               : const CircularProgressIndicator(),
                         ],

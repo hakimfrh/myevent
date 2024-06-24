@@ -9,6 +9,7 @@ environment:
 dependencies:
   another_stepper: ^1.2.2
   change_app_package_name: ^1.1.0
+  date_ranger: ^1.0.1
   dropdown_search: ^5.0.6
   easy_stepper: ^0.8.4
   firebase_auth: ^4.17.8
@@ -24,7 +25,7 @@ dependencies:
   horizontal_stepper_flutter: ^1.0.3
   http: ^1.2.0
   image_picker: ^1.0.8
-  intl: ^0.19.0
+  intl: ^0.18.1
   json_annotation: ^4.9.0
   json_serializable: ^6.7.1
   omni_datetime_picker: ^1.1.0

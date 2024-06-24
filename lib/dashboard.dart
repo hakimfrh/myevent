@@ -22,7 +22,7 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
-  String location = UserController().cityName??'Klik untuk cari lokasi';
+  String location = UserController().cityName ?? 'Klik untuk cari lokasi';
 
   static final List<Widget> _widgetOptions = <Widget>[
     const Home(),
@@ -38,11 +38,11 @@ class DashboardState extends State<Dashboard> {
 
   void refreshLocation() async {
     String result = await UserController().refreshLocation();
-    if(result == 'ok'){
+    if (result == 'ok') {
       setState(() {
-        location = UserController().cityName??'Lokasi tak diketahui';
+        location = UserController().cityName ?? 'Lokasi tak diketahui';
       });
-    }else{
+    } else {
       throw result;
     }
   }
@@ -84,16 +84,21 @@ class DashboardState extends State<Dashboard> {
             ),
             const Spacer(), // Spacer untuk jarak di antara teks dan gambar berikutnya
             GestureDetector(
-                onTap: () {
-                  UserController().logout();
-                  Get.offNamed('/login');
-                },
-                child: const CircleAvatar(
-                  // Third image as CircleAvatar
-                  radius: 18, // Add the desired radius here
-                  backgroundImage: AssetImage(
-                      'images/profile.png'), // Add your image asset here
-                )),
+              onTap: () {
+                Get.toNamed('/editprofile', arguments: UserController().user);
+              },
+              child: const CircleAvatar(
+                // Add the desired radius here
+                backgroundColor: Colors.white,
+                // Add the desired radius here
+                child: Icon(
+                  Icons
+                      .account_circle, // Use the Icons class for built-in icons
+                  size: 30, // Adjust the size of the icon as needed
+                  color: Colors.black, // Set the color of the icon
+                ), // Add a background color for the CircleAvatar
+              ),
+            ),
           ],
         ),
       ),
@@ -185,36 +190,6 @@ class HomeState extends State<Home> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.all(9.0),
-            sliver: SliverToBoxAdapter(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        // Handle search logic here
-                        // print(_controller.text);
-                      },
-                    ),
-                    border: InputBorder.none,
-                  ),
-                  onChanged: (value) {
-                    // Handle search logic here
-                    // print(value);
-                  },
-                ),
-              ),
-            ),
-          ),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -283,7 +258,7 @@ class HomeState extends State<Home> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.eleven_mp_outlined),
+                            Icon(Icons.business),
                           ],
                         ),
                       ],
@@ -398,12 +373,12 @@ class HomeState extends State<Home> {
               ),
             ),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+          const SliverPadding(
+            padding: EdgeInsets.only(left: 20.0, right: 20.0),
             sliver: SliverToBoxAdapter(
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     "Event yang anda ikuti",
                     style: TextStyle(
                       color: Colors.black,
@@ -413,65 +388,9 @@ class HomeState extends State<Home> {
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
-                  const Spacer(),
-                  PopupMenuButton(
-                    icon: const Icon(
-                      Icons.filter_alt_outlined,
-                      color: Colors.black,
-                    ),
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                      const PopupMenuItem(
-                        value: 'Semua',
-                        child: Text(
-                          'Semua',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const PopupMenuItem(
-                        value: 'Ditolak',
-                        child: Text(
-                          'Ditolak',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      const PopupMenuItem(
-                        value: 'Pembayaran',
-                        child: Text(
-                          'Pembayaran',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      // Add more menu items if needed
-                    ],
-                    onSelected: (selectedValue) {
-                      // Handle filter selection here
-                      print('Selected filter: $selectedValue');
-                      setState(() {
-                        _selectedFilter =
-                            selectedValue; // Store the selected value
-                      });
-                    },
+                  SizedBox(
+                    height: 40,
                   ),
-                  if (_selectedFilter != null &&
-                      _selectedFilter
-                          .isNotEmpty) // Check if a value is selected
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left:
-                              8.0), // Add a bit of padding between text and menu
-                      child: Text(
-                        _selectedFilter,
-                        style: const TextStyle(
-                          color: Colors.black, // Set the text color to black
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

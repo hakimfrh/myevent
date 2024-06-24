@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'package:date_ranger/date_ranger.dart';
 import 'package:flutter/material.dart';
 import 'package:myevent/services/api.dart';
 import 'package:myevent/event/card_event_list.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:myevent/model/eventt.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:intl/intl.dart'; // Import package intl untuk menggunakan DateFormat
 import 'package:http/http.dart' as http;
+import 'package:myevent/services/user_controller.dart';
 
 class ListEvent extends StatefulWidget {
   const ListEvent({super.key});
@@ -17,12 +18,17 @@ class ListEvent extends StatefulWidget {
 
 class _ListEventState extends State<ListEvent> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  GlobalKey<FormState> _dropdownFormKey = GlobalKey<FormState>();
-  late String _selectedValue;
 
   String search = '';
-  double _currentValue = 500; // initial value for the slider
-  DateTime? selectedDateTime;
+  double? latitude;
+  double? longitude;
+  double distance = 100;
+  int hargaMax = -1;
+  int hargaMin = -1;
+  bool isSetDate = false;
+  var initialDateRange =
+      DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  String kategori = '';
   List<Eventt> eventList = [];
 
   @override
@@ -47,14 +53,64 @@ class _ListEventState extends State<ListEvent> {
       }
       arguments += 'search=$search';
     }
+
+    if (distance < 100 &&
+        UserController().latitude != null &&
+        UserController().longitude != null) {
+      if (arguments.isEmpty) {
+        arguments += '?';
+      } else {
+        arguments += '&';
+      }
+      arguments +=
+          'latitude=${UserController().latitude}&longitude=${UserController().longitude}&distance=$distance';
+    }
+
+    if (isSetDate) {
+      if (arguments.isEmpty) {
+        arguments += '?';
+      } else {
+        arguments += '&';
+      }
+      arguments +=
+          'start_date=${initialDateRange.start}&end_date=${initialDateRange.end}';
+    }
+
+    if (hargaMin >= 0) {
+      if (arguments.isEmpty) {
+        arguments += '?';
+      } else {
+        arguments += '&';
+      }
+      arguments += 'harga_min=$hargaMin';
+    }
+    if (hargaMax >= 0) {
+      if (arguments.isEmpty) {
+        arguments += '?';
+      } else {
+        arguments += '&';
+      }
+      arguments += 'harga_max=$hargaMax';
+    }
+    if (kategori.isNotEmpty) {
+      if (arguments.isEmpty) {
+        arguments += '?';
+      } else {
+        arguments += '&';
+      }
+      arguments += 'kategori=$kategori';
+    }
+
     var response = await http.get(Uri.parse('${Api.urlEvent}$arguments'));
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body)['event_list'];
-      eventList = [];
+      setState(() {
+        eventList = [];
+      });
       for (int i = 0; i < data.length; i++) {
         Map<String, dynamic> eventMap = data[i];
         Eventt event = Eventt.fromJson(eventMap);
-        if (!mounted) return;
+        // if (!mounted) return;
         setState(() {
           eventList.add(event);
         });
@@ -102,8 +158,8 @@ class _ListEventState extends State<ListEvent> {
                       onSubmitted: (value) {
                         search = value;
                         setState(() {
-                              getEvent();
-                            });
+                          getEvent();
+                        });
                       },
                     ),
                   ),
@@ -207,140 +263,44 @@ class _ListEventState extends State<ListEvent> {
                     height: 10,
                   ),
                   const Text(
-                    "Provinsi",
+                    'Jarak Lokasi Maksimal : ',
                     style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Rubik',
-                    ),
+                        fontFamily: 'Rubik',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        DropdownSearch<String>(
-                          popupProps: PopupProps.menu(
-                            showSearchBox: true,
-                            showSelectedItems: true,
-                            disabledItemFn: (String s) => s.startsWith('I'),
-                          ),
-                          items: [
-                            "Brazil",
-                            "Italia (Disabled)",
-                            "Tunisia",
-                            'Canada'
-                          ],
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              hintText: "Pilih Provinsi",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 12.0, horizontal: 16.0),
-                            ),
-                          ),
-                          clearButtonProps:
-                              const ClearButtonProps(isVisible: true),
-                          onChanged: print,
-                          // selectedItem: "Pilih Lokasi",
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        distance >= 100 ? '-' : '${distance.round()} km',
+                        style: const TextStyle(fontSize: 20.0),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Container(
+                        width: 300.0,
+                        child: Slider(
+                          value: distance,
+                          min: 0,
+                          max: 100,
+                          divisions: 100,
+                          label: distance >= 100
+                              ? '-'
+                              : distance.round().toString(),
+                          onChanged: (double value) {
+                            setState(() {
+                              distance = value.roundToDouble();
+                            });
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 10,
-                  ),
-                  const Text(
-                    "Kabupaten",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Rubik',
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        DropdownSearch<String>(
-                          popupProps: PopupProps.menu(
-                            showSearchBox: true,
-                            showSelectedItems: true,
-                            disabledItemFn: (String s) => s.startsWith('I'),
-                          ),
-                          items: [
-                            "Brazil",
-                            "Italia (Disabled)",
-                            "Tunisia",
-                            'Canada'
-                          ],
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              hintText: "Pilih Kabupaten",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 12.0, horizontal: 16.0),
-                            ),
-                          ),
-                          clearButtonProps:
-                              const ClearButtonProps(isVisible: true),
-                          onChanged: print,
-                          // selectedItem: "Pilih Lokasi",
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    "Kecamatan",
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: 'Rubik',
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        DropdownSearch<String>(
-                          popupProps: PopupProps.menu(
-                            showSearchBox: true,
-                            showSelectedItems: true,
-                            disabledItemFn: (String s) => s.startsWith('I'),
-                          ),
-
-                          items: [
-                            "Brazil",
-                            "Italia (Disabled)",
-                            "Tunisia",
-                            'Canada'
-                          ],
-                          dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                              hintText: "Pilih Kecamatan",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 12.0, horizontal: 16.0),
-                            ),
-                          ),
-                          clearButtonProps:
-                              const ClearButtonProps(isVisible: true),
-                          onChanged: print,
-                          // selectedItem: "Pilih Lokasi",
-                        ),
-                      ],
-                    ),
                   ),
                   Container(
                     height: 1,
@@ -374,99 +334,24 @@ class _ListEventState extends State<ListEvent> {
                   const SizedBox(
                     height: 10,
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(500, 40),
-                        backgroundColor: const Color(0xFF512E67),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    onPressed: () async {
-                      selectedDateTime = await showOmniDateTimePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate:
-                            DateTime(1600).subtract(const Duration(days: 3652)),
-                        lastDate: DateTime.now().add(
-                          const Duration(days: 3652),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(),
+                      Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: DateRanger(
+                          
+                          initialRange: initialDateRange,
+                          onRangeChanged: (range) {
+                            setState(() {
+                              initialDateRange = range;
+                              isSetDate = true;
+                            });
+                          },
                         ),
-                        is24HourMode: false,
-                        isShowSeconds: false,
-                        minutesInterval: 1,
-                        secondsInterval: 1,
-                        isForce2Digits: true,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(0)),
-                        constraints: const BoxConstraints(
-                          maxWidth: 350,
-                          maxHeight: 650,
-                        ),
-                        transitionBuilder: (context, anim1, anim2, child) {
-                          return FadeTransition(
-                            opacity: anim1.drive(
-                              Tween(
-                                begin: 0,
-                                end: 1,
-                              ),
-                            ),
-                            child: child,
-                          );
-                        },
-                        transitionDuration: const Duration(milliseconds: 200),
-                        barrierDismissible: true,
-                        selectableDayPredicate: (dateTime) {
-                          // Disable 25th Feb 2023
-                          if (dateTime == DateTime(2023, 2, 25)) {
-                            return false;
-                          } else {
-                            return true;
-                          }
-                        },
-                      );
-
-                      print("dateTime: $selectedDateTime");
-
-                      setState(
-                          () {}); // Panggil setState untuk memperbarui tampilan
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${selectedDateTime != null ? DateFormat('yyyy-MM-dd').format(selectedDateTime!) : 'Pilih Tanggal'}",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'Rubik',
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          height: 10,
-                          width: 1, // Height of the divider
-                          color: Colors.white, // Color of the divider
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 10.0,
-                              horizontal: 10), // Margin around the divider
-                        ),
-                        // Icon(Icons.access_time_rounded,
-                        //     color: Colors.white, size: 14),
-                        // SizedBox(
-                        //   width: 5,
-                        // ),
-                        Text(
-                          "${selectedDateTime != null ? DateFormat('HH:mm:ss').format(selectedDateTime!) : 'Pilih Waktu'}",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            fontFamily: 'Rubik',
-                            color: Colors.white,
-                          ),
-                        ),
-                        const Spacer(),
-                        const Icon(Icons.calendar_month_outlined,
-                            color: Colors.white, size: 18),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                   Container(
                     height: 1,
@@ -499,30 +384,60 @@ class _ListEventState extends State<ListEvent> {
                   const SizedBox(
                     height: 10,
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Price: ${formatCurrency(_currentValue)}',
-                        style: const TextStyle(fontSize: 20.0),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Harga Minimal',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                      const SizedBox(height: 20.0),
-                      Container(
-                        width: 300.0,
-                        child: Slider(
-                          value: _currentValue,
-                          min: 0,
-                          max: 1000,
-                          divisions: 100,
-                          label: formatCurrency(_currentValue),
-                          onChanged: (double value) {
-                            setState(() {
-                              _currentValue = value;
-                            });
-                          },
-                        ),
+                      prefixIcon: const Icon(Icons.money),
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 12.0), // Added padding
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Masukkan Harga Minimal';
+                      } else if (!value.contains(RegExp(r'^[a-zA-Z0-9_]+$'))) {
+                        return 'Harga Minimal harus di isi';
+                      } else {
+                        return null;
+                      }
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      hargaMin = int.parse(value);
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Harga Maksimal',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ],
+                      prefixIcon: const Icon(Icons.description),
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 12.0), // Added padding
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Masukkan Harga Maksimal';
+                      } else if (!value.contains(RegExp(r'^[a-zA-Z0-9_]+$'))) {
+                        return 'Harga Maksimal harus di isi';
+                      } else {
+                        return null;
+                      }
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      hargaMax = int.parse(value);
+                    },
                   ),
                   Container(
                     height: 1,
@@ -556,12 +471,15 @@ class _ListEventState extends State<ListEvent> {
                     height: 10,
                   ),
                   const Text(
-                    "Kecamatan",
+                    "Kategori Event",
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.normal,
                       fontFamily: 'Rubik',
                     ),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 0, right: 0, top: 0),
@@ -570,16 +488,15 @@ class _ListEventState extends State<ListEvent> {
                       children: [
                         DropdownSearch<String>(
                           popupProps: PopupProps.menu(
-                            showSearchBox: true,
+                            showSearchBox: false,
                             showSelectedItems: true,
-                            disabledItemFn: (String s) => s.startsWith('I'),
                           ),
 
                           items: [
-                            "Brazil",
-                            "Italia (Disabled)",
-                            "Tunisia",
-                            'Canada'
+                            "Pameran",
+                            "Seminar",
+                            "Konser",
+                            'Lainnya'
                           ],
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
@@ -593,7 +510,9 @@ class _ListEventState extends State<ListEvent> {
                           ),
                           clearButtonProps:
                               const ClearButtonProps(isVisible: true),
-                          onChanged: print,
+                          onChanged: (value) {
+                            kategori = value ?? '';
+                          },
                           // selectedItem: "Pilih Lokasi",
                         ),
                       ],
@@ -608,7 +527,15 @@ class _ListEventState extends State<ListEvent> {
                       // Spasi antara tombol
                       OutlinedButton(
                         onPressed: () {
-                          // Aksi untuk tombol "Reset"
+                          setState(() {
+                            distance = 100;
+                            isSetDate = false;
+                            initialDateRange = DateTimeRange(
+                                start: DateTime.now(), end: DateTime.now());
+                            hargaMin = -1;
+                            hargaMax = -1;
+                            kategori = '';
+                          });
                         },
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Colors.black,
@@ -627,7 +554,9 @@ class _ListEventState extends State<ListEvent> {
                       const Spacer(),
                       ElevatedButton(
                         onPressed: () {
-                          // Aksi untuk tombol "Terapkan"
+                          setState(() {
+                            getEvent();
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:

@@ -39,48 +39,60 @@ class _CardBoothState extends State<CardBooth> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 20, top: 10.0), // Add margin here
-      width: 180.0, // Specify the width here
-      height: 100.0, // Specify the height here
-      child: Card(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20, top: 7.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    booth.tipeBooth,
-                    style:
-                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.w700),
+  margin: const EdgeInsets.only(left: 20, top: 10.0),
+  width: 180.0,
+  height: 100.0,
+  child: Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0), // Radius untuk Card
+    ),
+    elevation: 6.0,
+    child: Stack(
+      children: [
+        // Gambar dengan radius
+        Positioned.fill(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0), // Radius untuk ClipRRect
+            child: imageData != ''
+                ? Image.memory(
+                    base64Decode(imageData),
+                    fit: BoxFit.cover, // Memenuhi Card
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  imageData != ''
-                      ? Image.memory(
-                          base64Decode(imageData),
-                          // fit: BoxFit.cover,
-                          height: 50,
-                          // width: 130,
-                        )
-                      : const SizedBox(
-                          height: 25.0,
-                          width: 25.0,
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
-                  // Image.asset(
-                  //   'images/booth.png',
-                  //   width: 130,
-                  //   height: 60,
-                  // ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
+        // Teks
+        Positioned(
+          left: 20,
+          top: 7.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+             Text(
+  booth.tipeBooth,
+  style: TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.w700,
+    color: Colors.white, // Warna teks putih
+    shadows: [
+      Shadow(
+        color: Colors.black.withOpacity(0.5), // Warna shadow
+        offset: Offset(1, 1), // Posisi shadow (horizontal, vertical)
+        blurRadius: 2, // Blur radius
       ),
-    );
+    ],
+  ),
+),
+
+            ],
+          ),
+        ),
+      ],
+    ),
+  ),
+);
   }
 }

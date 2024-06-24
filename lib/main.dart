@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:myevent/dashboard.dart';
+import 'package:myevent/editprofile.dart';
 import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/firebase_options.dart';
 import 'package:myevent/login.dart';
@@ -11,6 +12,7 @@ import 'package:myevent/register.dart';
 import 'package:myevent/pembayaran.dart';
 import 'package:myevent/riwayat.dart';
 import 'package:get/get.dart';
+import 'package:myevent/ubahpassword.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/listevent', page: () => ListEvent()),
         GetPage(name: '/pembayaran', page: () => Pembayaran()),
         GetPage(name: '/riwayat', page: () => UserList()),
+        GetPage(name: '/editprofile', page: () => EditProfile()),
+        GetPage(name: '/ubahpassword', page: () => UbahPassword()),
       ],
     );
   }
