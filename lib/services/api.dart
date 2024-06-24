@@ -10,7 +10,9 @@ class Api {
   static const String urlUpdateUser = "$serverIp/api/update_user";
   static const String urlUpdatePassword = "$serverIp/api/update_password";
   static const String urlUserList = "$serverIp/api/getalluser";
-  static const String urlSendCode = "$serverIp/api/sendcode";
+  static const String urlSendCode = "$serverIp/api/sendCode";
+  static const String urlvalidateCode = "$serverIp/api/validateCode";
+  static const String urlResetPassword = "$serverIp/api/resetPassword";
 
   static const String urlEvent = "$serverIp/api/event";
   static const String urlEventIsEnrolled = "$serverIp/api/event/isEnrolled";

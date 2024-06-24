@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myevent/services/api.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,10 +18,99 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final GlobalKey<FormState> _stepThreeKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _stepFourKey = GlobalKey<FormState>();
 
-  bool _isPasswordHidden = true;
-  bool _isPasswordHidden2 = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
+  final TextEditingController _pass1Controller = TextEditingController();
+  final TextEditingController _pass2Controller = TextEditingController();
+
   int _currentStep = 0;
-  String? _emailError;
+  String email = '';
+  String errorEmail = '';
+  String errorOtp = '';
+  String errorPass = '';
+  bool isButtonActive = true;
+
+  void _validateStep() async {
+    if (!isButtonActive) return;
+    isButtonActive = false;
+    if (_currentStep == 0) {
+      if (_stepOneKey.currentState!.validate()) {
+        _sendCode();
+      }
+    } else if (_currentStep == 1) {
+      if (_stepTwoKey.currentState!.validate()) {
+        _verifyCode();
+      }
+    } else if (_currentStep == 2) {
+      if (_stepThreeKey.currentState!.validate()) {
+        _resetPassword();
+      }
+    } else {
+      if (_stepFourKey.currentState!.validate()) {
+        Get.offNamed('/login');
+      }
+    }
+  }
+
+  void _sendCode() async {
+    email = _emailController.text;
+    var response = await http.get(Uri.parse("${Api.urlSendCode}?email=$email"));
+    if (response.statusCode == 200) {
+      // Map<String, dynamic> json = jsonDecode(response.body);
+      setState(() {
+        _currentStep++;
+      });
+    } else {
+      // Map<String, dynamic> json = jsonDecode(response.body);
+      setState(() {
+        errorEmail = 'Email tidak ditemukan';
+      });
+      _stepOneKey.currentState!.validate();
+    }
+    isButtonActive = true;
+  }
+
+  void _verifyCode() async {
+    String otp = _otpController.text;
+    var response = await http
+        .get(Uri.parse("${Api.urlvalidateCode}?email=$email&code=$otp"));
+    if (response.statusCode == 200) {
+      // Map<String, dynamic> json = jsonDecode(response.body);
+      setState(() {
+        _currentStep++;
+      });
+    } else {
+      // Map<String, dynamic> json = jsonDecode(response.body);
+      setState(() {
+        errorOtp = 'Kode salah atau kadaluarsa. Kembali dan coba lagi';
+      });
+      _stepTwoKey.currentState!.validate();
+    }
+    isButtonActive = true;
+  }
+
+  void _resetPassword() async {
+    String otp = _otpController.text;
+    String password = _pass2Controller.text;
+    var response = await http.get(Uri.parse(
+        "${Api.urlvalidateCode}?email=$email&code=$otp&new_password=$password"));
+    if (response.statusCode == 200) {
+      // Map<String, dynamic> json = jsonDecode(response.body);
+      setState(() {
+        _currentStep++;
+      });
+    } else {
+      Map<String, dynamic> json = jsonDecode(response.body);
+      String errorMessage = json['message'];
+      if (errorMessage.contains('unknown')) {
+        setState(() {
+          errorPass = 'Kode kadaluarsa. Kembali dan coba lagi';
+        });
+        _stepThreeKey.currentState!.validate();
+      }
+    }
+    isButtonActive = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,12 +208,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       const SizedBox(width: 10), // Spacer between buttons
                     Flexible(
                       child: ElevatedButton(
-                        onPressed: _currentStep ==
-                                3 // Navigasi ke halaman login jika langkah terakhir
-                            ? () {
-                                // Tambahkan logika untuk menuju halaman login
-                              }
-                            : _validateStep, // Validasi langkah jika bukan langkah terakhir
+                        onPressed:
+                            _validateStep, // Validasi langkah jika bukan langkah terakhir
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
@@ -210,12 +298,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               prefixIcon: const Icon(Icons.email_outlined),
               floatingLabelBehavior: FloatingLabelBehavior.never,
             ),
+            onChanged: (value) {
+              errorEmail = '';
+            },
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Masukkan Email';
+              } else if (errorEmail.isNotEmpty) {
+                return errorEmail;
+              } else {
+                return null;
               }
-              return null;
             },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
         ],
       ),
@@ -249,7 +344,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           ),
           SizedBox(height: 10.0),
           TextFormField(
-            //controller: _companyNameController,
+            controller: _otpController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -263,12 +358,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
             textAlign: TextAlign.center, // Teks di tengah
             style: TextStyle(fontSize: 18.0), // Font size input
+            onChanged: (value) {
+              errorOtp = '';
+            },
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Masukkan Kode OTP';
+              } else if (errorOtp.isNotEmpty) {
+                return errorOtp;
+              } else {
+                return null;
               }
-              return null;
             },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
         ],
       ),
@@ -304,9 +406,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             height: 10.0,
           ),
           TextFormField(
-            //controller: _companyNameController,
+            controller: _pass1Controller,
             decoration: InputDecoration(
-              labelText: 'Masukkan Password Lama',
+              labelText: 'Masukkan Password Baru',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
@@ -315,30 +417,40 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Masukkan Password Lama';
+                return 'Masukkan Password Baru';
               }
               return null;
             },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
           SizedBox(
             height: 10.0,
           ),
           TextFormField(
-            //controller: _companyNameController,
+            controller: _pass2Controller,
             decoration: InputDecoration(
-              labelText: 'Masukkan Password Baru',
+              labelText: 'Masukkan Password Lagi',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),
               prefixIcon: const Icon(Icons.key),
               floatingLabelBehavior: FloatingLabelBehavior.never,
             ),
+            onChanged: (value) {
+              errorPass = '';
+            },
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Masukkan Password Baru';
+                return 'Masukkan Password Lagi';
+              } else if (value != _pass1Controller.text) {
+                return 'Password tidak sama';
+              } else if (errorPass.isNotEmpty) {
+                return errorPass;
+              } else {
+                return null;
               }
-              return null;
             },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
         ],
       ),
@@ -373,43 +485,5 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ],
       ),
     );
-  }
-  final TextEditingController _emailController = TextEditingController();
-
-  void _validateStep() async {
-    if (_currentStep == 0) {
-      if (_stepOneKey.currentState!.validate()) {
-        _sendCode();
-        setState(() {
-          _currentStep++;
-        });
-      }
-    } else if (_currentStep == 1) {
-      if (_stepTwoKey.currentState!.validate()) {
-        setState(() {
-          _currentStep++;
-        });
-      }
-    } else if (_currentStep == 2) {
-      if (_stepThreeKey.currentState!.validate()) {
-        setState(() {
-          _currentStep++;
-        });
-      }
-    } else {
-      if (_stepFourKey.currentState!.validate()) {
-        _register();
-      }
-    }
-  }
-
-  void _register() async {
-    // Your registration logic here
-    // Example: sending data to an API endpoint
-  }
-
-  void _sendCode() async{
-    String email = _emailController.text;
-    var response = await http.get(Uri.parse("${Api.urlSendCode}?email=$email"));
   }
 }

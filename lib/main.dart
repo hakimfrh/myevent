@@ -6,7 +6,7 @@ import 'package:myevent/editprofile.dart';
 import 'package:myevent/event/detail_event.dart';
 import 'package:myevent/firebase_options.dart';
 import 'package:myevent/login.dart';
-import 'package:myevent/forgotpassword/forgotpassword.dart';
+import 'package:myevent/forgotpassword.dart';
 import 'package:myevent/search_event.dart';
 import 'package:myevent/register.dart';
 import 'package:myevent/pembayaran.dart';
