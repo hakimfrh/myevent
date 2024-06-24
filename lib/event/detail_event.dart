@@ -10,7 +10,8 @@ import 'package:myevent/model/booth.dart';
 import 'package:myevent/model/eventt.dart';
 import 'package:myevent/model/order.dart';
 import 'package:myevent/services/user_controller.dart';
-import 'package:myevent/pembayaran.dart';
+
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui';
 
 class Event extends StatefulWidget {
@@ -192,6 +193,14 @@ class _EventState extends State<Event> {
       ));
     }
     // } catch (e) {}
+  }
+
+  void openLinks(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   String formatCurrency(int value) {
@@ -640,30 +649,35 @@ class _EventState extends State<Event> {
           SizedBox(
             width: 10,
           ),
-          Container(
-            width: 50.0,
-            height: 50.0,
-            child: FloatingActionButton(
-              onPressed: () {
-                // Logika untuk tombol kedua
-              },
-              backgroundColor: Color.fromARGB(255, 255, 255, 255),
-              mini: false,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-                side: BorderSide(
-                    color: Colors.black, width: 1), // Menambahkan outline putih
-              ),
-              elevation: 6.0,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                child: Image(
-                  image: AssetImage('images/wa.png'),
-                  width: 20,
-                ),
-              ),
-            ),
-          ),
+          event.instagram != null
+              ? Container(
+                  width: 50.0,
+                  height: 50.0,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      // Logika untuk tombol kedua
+                      openLinks(Uri.parse(event.instagram!));
+                    },
+                    backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                    mini: false,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: BorderSide(
+                          color: Colors.black,
+                          width: 1), // Menambahkan outline putih
+                    ),
+                    elevation: 6.0,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Image(
+                        image: AssetImage('images/ig.png'),
+                        fit: BoxFit.contain,
+                        width: 24,
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox(),
           SizedBox(
             width: 10,
           ),
@@ -673,6 +687,9 @@ class _EventState extends State<Event> {
             child: FloatingActionButton(
               onPressed: () {
                 // Logika untuk tombol ketiga
+                String url =
+                    'https://maps.google.com/?q=${event.latitude},${event.longitude}';
+                openLinks(Uri.parse(url));
               },
               backgroundColor: Color.fromARGB(255, 255, 255, 255),
               mini: true,
@@ -712,7 +729,7 @@ class _EventState extends State<Event> {
         content: Text("anda telah terdaftar"),
         duration: Durations.short4,
       ));
-      // return;
+      return;
     }
 
     if (event.userId == UserController().user!.id) {
