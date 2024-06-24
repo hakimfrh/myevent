@@ -35,7 +35,7 @@ final List<String> categoriesName = [
   'Verifikasi Pembayaran',
   'Selesai'
 ];
-   
+
 int selectedindex = 0;
 
 List<Order> orderList = [];
@@ -120,19 +120,32 @@ class _UserListState extends State<UserList> {
               }),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: orderList.length, // Jumlah total item dalam daftar
-              itemBuilder: (context, index) {
-                Order event = orderList[index];
-                return GestureDetector(
-                    onTap: () {
-                      Get.toNamed('/pembayaran', arguments: event);
+          orderList.length > 0
+              ? Expanded(
+                  child: ListView.builder(
+                    itemCount:
+                        orderList.length, // Jumlah total item dalam daftar
+                    itemBuilder: (context, index) {
+                      Order event = orderList[index];
+                      return GestureDetector(
+                          onTap: () {
+                            Get.toNamed('/pembayaran', arguments: event);
+                          },
+                          child: CardEventOrder(order: event));
                     },
-                    child: CardEventOrder(order: event));
-              },
-            ),
-          )
+                  ),
+                )
+              : Container(
+                  alignment: Alignment.center,
+                  child: const Column(
+                    children: [
+                      Padding(padding: EdgeInsets.only(top: 48)),
+                      Text('Tidak Ada Data...'),
+                      Padding(padding: EdgeInsets.symmetric(vertical: 48)),
+                      // Text('Kamu belum mengikuti event.')
+                    ],
+                  ),
+                ),
         ],
       ),
     );

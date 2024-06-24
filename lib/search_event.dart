@@ -185,18 +185,30 @@ class _ListEventState extends State<ListEvent> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-                // scrollDirection: Axis.vertical,
-                // shrinkWrap: true,
-                itemCount: eventList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  Eventt event = eventList[index];
-                  return CardEventList(
-                    event: event,
-                  );
-                }),
-          ),
+          eventList.length > 0
+              ? Expanded(
+                  child: ListView.builder(
+                      // scrollDirection: Axis.vertical,
+                      // shrinkWrap: true,
+                      itemCount: eventList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Eventt event = eventList[index];
+                        return CardEventList(
+                          event: event,
+                        );
+                      }),
+                )
+              : Container(
+                  alignment: Alignment.center,
+                  child: const Column(
+                    children: [
+                      Padding(padding: EdgeInsets.only(top: 48)),
+                      Text('Event Tidak Ditemukan...'),
+                      Padding(padding: EdgeInsets.symmetric(vertical: 48)),
+                      // Text('Kamu belum mengikuti event.')
+                    ],
+                  ),
+                ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -269,7 +281,7 @@ class _ListEventState extends State<ListEvent> {
                         fontSize: 16,
                         fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Column(
@@ -341,7 +353,6 @@ class _ListEventState extends State<ListEvent> {
                       Padding(
                         padding: const EdgeInsets.all(24),
                         child: DateRanger(
-                          
                           initialRange: initialDateRange,
                           onRangeChanged: (range) {
                             setState(() {
@@ -410,7 +421,7 @@ class _ListEventState extends State<ListEvent> {
                       hargaMin = int.parse(value);
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   TextFormField(
@@ -478,7 +489,7 @@ class _ListEventState extends State<ListEvent> {
                       fontFamily: 'Rubik',
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Padding(
@@ -487,17 +498,12 @@ class _ListEventState extends State<ListEvent> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         DropdownSearch<String>(
-                          popupProps: PopupProps.menu(
+                          popupProps: const PopupProps.menu(
                             showSearchBox: false,
                             showSelectedItems: true,
                           ),
 
-                          items: [
-                            "Pameran",
-                            "Seminar",
-                            "Konser",
-                            'Lainnya'
-                          ],
+                          items: ["Pameran", "Seminar", "Konser", 'Lainnya'],
                           dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
                               hintText: "Pilih Kategori",

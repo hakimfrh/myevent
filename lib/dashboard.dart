@@ -175,13 +175,14 @@ class HomeState extends State<Home> {
     }
   }
 
-void getOrderCount() async {
-    final response = await http
-        .get(Uri.parse('${Api.urlOrderCount}?user_id=${UserController().user!.id}'));
+  void getOrderCount() async {
+    final response = await http.get(
+        Uri.parse('${Api.urlOrderCount}?user_id=${UserController().user!.id}'));
     if (response.statusCode == 200) {
       int totalOrder = json.decode(response.body)['total_orders'];
       int totalOrderBulan = json.decode(response.body)['orders_this_month'];
-      int totalTerverifikasi = json.decode(response.body)['terverifikasi_orders'];
+      int totalTerverifikasi =
+          json.decode(response.body)['terverifikasi_orders'];
       if (!mounted) return;
       setState(() {
         orderCount = totalOrder.toString();
@@ -311,7 +312,7 @@ void getOrderCount() async {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                           Text(
+                          Text(
                             orderCount,
                             style: const TextStyle(
                               color: Colors.white,
@@ -326,7 +327,7 @@ void getOrderCount() async {
                             color: Colors.white,
                           ),
                           const SizedBox(width: 50.0),
-                           Text(
+                          Text(
                             orderSelesai,
                             style: const TextStyle(
                               color: Colors.white,
@@ -341,7 +342,7 @@ void getOrderCount() async {
                             color: Colors.white,
                           ),
                           const SizedBox(width: 50.0),
-                           Text(
+                          Text(
                             orderCountMonth,
                             style: const TextStyle(
                               color: Colors.white,
@@ -417,19 +418,33 @@ void getOrderCount() async {
               ),
             ),
           ),
-          SliverList.builder(
-            // Provide the number of items in the list
-            itemCount: orderList.length,
-            // Build each list item dynamically
-            itemBuilder: (BuildContext context, int index) {
-              Order order = orderList[index];
-              return GestureDetector(
-                  onTap: () {
-                    Get.toNamed('/pembayaran', arguments: order);
+          orderList.length > 0
+              ? SliverList.builder(
+                  // Provide the number of items in the list
+                  itemCount: orderList.length,
+                  // Build each list item dynamically
+                  itemBuilder: (BuildContext context, int index) {
+                    Order order = orderList[index];
+                    return GestureDetector(
+                        onTap: () {
+                          Get.toNamed('/pembayaran', arguments: order);
+                        },
+                        child: CardEventOrder(order: order));
                   },
-                  child: CardEventOrder(order: order));
-            },
-          ),
+                )
+              : SliverToBoxAdapter(
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const Column(
+                      children: [
+                        Padding(padding: EdgeInsets.only(top: 48)),
+                        Text('Tidak Ada Data...'),
+                        Padding(padding: EdgeInsets.symmetric(vertical: 4)),
+                        Text('Kamu belum mengikuti event.')
+                      ],
+                    ),
+                  ),
+                ),
           const SliverToBoxAdapter(
             child: SizedBox(height: 5.0),
           ),
