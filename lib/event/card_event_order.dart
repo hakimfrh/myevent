@@ -44,7 +44,7 @@ class CardEventOrderState extends State<CardEventOrder> {
     if(status == 'ditolak') orderStatus = 'Ditolak';
     if(status == 'diterima') orderStatus = 'Menunggu Pembayaran';
     if(status == 'menunggu pembayaran') orderStatus = 'Verifikasi Pembayaran';
-    if(status == 'terverivikasi') orderStatus = 'Selesai';
+    if(status == 'terverifikasi') orderStatus = 'Selesai';
 
     String trimString(String s) {
       int length = 90;

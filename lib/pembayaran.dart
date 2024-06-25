@@ -254,6 +254,7 @@ class _PembayaranState extends State<Pembayaran> {
         await http.post(Uri.parse(Api.urlOrderBayar), body: formData);
     if (response.statusCode == 200) {
       setState(() {
+        _buttonText = 'kembali';
         activeIndex = 3;
       });
     } else {

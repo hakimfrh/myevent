@@ -1,6 +1,6 @@
 class Api {
-  static const String serverIp = "http://10.10.69.200:8000";
-  // static const String serverIp = "http://192.168.137.1:8000";
+  // static const String serverIp = "http://10.10.69.200:8000";
+  static const String serverIp = "http://192.168.137.1:8000";
 
   static const String urlImage = "$serverIp/api/image";
   

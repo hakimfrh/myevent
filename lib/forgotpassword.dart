@@ -93,7 +93,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     String otp = _otpController.text;
     String password = _pass2Controller.text;
     var response = await http.get(Uri.parse(
-        "${Api.urlvalidateCode}?email=$email&code=$otp&new_password=$password"));
+        "${Api.urlResetPassword}?email=$email&code=$otp&new_password=$password"));
     if (response.statusCode == 200) {
       // Map<String, dynamic> json = jsonDecode(response.body);
       setState(() {
