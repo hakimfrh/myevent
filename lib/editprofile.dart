@@ -463,7 +463,7 @@ class _EditProfileState extends State<EditProfile> {
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       UserController().logout();
-                                      Get.offNamed('/login');
+                                      Get.offAllNamed('/login');
 
                                       // Navigator.push(
                                       //   context,

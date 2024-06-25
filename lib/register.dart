@@ -168,6 +168,8 @@ class _RegisterState extends State<Register> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Masukkan Nama Lengkap';
+              } else if (!value.contains(RegExp(r'^[a-z A-Z_]+$'))) {
+                return 'Nama Tidak Valid';
               }
               return null;
             },
